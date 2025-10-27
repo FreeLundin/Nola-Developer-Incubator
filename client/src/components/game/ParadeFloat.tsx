@@ -71,10 +71,26 @@ export function ParadeFloat({
     const throwTypes = ["beads", "doubloon", "cup"] as const;
     const randomType = throwTypes[Math.floor(Math.random() * throwTypes.length)];
     
+    // Vary throw arc heights for different difficulty levels
+    // 40% low arc (easy to catch), 40% medium arc, 20% high arc
+    const arcRoll = Math.random();
+    let upwardArc: number;
+    
+    if (arcRoll < 0.4) {
+      // Low arc - easier to catch (released earlier)
+      upwardArc = Math.random() * 0.2 + 0.4; // 0.4 to 0.6
+    } else if (arcRoll < 0.8) {
+      // Medium arc
+      upwardArc = Math.random() * 0.2 + 0.6; // 0.6 to 0.8
+    } else {
+      // High arc - harder to catch
+      upwardArc = Math.random() * 0.3 + 0.8; // 0.8 to 1.1
+    }
+    
     // Create a collectible thrown from the float toward the center of the street
     const throwDirection = new THREE.Vector3(
       -lane * (Math.random() * 0.5 + 0.5), // Toward center with some randomness
-      Math.random() * 0.3 + 0.8, // Upward arc
+      upwardArc, // Variable upward arc
       Math.random() * 0.4 - 0.2 // Slight forward/backward variance
     ).normalize();
     
