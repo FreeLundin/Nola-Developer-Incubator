@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Trophy, Star, Zap } from "lucide-react";
 
 export function WinScreen() {
-  const { phase, score, resetGame } = useParadeGame();
+  const { phase, score, level, maxCombo, totalCatches, nextLevel, resetGame } = useParadeGame();
   const { playSuccess } = useAudio();
   
   useEffect(() => {
@@ -39,25 +40,63 @@ export function WinScreen() {
           animate={{ scale: 1 }}
           transition={{ type: "spring", duration: 0.8 }}
         >
-          <h1 className="text-6xl font-bold text-yellow-300 mb-4">
-            🎉 You Won! 🎉
+          <div className="flex justify-center mb-6">
+            <Trophy className="w-24 h-24 text-yellow-400" />
+          </div>
+          
+          <h1 className="text-5xl font-bold text-yellow-300 mb-4">
+            Level {level} Complete!
           </h1>
           
-          <div className="text-4xl text-white mb-8">
+          <div className="text-2xl text-white mb-8">
             You caught all {score} throws!
           </div>
           
-          <p className="text-2xl text-yellow-200 mb-8">
-            Congratulations! You're a true Krew of Boo parade champion!
+          {/* Stats Display */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="bg-black/30 rounded-lg p-4">
+              <div className="flex items-center justify-center mb-2">
+                <Zap className="w-6 h-6 text-yellow-400 mr-2" />
+                <span className="text-yellow-300 font-semibold">Max Combo</span>
+              </div>
+              <div className="text-4xl font-bold text-white">{maxCombo}x</div>
+            </div>
+            
+            <div className="bg-black/30 rounded-lg p-4">
+              <div className="flex items-center justify-center mb-2">
+                <Star className="w-6 h-6 text-yellow-400 mr-2" />
+                <span className="text-yellow-300 font-semibold">Total Catches</span>
+              </div>
+              <div className="text-4xl font-bold text-white">{totalCatches}</div>
+            </div>
+          </div>
+          
+          <p className="text-xl text-yellow-200 mb-8">
+            {maxCombo >= 5 ? "🔥 Amazing combo streak!" : maxCombo >= 3 ? "⚡ Great combo!" : "Keep practicing your combos!"}
           </p>
           
-          <Button
-            onClick={resetGame}
-            size="lg"
-            className="text-2xl py-6 px-12 bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold"
-          >
-            Play Again
-          </Button>
+          <div className="flex gap-4">
+            <Button
+              onClick={nextLevel}
+              size="lg"
+              className="flex-1 text-2xl py-6 px-8 bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold"
+            >
+              Next Level →
+            </Button>
+            
+            <Button
+              onClick={resetGame}
+              size="lg"
+              variant="outline"
+              className="text-xl py-6 px-8 border-2 border-yellow-400 text-yellow-300 hover:bg-yellow-400/20"
+            >
+              Start Over
+            </Button>
+          </div>
+          
+          <div className="mt-6 text-sm text-yellow-200/70">
+            Level {level + 1} will be harder - faster floats and more throws!
+          </div>
         </motion.div>
       </Card>
     </motion.div>

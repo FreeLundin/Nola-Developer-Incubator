@@ -72,16 +72,16 @@ export function GameScene({ touchInput }: GameSceneProps) {
       <Environment />
       
       {/* Player */}
-      <Player position={[0, 0.5, 0]} onPositionChange={setPlayerPosition} />
+      <Player position={[0, 0.5, 0]} onPositionChange={setPlayerPosition} touchInput={touchInput} />
       
       {/* Camera */}
       <GameCamera playerPosition={playerPosition} />
       
-      {/* Parade Floats */}
-      <ParadeFloat id="float-1" startZ={-25} lane={-1} color="#9b59b6" throwInterval={2500} />
-      <ParadeFloat id="float-2" startZ={-15} lane={1} color="#e74c3c" throwInterval={3000} />
-      <ParadeFloat id="float-3" startZ={-35} lane={-1} color="#ff6b35" throwInterval={2800} />
-      <ParadeFloat id="float-4" startZ={-5} lane={1} color="#3498db" throwInterval={3200} />
+      {/* Parade Floats - no longer need throwInterval, it's dynamic */}
+      <ParadeFloat id="float-1" startZ={-25} lane={-1} color="#9b59b6" />
+      <ParadeFloat id="float-2" startZ={-15} lane={1} color="#e74c3c" />
+      <ParadeFloat id="float-3" startZ={-35} lane={-1} color="#ff6b35" />
+      <ParadeFloat id="float-4" startZ={-5} lane={1} color="#3498db" />
       
       {/* Collectibles */}
       {collectibles.map((collectible) => (

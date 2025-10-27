@@ -1,20 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParadeGame } from "@/lib/stores/useParadeGame";
+import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, X } from "lucide-react";
+import { Camera, X, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 export function GameUI() {
-  const { phase, score, targetScore, cameraMode, startGame, toggleCamera } = useParadeGame();
+  const { phase, score, targetScore, level, combo, cameraMode, startGame, toggleCamera } = useParadeGame();
+  const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
+  const [comboVisible, setComboVisible] = useState(false);
   const isMobile = useIsMobile();
+  
+  // Show combo animation when combo changes
+  useEffect(() => {
+    if (combo > 1) {
+      setComboVisible(true);
+      const timer = setTimeout(() => setComboVisible(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [combo]);
   
   const handleStartGame = () => {
     setShowTutorial(false);
     startGame();
   };
+  
+  const progressPercentage = (score / targetScore) * 100;
   
   return (
     <>
@@ -40,7 +55,7 @@ export function GameUI() {
               
               <div className="space-y-6">
                 <p className="text-xl text-yellow-200">
-                  Welcome to the New Orleans Halloween parade! Catch 5 throws from the parade floats to win!
+                  Welcome to the New Orleans Halloween parade! Catch throws from the parade floats to win!
                 </p>
                 
                 <div className="bg-black/30 rounded-lg p-6 space-y-4">
@@ -71,8 +86,9 @@ export function GameUI() {
                       <h3 className="font-semibold text-yellow-200">Gameplay:</h3>
                       <ul className="space-y-1 text-sm">
                         <li>• Move close to falling items to catch them</li>
-                        <li>• Highlighted rings show catch zones</li>
-                        <li>• Switch camera views for better tactical positioning</li>
+                        <li>• Catch quickly for combo bonuses!</li>
+                        <li>• Complete levels to increase difficulty</li>
+                        <li>• Switch camera views for better positioning</li>
                       </ul>
                     </div>
                   </div>
@@ -94,39 +110,70 @@ export function GameUI() {
       {/* In-Game HUD */}
       {phase === "playing" && (
         <div className="absolute inset-0 pointer-events-none">
-          {/* Score Display - Top Center */}
-          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 pointer-events-auto">
+          {/* Top HUD Bar */}
+          <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-auto">
+            {/* Level and Progress */}
             <Card className="bg-gradient-to-r from-purple-900/90 to-orange-900/90 border-2 border-yellow-400 px-6 py-3">
-              <div className="text-center">
-                <div className="text-sm text-yellow-300 font-semibold">Catches</div>
-                <div className="text-3xl font-bold text-white">
+              <div className="space-y-2">
+                <div className="text-xs text-yellow-300 font-semibold">LEVEL {level}</div>
+                <div className="text-2xl font-bold text-white">
                   {score} / {targetScore}
                 </div>
+                <Progress value={progressPercentage} className="h-2 w-32" />
               </div>
             </Card>
+            
+            {/* Camera and Sound Controls */}
+            <div className="flex gap-2">
+              <Button
+                onClick={toggleMute}
+                size="lg"
+                className="bg-purple-900/90 hover:bg-purple-800 border-2 border-yellow-400 text-white"
+              >
+                {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+              </Button>
+              
+              <Button
+                onClick={toggleCamera}
+                size="lg"
+                className="bg-purple-900/90 hover:bg-purple-800 border-2 border-yellow-400 text-white"
+              >
+                <Camera className="mr-2" size={20} />
+                {cameraMode === "third-person" ? "3rd" : "1st"}
+              </Button>
+            </div>
           </div>
           
-          {/* Camera Toggle Button - Top Right */}
-          <div className="absolute top-4 right-4 pointer-events-auto">
-            <Button
-              onClick={toggleCamera}
-              size="lg"
-              className="bg-purple-900/90 hover:bg-purple-800 border-2 border-yellow-400 text-white"
-            >
-              <Camera className="mr-2" size={20} />
-              {cameraMode === "third-person" ? "3rd Person" : "1st Person"}
-            </Button>
-          </div>
+          {/* Combo Display - Center */}
+          <AnimatePresence>
+            {comboVisible && combo > 1 && (
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 1.5, opacity: 0 }}
+                className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              >
+                <div className="text-center">
+                  <div className="text-6xl font-bold text-yellow-300 drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]">
+                    {combo}x
+                  </div>
+                  <div className="text-2xl text-white font-bold mt-2">
+                    COMBO!
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           
           {/* Controls Hint - Bottom Center */}
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
             <div className="bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2 text-white text-sm">
               {isMobile ? (
-                "Use joystick to move • Tap camera to switch view"
+                "Use joystick to move • Catch items quickly for combos!"
               ) : (
                 <>
                   <kbd className="px-2 py-1 bg-white/20 rounded mx-1">WASD</kbd> Move •
-                  <kbd className="px-2 py-1 bg-white/20 rounded mx-1">C</kbd> Camera
+                  <kbd className="px-2 py-1 bg-white/20 rounded mx-1">C</kbd> Camera • Catch fast for combos!
                 </>
               )}
             </div>
