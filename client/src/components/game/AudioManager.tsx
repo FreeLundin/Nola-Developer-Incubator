@@ -31,15 +31,16 @@ export function AudioManager() {
   
   // Handle background music based on game phase
   useEffect(() => {
-    const bgMusic = document.querySelector("audio[loop]") as HTMLAudioElement;
-    if (!bgMusic) return;
+    // Get the stored background music from the audio store
+    const { backgroundMusic } = useAudio.getState();
+    if (!backgroundMusic) return;
     
     if (phase === "playing" && !isMuted) {
-      bgMusic.play().catch((error) => {
-        console.log("Background music autoplay prevented:", error);
+      backgroundMusic.play().catch((error) => {
+        console.log("Background music autoplay prevented (requires user interaction):", error);
       });
     } else {
-      bgMusic.pause();
+      backgroundMusic.pause();
     }
   }, [phase, isMuted]);
   

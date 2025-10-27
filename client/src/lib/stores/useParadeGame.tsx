@@ -126,17 +126,18 @@ export const useParadeGame = create<ParadeGameState>()(
     },
     
     nextLevel: () => {
-      const { level } = get();
+      const { level, totalCatches } = get();
       const newLevel = level + 1;
-      const newTargetScore = 5 + (newLevel - 1) * 2; // Increase target each level
+      const newTargetScore = 5 + (newLevel - 1) * 2; // Increase target each level: 5, 7, 9, 11...
       
-      console.log(`Advancing to level ${newLevel}! New target: ${newTargetScore}`);
+      console.log(`Advancing to level ${newLevel}! New target: ${newTargetScore} catches`);
       
       set({
         level: newLevel,
         targetScore: newTargetScore,
         score: 0,
         combo: 0,
+        lastCatchTime: 0,
         phase: "playing",
         collectibles: [],
       });

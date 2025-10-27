@@ -29,7 +29,7 @@ export function GameScene({ touchInput }: GameSceneProps) {
   // Handle keyboard camera toggle (C key)
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.code === "KeyC" || e.code === "keC") {
+      if (e.code === "KeyC" && phase === "playing") {
         console.log("Camera toggle key pressed");
         toggleCamera();
       }
@@ -37,7 +37,7 @@ export function GameScene({ touchInput }: GameSceneProps) {
     
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [toggleCamera]);
+  }, [toggleCamera, phase]);
   
   // Handle player catch
   const handleCatch = useCallback(() => {
@@ -62,13 +62,9 @@ export function GameScene({ touchInput }: GameSceneProps) {
     }, 1100);
   }, [playHit, addCatch, playerPosition]);
   
-  if (phase !== "playing") {
-    return null;
-  }
-  
   return (
     <group>
-      {/* Environment */}
+      {/* Environment - always visible */}
       <Environment />
       
       {/* Player */}
@@ -77,33 +73,38 @@ export function GameScene({ touchInput }: GameSceneProps) {
       {/* Camera */}
       <GameCamera playerPosition={playerPosition} />
       
-      {/* Parade Floats - no longer need throwInterval, it's dynamic */}
-      <ParadeFloat id="float-1" startZ={-25} lane={-1} color="#9b59b6" />
-      <ParadeFloat id="float-2" startZ={-15} lane={1} color="#e74c3c" />
-      <ParadeFloat id="float-3" startZ={-35} lane={-1} color="#ff6b35" />
-      <ParadeFloat id="float-4" startZ={-5} lane={1} color="#3498db" />
-      
-      {/* Collectibles */}
-      {collectibles.map((collectible) => (
-        <Collectible
-          key={collectible.id}
-          collectible={collectible}
-          playerPosition={playerPosition}
-          onCatch={handleCatch}
-        />
-      ))}
-      
-      {/* Catch Effects */}
-      {catchEffects.map((effect) => (
-        <CatchEffect
-          key={effect.id}
-          position={effect.position}
-          color={effect.color}
-          onComplete={() => {
-            setCatchEffects((prev) => prev.filter((e) => e.id !== effect.id));
-          }}
-        />
-      ))}
+      {/* Gameplay elements only during playing phase */}
+      {phase === "playing" && (
+        <>
+          {/* Parade Floats - no longer need throwInterval, it's dynamic */}
+          <ParadeFloat id="float-1" startZ={-25} lane={-1} color="#9b59b6" />
+          <ParadeFloat id="float-2" startZ={-15} lane={1} color="#e74c3c" />
+          <ParadeFloat id="float-3" startZ={-35} lane={-1} color="#ff6b35" />
+          <ParadeFloat id="float-4" startZ={-5} lane={1} color="#3498db" />
+          
+          {/* Collectibles */}
+          {collectibles.map((collectible) => (
+            <Collectible
+              key={collectible.id}
+              collectible={collectible}
+              playerPosition={playerPosition}
+              onCatch={handleCatch}
+            />
+          ))}
+          
+          {/* Catch Effects */}
+          {catchEffects.map((effect) => (
+            <CatchEffect
+              key={effect.id}
+              position={effect.position}
+              color={effect.color}
+              onComplete={() => {
+                setCatchEffects((prev) => prev.filter((e) => e.id !== effect.id));
+              }}
+            />
+          ))}
+        </>
+      )}
     </group>
   );
 }
