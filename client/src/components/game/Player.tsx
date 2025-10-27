@@ -1,0 +1,94 @@
+import { useRef, useEffect } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useKeyboardControls } from "@react-three/drei";
+import * as THREE from "three";
+
+export enum Controls {
+  forward = "forward",
+  back = "back",
+  left = "left",
+  right = "right",
+}
+
+interface PlayerProps {
+  position?: [number, number, number];
+  onPositionChange?: (position: THREE.Vector3) => void;
+}
+
+export function Player({ position = [0, 0.5, 0], onPositionChange }: PlayerProps) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const [, getKeys] = useKeyboardControls<Controls>();
+  
+  const playerPosition = useRef(new THREE.Vector3(...position));
+  const playerVelocity = useRef(new THREE.Vector3());
+  const playerDirection = useRef(new THREE.Vector3());
+  
+  // Player settings
+  const moveSpeed = 5;
+  const rotationSpeed = 3;
+  
+  useEffect(() => {
+    console.log("Player initialized at position:", position);
+  }, []);
+  
+  useFrame((state, delta) => {
+    if (!meshRef.current) return;
+    
+    const keys = getKeys();
+    const forward = keys.forward ? 1 : 0;
+    const back = keys.back ? 1 : 0;
+    const left = keys.left ? 1 : 0;
+    const right = keys.right ? 1 : 0;
+    
+    // Calculate movement direction
+    const moveX = right - left;
+    const moveZ = back - forward;
+    
+    // Update player direction and movement
+    if (moveX !== 0 || moveZ !== 0) {
+      playerDirection.current.set(moveX, 0, moveZ).normalize();
+      
+      // Move player
+      playerVelocity.current.copy(playerDirection.current).multiplyScalar(moveSpeed * delta);
+      playerPosition.current.add(playerVelocity.current);
+      
+      // Rotate player to face movement direction
+      const targetRotation = Math.atan2(moveX, moveZ);
+      const currentRotation = meshRef.current.rotation.y;
+      meshRef.current.rotation.y = THREE.MathUtils.lerp(
+        currentRotation,
+        targetRotation,
+        rotationSpeed * delta
+      );
+    }
+    
+    // Keep player on the street (constrain movement)
+    playerPosition.current.x = THREE.MathUtils.clamp(playerPosition.current.x, -8, 8);
+    playerPosition.current.z = THREE.MathUtils.clamp(playerPosition.current.z, -15, 15);
+    
+    // Update mesh position
+    meshRef.current.position.copy(playerPosition.current);
+    
+    // Notify parent of position change
+    if (onPositionChange) {
+      onPositionChange(playerPosition.current);
+    }
+  });
+  
+  return (
+    <group>
+      {/* Player character - simple capsule shape */}
+      <mesh ref={meshRef} position={position} castShadow>
+        {/* Body */}
+        <capsuleGeometry args={[0.3, 1.0, 8, 16]} />
+        <meshStandardMaterial color="#ff6b35" />
+      </mesh>
+      
+      {/* Player shadow indicator on ground */}
+      <mesh position={[playerPosition.current.x, 0.01, playerPosition.current.z]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.4, 16]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.3} />
+      </mesh>
+    </group>
+  );
+}
