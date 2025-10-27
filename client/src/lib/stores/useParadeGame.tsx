@@ -18,6 +18,11 @@ interface ParadeGameState {
   cameraMode: CameraMode;
   score: number;
   targetScore: number;
+  level: number;
+  totalCatches: number;
+  combo: number;
+  maxCombo: number;
+  lastCatchTime: number;
   collectibles: Collectible[];
   
   // Actions
@@ -28,7 +33,13 @@ interface ParadeGameState {
   updateCollectible: (id: string, updates: Partial<Collectible>) => void;
   removeCollectible: (id: string) => void;
   resetGame: () => void;
+  nextLevel: () => void;
+  getFloatSpeed: () => number;
+  getThrowInterval: () => number;
 }
+
+// Combo timing window (milliseconds)
+const COMBO_WINDOW = 3000;
 
 export const useParadeGame = create<ParadeGameState>()(
   subscribeWithSelector((set, get) => ({
@@ -36,6 +47,11 @@ export const useParadeGame = create<ParadeGameState>()(
     cameraMode: "third-person",
     score: 0,
     targetScore: 5,
+    level: 1,
+    totalCatches: 0,
+    combo: 0,
+    maxCombo: 0,
+    lastCatchTime: 0,
     collectibles: [],
     
     startGame: () => {
@@ -51,14 +67,41 @@ export const useParadeGame = create<ParadeGameState>()(
     },
     
     addCatch: () => {
-      const { score, targetScore } = get();
+      const { score, targetScore, combo, maxCombo, lastCatchTime, totalCatches } = get();
+      const now = Date.now();
+      const timeSinceLastCatch = now - lastCatchTime;
+      
+      // Update combo
+      let newCombo = combo;
+      if (timeSinceLastCatch < COMBO_WINDOW && lastCatchTime > 0) {
+        newCombo = combo + 1;
+      } else {
+        newCombo = 1;
+      }
+      
+      const newMaxCombo = Math.max(maxCombo, newCombo);
       const newScore = score + 1;
-      console.log(`Catch! Score: ${newScore}/${targetScore}`);
+      const newTotalCatches = totalCatches + 1;
+      
+      console.log(`Catch! Score: ${newScore}/${targetScore}, Combo: ${newCombo}x`);
       
       if (newScore >= targetScore) {
-        set({ score: newScore, phase: "won" });
+        set({ 
+          score: newScore, 
+          phase: "won",
+          combo: newCombo,
+          maxCombo: newMaxCombo,
+          lastCatchTime: now,
+          totalCatches: newTotalCatches,
+        });
       } else {
-        set({ score: newScore });
+        set({ 
+          score: newScore,
+          combo: newCombo,
+          maxCombo: newMaxCombo,
+          lastCatchTime: now,
+          totalCatches: newTotalCatches,
+        });
       }
     },
     
@@ -82,14 +125,48 @@ export const useParadeGame = create<ParadeGameState>()(
       }));
     },
     
+    nextLevel: () => {
+      const { level } = get();
+      const newLevel = level + 1;
+      const newTargetScore = 5 + (newLevel - 1) * 2; // Increase target each level
+      
+      console.log(`Advancing to level ${newLevel}! New target: ${newTargetScore}`);
+      
+      set({
+        level: newLevel,
+        targetScore: newTargetScore,
+        score: 0,
+        combo: 0,
+        phase: "playing",
+        collectibles: [],
+      });
+    },
+    
     resetGame: () => {
       console.log("Resetting game...");
       set({
         phase: "tutorial",
         score: 0,
+        level: 1,
+        targetScore: 5,
+        combo: 0,
+        maxCombo: 0,
+        lastCatchTime: 0,
+        totalCatches: 0,
         collectibles: [],
         cameraMode: "third-person",
       });
+    },
+    
+    // Dynamic difficulty - increases with level
+    getFloatSpeed: () => {
+      const { level } = get();
+      return 2 + (level - 1) * 0.3; // Speed increases each level
+    },
+    
+    getThrowInterval: () => {
+      const { level } = get();
+      return Math.max(1500, 3000 - (level - 1) * 200); // Throws get more frequent, min 1.5s
     },
   }))
 );

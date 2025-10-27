@@ -8,22 +8,18 @@ interface ParadeFloatProps {
   startZ: number;
   lane: number; // -1 or 1 for left or right side of street
   color: string;
-  throwInterval?: number;
 }
 
 export function ParadeFloat({ 
   id, 
   startZ, 
   lane, 
-  color, 
-  throwInterval = 3000 
+  color,
 }: ParadeFloatProps) {
   const meshRef = useRef<THREE.Group>(null);
   const position = useRef(new THREE.Vector3(lane * 5, 1, startZ));
   const lastThrowTime = useRef(Date.now());
-  const { addCollectible, phase } = useParadeGame();
-  
-  const floatSpeed = 2; // Units per second
+  const { addCollectible, phase, getFloatSpeed, getThrowInterval } = useParadeGame();
   
   // Pre-calculate random decorative elements positions
   const decorations = useMemo(() => {
@@ -42,6 +38,10 @@ export function ParadeFloat({
   useFrame((state, delta) => {
     if (!meshRef.current || phase !== "playing") return;
     
+    // Get dynamic speed based on level
+    const floatSpeed = getFloatSpeed();
+    const throwInterval = getThrowInterval();
+    
     // Move float forward along the street
     position.current.z += floatSpeed * delta;
     
@@ -59,7 +59,7 @@ export function ParadeFloat({
     // Gentle rotation animation
     meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
     
-    // Throw collectibles at intervals
+    // Throw collectibles at intervals (faster at higher levels)
     const now = Date.now();
     if (now - lastThrowTime.current > throwInterval && position.current.z < 10 && position.current.z > -10) {
       throwCollectible();

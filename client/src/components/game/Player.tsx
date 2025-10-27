@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
+import { TouchInput } from "./TouchControls";
 import * as THREE from "three";
 
 export enum Controls {
@@ -13,9 +14,10 @@ export enum Controls {
 interface PlayerProps {
   position?: [number, number, number];
   onPositionChange?: (position: THREE.Vector3) => void;
+  touchInput?: TouchInput;
 }
 
-export function Player({ position = [0, 0.5, 0], onPositionChange }: PlayerProps) {
+export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput }: PlayerProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls<Controls>();
   
@@ -35,14 +37,22 @@ export function Player({ position = [0, 0.5, 0], onPositionChange }: PlayerProps
     if (!meshRef.current) return;
     
     const keys = getKeys();
-    const forward = keys.forward ? 1 : 0;
-    const back = keys.back ? 1 : 0;
-    const left = keys.left ? 1 : 0;
-    const right = keys.right ? 1 : 0;
     
-    // Calculate movement direction
-    const moveX = right - left;
-    const moveZ = back - forward;
+    // Combine keyboard and touch input
+    let moveX = 0;
+    let moveZ = 0;
+    
+    // Keyboard input
+    if (keys.forward) moveZ -= 1;
+    if (keys.back) moveZ += 1;
+    if (keys.left) moveX -= 1;
+    if (keys.right) moveX += 1;
+    
+    // Touch input (if available)
+    if (touchInput && (Math.abs(touchInput.x) > 0.1 || Math.abs(touchInput.y) > 0.1)) {
+      moveX += touchInput.x;
+      moveZ += touchInput.y;
+    }
     
     // Update player direction and movement
     if (moveX !== 0 || moveZ !== 0) {
