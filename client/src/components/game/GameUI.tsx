@@ -76,7 +76,8 @@ export function GameUI() {
                       <div className="space-y-2">
                         <h3 className="font-semibold text-yellow-200">Touch Controls:</h3>
                         <ul className="space-y-1 text-sm">
-                          <li>• Use on-screen joystick to move</li>
+                          <li>• Use left joystick to move around</li>
+                          <li>• Tap <span className="text-yellow-300 font-semibold">CATCH 🎯</span> button when near highlighted items</li>
                           <li>• Tap camera button to switch view</li>
                         </ul>
                       </div>
@@ -169,7 +170,7 @@ export function GameUI() {
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
             <div className="bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2 text-white text-sm">
               {isMobile ? (
-                "Use joystick to move • Catch items quickly for combos!"
+                "Joystick to move • 🎯 CATCH button when items glow • Catch fast for combos!"
               ) : (
                 <>
                   <kbd className="px-2 py-1 bg-white/20 rounded mx-1">WASD</kbd> Move •
