@@ -9,13 +9,18 @@ import { Trophy, Star, Zap } from "lucide-react";
 
 export function WinScreen() {
   const { phase, score, level, maxCombo, totalCatches, nextLevel, resetGame } = useParadeGame();
-  const { playSuccess } = useAudio();
+  const { playFireworks } = useAudio();
   
   useEffect(() => {
     if (phase === "won") {
-      playSuccess();
+      // Play fireworks sound on level completion
+      playFireworks();
+      
+      // Play additional fireworks for celebration
+      setTimeout(() => playFireworks(), 300);
+      setTimeout(() => playFireworks(), 600);
     }
-  }, [phase, playSuccess]);
+  }, [phase, playFireworks]);
   
   if (phase !== "won") return null;
   
