@@ -6,7 +6,7 @@ import * as THREE from "three";
 interface CollectibleProps {
   collectible: CollectibleType;
   playerPosition: THREE.Vector3;
-  onCatch: () => void;
+  onCatch: (type: CollectibleType["type"]) => void;
   catchAction: number;
 }
 
@@ -14,6 +14,9 @@ const COLLECTIBLE_COLORS = {
   beads: "#9b59b6",
   doubloon: "#f1c40f",
   cup: "#e74c3c",
+  king_cake: "#ff6b35",
+  speed_boost: "#00ffff",
+  double_points: "#ffd700",
 };
 
 const GRAVITY = -15;
@@ -47,11 +50,18 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
     // Update position based on velocity
     position.current.add(velocity.current.clone().multiplyScalar(delta));
     
-    // Check if on ground
+    // Check if on ground (with bouncing)
     const isOnGround = position.current.y <= 0.3;
     if (isOnGround) {
       position.current.y = 0.3;
-      velocity.current.y = 0;
+      
+      // Bounce with energy loss
+      if (Math.abs(velocity.current.y) > 0.5) {
+        velocity.current.y = -velocity.current.y * 0.4; // Bounce with 40% energy
+      } else {
+        velocity.current.y = 0; // Stop bouncing if too slow
+      }
+      
       velocity.current.x *= 0.9; // Friction
       velocity.current.z *= 0.9;
     }
@@ -76,7 +86,7 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
       // Auto-catch if very close (for PC)
       if (distanceToPlayer < 0.8) {
         hasBeenCaught.current = true;
-        onCatch();
+        onCatch(collectible.type);
         removeCollectible(collectible.id);
       }
       
@@ -84,7 +94,7 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
       if (catchAction !== previousCatchAction.current) {
         previousCatchAction.current = catchAction;
         hasBeenCaught.current = true;
-        onCatch();
+        onCatch(collectible.type);
         removeCollectible(collectible.id);
       }
     } else {
@@ -104,9 +114,9 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
     <group>
       <mesh ref={meshRef} castShadow>
         {collectible.type === "cup" ? (
-          <cylinderGeometry args={[size, size * 0.8, size * 1.2, 8]} />
+          <cylinderGeometry args={[size, size * 0.8, size * 1.2, 6]} />
         ) : (
-          <sphereGeometry args={[size, 12, 12]} />
+          <sphereGeometry args={[size, 8, 8]} />
         )}
         <meshStandardMaterial 
           color={color} 
@@ -117,9 +127,9 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
         />
       </mesh>
       
-      {/* Catchable highlight ring */}
+      {/* Catchable highlight ring - optimized */}
       <mesh position={[position.current.x, 0.05, position.current.z]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[CATCH_RADIUS * 0.8, CATCH_RADIUS, 32]} />
+        <ringGeometry args={[CATCH_RADIUS * 0.8, CATCH_RADIUS, 16]} />
         <meshBasicMaterial 
           color={color} 
           transparent 

@@ -9,10 +9,12 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
 export function GameUI() {
-  const { phase, score, targetScore, level, combo, startGame } = useParadeGame();
+  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [comboVisible, setComboVisible] = useState(false);
+  const [comboTimeLeft, setComboTimeLeft] = useState(100);
+  const [, forceUpdate] = useState(0); // For power-up countdown updates
   const isMobile = useIsMobile();
   
   // Show combo animation when combo changes
@@ -23,6 +25,29 @@ export function GameUI() {
       return () => clearTimeout(timer);
     }
   }, [combo]);
+  
+  // Update combo timer
+  useEffect(() => {
+    if (combo > 0 && lastCatchTime > 0) {
+      const interval = setInterval(() => {
+        const now = Date.now();
+        const timeSinceLastCatch = now - lastCatchTime;
+        const timeLeft = Math.max(0, 3000 - timeSinceLastCatch);
+        setComboTimeLeft((timeLeft / 3000) * 100);
+      }, 50);
+      return () => clearInterval(interval);
+    }
+  }, [combo, lastCatchTime]);
+  
+  // Update power-up UI countdown
+  useEffect(() => {
+    if (activePowerUps.length > 0) {
+      const interval = setInterval(() => {
+        forceUpdate(n => n + 1); // Force re-render to update countdown
+      }, 100);
+      return () => clearInterval(interval);
+    }
+  }, [activePowerUps.length]);
   
   const handleStartGame = () => {
     setShowTutorial(false);
@@ -125,8 +150,25 @@ export function GameUI() {
               </div>
             </Card>
             
-            {/* Sound Controls */}
-            <div className="flex gap-2">
+            {/* Right side - Power-ups and Sound Controls */}
+            <div className="flex flex-col gap-2">
+              {/* Active Power-ups */}
+              {activePowerUps.map((powerUp) => {
+                const timeLeft = Math.max(0, powerUp.endTime - Date.now());
+                const percentage = (timeLeft / 8000) * 100;
+                return (
+                  <Card key={powerUp.type} className="bg-gradient-to-r from-cyan-900/90 to-blue-900/90 border-2 border-cyan-400 px-4 py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="text-xs text-cyan-300 font-semibold whitespace-nowrap">
+                        {powerUp.type === "speed_boost" ? "⚡ SPEED" : "💎 2X POINTS"}
+                      </div>
+                      <div className="text-white text-xs font-bold">{Math.ceil(timeLeft / 1000)}s</div>
+                    </div>
+                    <Progress value={percentage} className="h-1 w-24 mt-1" />
+                  </Card>
+                );
+              })}
+              
               <Button
                 onClick={toggleMute}
                 size="lg"
@@ -136,6 +178,19 @@ export function GameUI() {
               </Button>
             </div>
           </div>
+          
+          {/* Combo Timer - Top Center */}
+          {combo > 0 && (
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+              <Card className="bg-gradient-to-r from-yellow-900/90 to-orange-900/90 border-2 border-yellow-400 px-6 py-2">
+                <div className="text-center">
+                  <div className="text-xs text-yellow-300 font-semibold">COMBO</div>
+                  <div className="text-3xl font-bold text-white">{combo}x</div>
+                  <Progress value={comboTimeLeft} className="h-1 w-24 mt-1" />
+                </div>
+              </Card>
+            </div>
+          )}
           
           {/* Combo Display - Center */}
           <AnimatePresence>

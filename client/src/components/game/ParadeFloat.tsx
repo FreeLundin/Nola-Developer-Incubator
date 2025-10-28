@@ -68,8 +68,21 @@ export function ParadeFloat({
   });
   
   const throwCollectible = () => {
-    const throwTypes = ["beads", "doubloon", "cup"] as const;
-    const randomType = throwTypes[Math.floor(Math.random() * throwTypes.length)];
+    // Determine what to throw - special items have lower chance
+    const specialChance = Math.random();
+    let randomType: "beads" | "doubloon" | "cup" | "king_cake" | "speed_boost" | "double_points";
+    
+    if (specialChance < 0.02) {
+      // 2% chance for King Cake (very rare, worth 5 points)
+      randomType = "king_cake";
+    } else if (specialChance < 0.08) {
+      // 6% chance for power-ups (3% each)
+      randomType = Math.random() < 0.5 ? "speed_boost" : "double_points";
+    } else {
+      // 92% chance for regular collectibles
+      const throwTypes = ["beads", "doubloon", "cup"] as const;
+      randomType = throwTypes[Math.floor(Math.random() * throwTypes.length)];
+    }
     
     // Vary throw arc heights for different difficulty levels
     // 40% low arc (easy to catch), 40% medium arc, 20% high arc
@@ -116,29 +129,29 @@ export function ParadeFloat({
         <meshStandardMaterial color={color} />
       </mesh>
       
-      {/* Decorative elements on the float */}
+      {/* Decorative elements on the float - optimized */}
       {decorations.map((dec, i) => (
         <mesh key={i} position={[dec.x, dec.y, dec.z]} castShadow>
-          <sphereGeometry args={[dec.scale, 8, 8]} />
+          <sphereGeometry args={[dec.scale, 6, 6]} />
           <meshStandardMaterial color="#ffd700" metalness={0.6} roughness={0.3} />
         </mesh>
       ))}
       
-      {/* Float wheels */}
+      {/* Float wheels - optimized */}
       <mesh position={[-0.8, -0.7, -1]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.3, 12]} />
+        <cylinderGeometry args={[0.3, 0.3, 0.3, 8]} />
         <meshStandardMaterial color="#2c2c2c" />
       </mesh>
       <mesh position={[0.8, -0.7, -1]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.3, 12]} />
+        <cylinderGeometry args={[0.3, 0.3, 0.3, 8]} />
         <meshStandardMaterial color="#2c2c2c" />
       </mesh>
       <mesh position={[-0.8, -0.7, 1]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.3, 12]} />
+        <cylinderGeometry args={[0.3, 0.3, 0.3, 8]} />
         <meshStandardMaterial color="#2c2c2c" />
       </mesh>
       <mesh position={[0.8, -0.7, 1]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.3, 12]} />
+        <cylinderGeometry args={[0.3, 0.3, 0.3, 8]} />
         <meshStandardMaterial color="#2c2c2c" />
       </mesh>
     </group>

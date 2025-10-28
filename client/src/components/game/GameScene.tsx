@@ -8,6 +8,7 @@ import { Environment } from "./Environment";
 import { ParadeFloat } from "./ParadeFloat";
 import { Collectible } from "./Collectible";
 import { CatchEffect } from "./CatchEffect";
+import { ClickMarker } from "./ClickMarker";
 import { TouchInput } from "./TouchControls";
 import * as THREE from "three";
 
@@ -15,6 +16,11 @@ interface CatchEffectInstance {
   id: string;
   position: THREE.Vector3;
   color: string;
+}
+
+interface ClickMarkerInstance {
+  id: string;
+  position: THREE.Vector3;
 }
 
 interface GameSceneProps {
@@ -29,6 +35,7 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
   const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(0, 0.5, 0));
   const [mouseTarget, setMouseTarget] = useState<THREE.Vector3 | null>(null);
   const [catchEffects, setCatchEffects] = useState<CatchEffectInstance[]>([]);
+  const [clickMarkers, setClickMarkers] = useState<ClickMarkerInstance[]>([]);
   
   // Play fireworks sound on high combos
   useEffect(() => {
@@ -65,6 +72,17 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
         target.y = 0.5; // Player height
         
         setMouseTarget(target.clone());
+        
+        // Add click marker
+        const markerId = `click-${Date.now()}`;
+        setClickMarkers((prev) => [
+          ...prev,
+          {
+            id: markerId,
+            position: target.clone(),
+          },
+        ]);
+        
         console.log("Mouse click target:", target);
       }
     };
@@ -79,19 +97,35 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
   }, []);
   
   // Handle player catch
-  const handleCatch = useCallback(() => {
-    console.log("Catch successful!");
+  const handleCatch = useCallback((type: "beads" | "doubloon" | "cup" | "king_cake" | "speed_boost" | "double_points") => {
+    console.log("Catch successful!", type);
     playHit();
-    addCatch();
+    
+    const isPowerUp = type === "speed_boost" || type === "double_points";
+    const isSpecial = type === "king_cake";
+    
+    if (isPowerUp) {
+      // Activate power-up
+      useParadeGame.getState().activatePowerUp(type as "speed_boost" | "double_points");
+    } else if (isSpecial) {
+      // King cake worth 5 points
+      for (let i = 0; i < 5; i++) {
+        addCatch();
+      }
+    } else {
+      // Regular collectible
+      addCatch();
+    }
     
     // Add catch effect
     const effectId = `catch-${Date.now()}`;
+    const effectColor = isPowerUp ? "#00ffff" : isSpecial ? "#ff6b35" : "#ffd700";
     setCatchEffects((prev) => [
       ...prev,
       {
         id: effectId,
         position: playerPosition.clone(),
-        color: "#ffd700",
+        color: effectColor,
       },
     ]);
     
@@ -146,6 +180,17 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
               color={effect.color}
               onComplete={() => {
                 setCatchEffects((prev) => prev.filter((e) => e.id !== effect.id));
+              }}
+            />
+          ))}
+          
+          {/* Click Markers */}
+          {clickMarkers.map((marker) => (
+            <ClickMarker
+              key={marker.id}
+              position={marker.position}
+              onComplete={() => {
+                setClickMarkers((prev) => prev.filter((m) => m.id !== marker.id));
               }}
             />
           ))}

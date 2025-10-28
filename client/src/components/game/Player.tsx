@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
+import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { TouchInput } from "./TouchControls";
 import * as THREE from "three";
 
@@ -21,6 +22,7 @@ interface PlayerProps {
 
 export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, mouseTarget, onClearMouseTarget }: PlayerProps) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const shadowRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls<Controls>();
   
   const playerPosition = useRef(new THREE.Vector3(...position));
@@ -28,8 +30,8 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
   const playerDirection = useRef(new THREE.Vector3());
   const currentMouseTarget = useRef<THREE.Vector3 | null>(null);
   
-  // Player settings
-  const moveSpeed = 5;
+  // Player settings (base values)
+  const baseMoveSpeed = 5;
   const rotationSpeed = 3;
   
   useEffect(() => {
@@ -40,6 +42,8 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
     if (!meshRef.current) return;
     
     const keys = getKeys();
+    const speedMultiplier = useParadeGame.getState().getMoveSpeedMultiplier();
+    const moveSpeed = baseMoveSpeed * speedMultiplier;
     
     // Update mouse target if changed
     if (mouseTarget !== currentMouseTarget.current) {
@@ -119,6 +123,11 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
     // Update mesh position
     meshRef.current.position.copy(playerPosition.current);
     
+    // Update shadow position efficiently
+    if (shadowRef.current) {
+      shadowRef.current.position.set(playerPosition.current.x, 0.01, playerPosition.current.z);
+    }
+    
     // Notify parent of position change
     if (onPositionChange) {
       onPositionChange(playerPosition.current);
@@ -134,8 +143,8 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
         <meshStandardMaterial color="#ff6b35" />
       </mesh>
       
-      {/* Player shadow indicator on ground */}
-      <mesh position={[playerPosition.current.x, 0.01, playerPosition.current.z]} rotation={[-Math.PI / 2, 0, 0]}>
+      {/* Player shadow indicator on ground - optimized with ref */}
+      <mesh ref={shadowRef} position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.4, 16]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.3} />
       </mesh>

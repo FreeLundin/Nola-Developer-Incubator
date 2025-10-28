@@ -20,7 +20,7 @@ export function CatchEffect({ position, color, onComplete }: CatchEffectProps) {
   const duration = 1000; // 1 second
   
   const particles = useMemo<Particle[]>(() => {
-    const count = 20;
+    const count = 12; // Reduced from 20 for better performance
     return Array.from({ length: count }, () => ({
       position: position.clone(),
       velocity: new THREE.Vector3(
@@ -68,7 +68,7 @@ export function CatchEffect({ position, color, onComplete }: CatchEffectProps) {
   
   return (
     <instancedMesh ref={particlesRef} args={[undefined, undefined, particles.length]}>
-      <sphereGeometry args={[0.1, 8, 8]} />
+      <sphereGeometry args={[0.1, 6, 6]} />
       <meshBasicMaterial color={color} />
     </instancedMesh>
   );
