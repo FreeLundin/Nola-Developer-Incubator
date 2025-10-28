@@ -67,6 +67,7 @@ export function GameUI() {
                         <h3 className="font-semibold text-yellow-200">PC Controls:</h3>
                         <ul className="space-y-1 text-sm">
                           <li>• <kbd className="px-2 py-1 bg-white/20 rounded">W A S D</kbd> or <kbd className="px-2 py-1 bg-white/20 rounded">Arrow Keys</kbd> - Move</li>
+                          <li>• <kbd className="px-2 py-1 bg-white/20 rounded">Click</kbd> anywhere to move there</li>
                           <li>• Move close to highlighted items to catch them</li>
                         </ul>
                       </div>
@@ -164,7 +165,7 @@ export function GameUI() {
                 "Joystick to move • 🎯 CATCH button when items glow • Catch fast for combos!"
               ) : (
                 <>
-                  <kbd className="px-2 py-1 bg-white/20 rounded mx-1">WASD</kbd> Move • Catch fast for combos!
+                  <kbd className="px-2 py-1 bg-white/20 rounded mx-1">WASD</kbd> or <kbd className="px-2 py-1 bg-white/20 rounded mx-1">Click</kbd> to move • Catch fast for combos!
                 </>
               )}
             </div>

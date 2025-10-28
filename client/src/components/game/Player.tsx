@@ -16,9 +16,10 @@ interface PlayerProps {
   onPositionChange?: (position: THREE.Vector3) => void;
   touchInput?: TouchInput;
   mouseTarget?: THREE.Vector3 | null;
+  onClearMouseTarget?: () => void;
 }
 
-export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, mouseTarget }: PlayerProps) {
+export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, mouseTarget, onClearMouseTarget }: PlayerProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls<Controls>();
   
@@ -69,6 +70,10 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
       // If close enough to target, clear it
       if (distanceToTarget < 0.5) {
         currentMouseTarget.current = null;
+        if (onClearMouseTarget) {
+          onClearMouseTarget();
+        }
+        console.log("Reached mouse target");
       } else {
         // Move toward mouse target
         const direction = new THREE.Vector3()
@@ -83,6 +88,10 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
     // Clear mouse target if manual input is detected
     if (hasManualInput && currentMouseTarget.current) {
       currentMouseTarget.current = null;
+      if (onClearMouseTarget) {
+        onClearMouseTarget();
+      }
+      console.log("Manual input detected, clearing mouse target");
     }
     
     // Update player direction and movement

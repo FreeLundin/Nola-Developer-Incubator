@@ -55,10 +55,10 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
       const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
       const target = new THREE.Vector3();
       
-      // Get intersection point
-      raycaster.ray.intersectPlane(groundPlane, target);
+      // Get intersection point - check if it succeeded
+      const intersected = raycaster.ray.intersectPlane(groundPlane, target);
       
-      if (target) {
+      if (intersected) {
         // Constrain to street bounds
         target.x = THREE.MathUtils.clamp(target.x, -8, 8);
         target.z = THREE.MathUtils.clamp(target.z, -15, 15);
@@ -72,6 +72,11 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
     gl.domElement.addEventListener("click", handleClick);
     return () => gl.domElement.removeEventListener("click", handleClick);
   }, [phase, camera, gl]);
+  
+  // Handle clearing mouse target
+  const handleClearMouseTarget = useCallback(() => {
+    setMouseTarget(null);
+  }, []);
   
   // Handle player catch
   const handleCatch = useCallback(() => {
@@ -102,7 +107,13 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
       <Environment />
       
       {/* Player */}
-      <Player position={[0, 0.5, 0]} onPositionChange={setPlayerPosition} touchInput={touchInput} mouseTarget={mouseTarget} />
+      <Player 
+        position={[0, 0.5, 0]} 
+        onPositionChange={setPlayerPosition} 
+        touchInput={touchInput} 
+        mouseTarget={mouseTarget}
+        onClearMouseTarget={handleClearMouseTarget}
+      />
       
       {/* Camera */}
       <GameCamera playerPosition={playerPosition} />
