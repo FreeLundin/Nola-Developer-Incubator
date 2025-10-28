@@ -15,6 +15,7 @@ interface AudioState {
   toggleMute: () => void;
   playHit: () => void;
   playSuccess: () => void;
+  playFireworks: () => void;
 }
 
 export const useAudio = create<AudioState>((set, get) => ({
@@ -68,6 +69,24 @@ export const useAudio = create<AudioState>((set, get) => ({
       successSound.currentTime = 0;
       successSound.play().catch(error => {
         console.log("Success sound play prevented:", error);
+      });
+    }
+  },
+  
+  playFireworks: () => {
+    const { successSound, isMuted } = get();
+    if (successSound) {
+      // If sound is muted, don't play anything
+      if (isMuted) {
+        console.log("Fireworks sound skipped (muted)");
+        return;
+      }
+      
+      // Play fireworks sound (using success sound with higher volume for celebration)
+      const soundClone = successSound.cloneNode() as HTMLAudioElement;
+      soundClone.volume = 0.6;
+      soundClone.play().catch(error => {
+        console.log("Fireworks sound play prevented:", error);
       });
     }
   }

@@ -22,23 +22,17 @@ interface GameSceneProps {
 }
 
 export function GameScene({ touchInput, catchAction }: GameSceneProps) {
-  const { phase, collectibles, addCatch, toggleCamera } = useParadeGame();
-  const { playHit } = useAudio();
+  const { phase, collectibles, addCatch, combo } = useParadeGame();
+  const { playHit, playFireworks } = useAudio();
   const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(0, 0.5, 0));
   const [catchEffects, setCatchEffects] = useState<CatchEffectInstance[]>([]);
   
-  // Handle keyboard camera toggle (C key)
+  // Play fireworks sound on high combos
   useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.code === "KeyC" && phase === "playing") {
-        console.log("Camera toggle key pressed");
-        toggleCamera();
-      }
-    };
-    
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [toggleCamera, phase]);
+    if (combo >= 3) {
+      playFireworks();
+    }
+  }, [combo, playFireworks]);
   
   // Handle player catch
   const handleCatch = useCallback(() => {
