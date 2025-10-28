@@ -6,6 +6,17 @@ This is a 3D Mardi Gras parade catching game built with React Three Fiber. Playe
 
 The application uses a full-stack TypeScript architecture with Express backend, React frontend, and PostgreSQL database support via Drizzle ORM.
 
+## Recent Changes
+
+**October 28, 2025 - iPad/Tablet Controls & Tutorial Enhancement**
+- Fixed tablet detection to properly identify iPads (including iPad Pro) via touch capability detection
+- Enhanced touch controls with larger, more visible joystick (140px) and catch button (132px)
+- Added dedicated catch button for tablets with visual feedback and proper touch handling
+- Updated tutorial to show platform-specific controls (PC keyboard vs tablet touch)
+- Improved in-game hints to mention catch button for tablet users
+- Items now require minimum height (0.5 units) to be catchable, preventing ground pickups
+- Added variable throw arcs (40% easy, 40% medium, 20% hard) for better gameplay variety
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -38,8 +49,10 @@ Preferred communication style: Simple, everyday language.
 - Component-based game entities (Player, ParadeFloat, Collectible, Environment)
 - Physics simulation with custom gravity and velocity calculations
 - Collision detection using distance-based calculations
-- Touch controls for mobile support with virtual joystick
+- Touch controls optimized for tablets/iPads with on-screen joystick and catch button
 - Keyboard controls using React Three Drei's KeyboardControls
+- Smart device detection (touch capability + screen size) to support all tablets including iPad Pro
+- Interactive tutorial system with platform-specific control instructions
 
 **Routing**: No client-side routing implemented (single-page application)
 
