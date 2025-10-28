@@ -15,15 +15,17 @@ interface PlayerProps {
   position?: [number, number, number];
   onPositionChange?: (position: THREE.Vector3) => void;
   touchInput?: TouchInput;
+  mouseTarget?: THREE.Vector3 | null;
 }
 
-export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput }: PlayerProps) {
+export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, mouseTarget }: PlayerProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls<Controls>();
   
   const playerPosition = useRef(new THREE.Vector3(...position));
   const playerVelocity = useRef(new THREE.Vector3());
   const playerDirection = useRef(new THREE.Vector3());
+  const currentMouseTarget = useRef<THREE.Vector3 | null>(null);
   
   // Player settings
   const moveSpeed = 5;
@@ -37,6 +39,11 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput }:
     if (!meshRef.current) return;
     
     const keys = getKeys();
+    
+    // Update mouse target if changed
+    if (mouseTarget !== currentMouseTarget.current) {
+      currentMouseTarget.current = mouseTarget || null;
+    }
     
     // Combine keyboard and touch input
     let moveX = 0;
@@ -52,6 +59,30 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput }:
     if (touchInput && (Math.abs(touchInput.x) > 0.1 || Math.abs(touchInput.y) > 0.1)) {
       moveX += touchInput.x;
       moveZ += touchInput.y;
+    }
+    
+    // Mouse click movement (only if no keyboard/touch input)
+    const hasManualInput = moveX !== 0 || moveZ !== 0;
+    if (!hasManualInput && currentMouseTarget.current) {
+      const distanceToTarget = playerPosition.current.distanceTo(currentMouseTarget.current);
+      
+      // If close enough to target, clear it
+      if (distanceToTarget < 0.5) {
+        currentMouseTarget.current = null;
+      } else {
+        // Move toward mouse target
+        const direction = new THREE.Vector3()
+          .subVectors(currentMouseTarget.current, playerPosition.current)
+          .normalize();
+        
+        moveX = direction.x;
+        moveZ = direction.z;
+      }
+    }
+    
+    // Clear mouse target if manual input is detected
+    if (hasManualInput && currentMouseTarget.current) {
+      currentMouseTarget.current = null;
     }
     
     // Update player direction and movement

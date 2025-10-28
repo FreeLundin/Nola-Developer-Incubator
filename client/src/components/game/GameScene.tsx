@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useThree } from "@react-three/fiber";
 import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
 import { Player, Controls } from "./Player";
@@ -24,7 +25,9 @@ interface GameSceneProps {
 export function GameScene({ touchInput, catchAction }: GameSceneProps) {
   const { phase, collectibles, addCatch, combo } = useParadeGame();
   const { playHit, playFireworks } = useAudio();
+  const { camera, gl } = useThree();
   const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(0, 0.5, 0));
+  const [mouseTarget, setMouseTarget] = useState<THREE.Vector3 | null>(null);
   const [catchEffects, setCatchEffects] = useState<CatchEffectInstance[]>([]);
   
   // Play fireworks sound on high combos
@@ -33,6 +36,42 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
       playFireworks();
     }
   }, [combo, playFireworks]);
+  
+  // Handle mouse click for movement
+  useEffect(() => {
+    if (phase !== "playing") return;
+    
+    const handleClick = (event: MouseEvent) => {
+      // Calculate mouse position in normalized device coordinates
+      const rect = gl.domElement.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      
+      // Create raycaster
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
+      
+      // Create a ground plane to raycast against
+      const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+      const target = new THREE.Vector3();
+      
+      // Get intersection point
+      raycaster.ray.intersectPlane(groundPlane, target);
+      
+      if (target) {
+        // Constrain to street bounds
+        target.x = THREE.MathUtils.clamp(target.x, -8, 8);
+        target.z = THREE.MathUtils.clamp(target.z, -15, 15);
+        target.y = 0.5; // Player height
+        
+        setMouseTarget(target.clone());
+        console.log("Mouse click target:", target);
+      }
+    };
+    
+    gl.domElement.addEventListener("click", handleClick);
+    return () => gl.domElement.removeEventListener("click", handleClick);
+  }, [phase, camera, gl]);
   
   // Handle player catch
   const handleCatch = useCallback(() => {
@@ -63,7 +102,7 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
       <Environment />
       
       {/* Player */}
-      <Player position={[0, 0.5, 0]} onPositionChange={setPlayerPosition} touchInput={touchInput} />
+      <Player position={[0, 0.5, 0]} onPositionChange={setPlayerPosition} touchInput={touchInput} mouseTarget={mouseTarget} />
       
       {/* Camera */}
       <GameCamera playerPosition={playerPosition} />
