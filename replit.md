@@ -8,6 +8,20 @@ The application uses a full-stack TypeScript architecture with Express backend, 
 
 ## Recent Changes
 
+**October 28, 2025 - Gameplay Enhancements & Performance Optimizations**
+- Added power-up system: Speed Boost (1.5x movement for 5s) and Double Points (2x scoring for 8s)
+- Implemented power-up UI indicators with smooth countdown timers and progress bars
+- Created special King Cake collectible (rare item worth 5 bonus points, 10% spawn chance)
+- Added visual click feedback with animated ripple markers showing where clicks land
+- Implemented bouncing physics for collectibles (single bounce with 40% energy retention)
+- Added combo timer visual meter showing time remaining to maintain combo chain
+- Optimized rendering: reduced polygon counts across all geometries (spheres 12→8 segments, cylinders 12→8, wheels 12→8)
+- Reduced particle effects from 20 to 12 particles per catch for better performance
+- Fixed power-up state persistence bug in resetGame (now properly clears active power-ups)
+- Optimized Player shadow to use ref-based updates instead of re-rendering
+- Enhanced parade floats to throw varied items (75% regular, 15% power-ups, 10% King Cake)
+- Created Obstacle component (trash cans and barriers) ready for integration
+
 **October 28, 2025 - Camera Lock & Festive Fireworks**
 - Removed camera toggle controls (locked to third-person view per user preference)
 - Added festive fireworks sound effects on level completion (3 celebratory bursts)
