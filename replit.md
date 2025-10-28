@@ -2,11 +2,17 @@
 
 ## Overview
 
-This is a 3D Mardi Gras parade catching game built with React Three Fiber. Players navigate through a parade scene to catch collectibles (beads, doubloons, and cups) thrown from parade floats. The game features progressive difficulty across levels, combo scoring mechanics, and both first-person and third-person camera modes.
+This is a 3D Mardi Gras parade catching game built with React Three Fiber. Players navigate through a parade scene to catch collectibles (beads, doubloons, and cups) thrown from parade floats. The game features progressive difficulty across levels, combo scoring mechanics, and festive fireworks celebrations.
 
 The application uses a full-stack TypeScript architecture with Express backend, React frontend, and PostgreSQL database support via Drizzle ORM.
 
 ## Recent Changes
+
+**October 28, 2025 - Camera Lock & Festive Fireworks**
+- Removed camera toggle controls (locked to third-person view per user preference)
+- Added festive fireworks sound effects on level completion (3 celebratory bursts)
+- Play fireworks sounds when achieving 3x combo or higher
+- Updated tutorial and hints to remove camera switching instructions
 
 **October 28, 2025 - iPad/Tablet Controls & Tutorial Enhancement**
 - Fixed tablet detection to properly identify iPads (including iPad Pro) via touch capability detection
