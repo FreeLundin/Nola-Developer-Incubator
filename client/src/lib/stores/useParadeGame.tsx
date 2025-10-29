@@ -2,8 +2,9 @@ import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import * as THREE from "three";
 
-export type GamePhase = "tutorial" | "playing" | "won";
+export type GamePhase = "tutorial" | "playing" | "won" | "ad_offer";
 export type CameraMode = "third-person" | "first-person";
+export type PlayerSkin = "default" | "golden" | "rainbow" | "ghost" | "king" | "jester";
 
 export interface Collectible {
   id: string;
@@ -48,6 +49,12 @@ interface ParadeGameState {
   totalFloats: number; // Total floats for current level (10 * level)
   floatsPassed: number; // How many floats have passed the player
   
+  // Monetization features
+  coins: number; // Currency earned from gameplay
+  playerSkin: PlayerSkin; // Current cosmetic skin
+  unlockedSkins: PlayerSkin[]; // Skins the player owns
+  adRewardType: "continue" | "bonus_time" | "power_up" | null; // Type of reward for watching ad
+  
   // Actions
   startGame: () => void;
   toggleCamera: () => void;
@@ -69,10 +76,28 @@ interface ParadeGameState {
   activatePowerUp: (type: PowerUp["type"]) => void;
   hasActivePowerUp: (type: PowerUp["type"]) => boolean;
   getMoveSpeedMultiplier: () => number;
+  
+  // Monetization actions
+  offerAdReward: (rewardType: "continue" | "bonus_time" | "power_up") => void;
+  watchAd: () => void; // Player chooses to watch ad
+  skipAd: () => void; // Player declines ad
+  addCoins: (amount: number) => void;
+  purchaseSkin: (skin: PlayerSkin) => boolean;
+  setSkin: (skin: PlayerSkin) => void;
 }
 
 // Combo timing window (milliseconds)
 const COMBO_WINDOW = 3000;
+
+// Skin prices in coins
+export const SKIN_PRICES: Record<PlayerSkin, number> = {
+  default: 0,
+  golden: 100,
+  rainbow: 150,
+  ghost: 200,
+  king: 250,
+  jester: 200,
+};
 
 export const useParadeGame = create<ParadeGameState>()(
   subscribeWithSelector((set, get) => ({
@@ -93,6 +118,12 @@ export const useParadeGame = create<ParadeGameState>()(
     botClaims: {},
     totalFloats: 10, // Start with 10 floats for level 1
     floatsPassed: 0,
+    
+    // Monetization state
+    coins: 0,
+    playerSkin: "default",
+    unlockedSkins: ["default"],
+    adRewardType: null,
     
     startGame: () => {
       console.log("Starting game...");
@@ -163,14 +194,18 @@ export const useParadeGame = create<ParadeGameState>()(
       
       console.log(`Catch! Score: +${points} = ${newScore}/${targetScore}, Combo: ${newCombo}x${isColorMatch ? " (COLOR MATCH!)" : ""}`);
       
+      // Award coins for catches (1 coin per catch, bonus for combos)
+      const coinReward = 1 + (newCombo >= 3 ? Math.floor(newCombo / 3) : 0);
+      
       // Score is now just for points - floats represent time, not score
-      set({ 
+      set((state) => ({ 
         score: newScore,
         combo: newCombo,
         maxCombo: newMaxCombo,
         lastCatchTime: now,
         totalCatches: newTotalCatches,
-      });
+        coins: state.coins + coinReward,
+      }));
     },
     
     addCollectible: (collectible) => {
@@ -361,6 +396,89 @@ export const useParadeGame = create<ParadeGameState>()(
     
     getMoveSpeedMultiplier: () => {
       return get().hasActivePowerUp("speed_boost") ? 1.5 : 1.0;
+    },
+    
+    // Monetization actions
+    offerAdReward: (rewardType: "continue" | "bonus_time" | "power_up") => {
+      console.log(`Offering ad reward: ${rewardType}`);
+      set({ phase: "ad_offer", adRewardType: rewardType });
+    },
+    
+    watchAd: () => {
+      const { adRewardType } = get();
+      console.log(`Player watched ad for: ${adRewardType}`);
+      
+      // Simulate ad watching delay
+      setTimeout(() => {
+        if (adRewardType === "continue") {
+          // Continue playing with bonus
+          set({ phase: "playing", adRewardType: null });
+          get().addCoins(10);
+        } else if (adRewardType === "bonus_time") {
+          // Add extra floats to extend level
+          set((state) => ({
+            totalFloats: state.totalFloats + 5,
+            phase: "playing",
+            adRewardType: null,
+          }));
+          get().addCoins(10);
+        } else if (adRewardType === "power_up") {
+          // Activate both power-ups
+          get().activatePowerUp("speed_boost");
+          get().activatePowerUp("double_points");
+          set({ phase: "playing", adRewardType: null });
+          get().addCoins(10);
+        }
+      }, 100);
+    },
+    
+    skipAd: () => {
+      console.log("Player declined ad");
+      set({ phase: "won", adRewardType: null });
+    },
+    
+    addCoins: (amount: number) => {
+      set((state) => {
+        const newCoins = state.coins + amount;
+        console.log(`Coins: ${state.coins} + ${amount} = ${newCoins}`);
+        return { coins: newCoins };
+      });
+    },
+    
+    purchaseSkin: (skin: PlayerSkin) => {
+      const { coins, unlockedSkins } = get();
+      const price = SKIN_PRICES[skin];
+      
+      if (unlockedSkins.includes(skin)) {
+        console.log(`Skin ${skin} already unlocked`);
+        return false;
+      }
+      
+      if (coins < price) {
+        console.log(`Not enough coins for ${skin}. Need ${price}, have ${coins}`);
+        return false;
+      }
+      
+      set((state) => ({
+        coins: state.coins - price,
+        unlockedSkins: [...state.unlockedSkins, skin],
+        playerSkin: skin,
+      }));
+      
+      console.log(`Purchased and equipped skin: ${skin} for ${price} coins`);
+      return true;
+    },
+    
+    setSkin: (skin: PlayerSkin) => {
+      const { unlockedSkins } = get();
+      
+      if (!unlockedSkins.includes(skin)) {
+        console.log(`Skin ${skin} not unlocked`);
+        return;
+      }
+      
+      set({ playerSkin: skin });
+      console.log(`Equipped skin: ${skin}`);
     },
   }))
 );

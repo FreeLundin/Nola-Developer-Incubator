@@ -8,8 +8,12 @@ import { Card } from "@/components/ui/card";
 import { Trophy, Star, Zap } from "lucide-react";
 
 export function WinScreen() {
-  const { phase, score, level, maxCombo, totalCatches, nextLevel, resetGame } = useParadeGame();
+  const { phase, score, level, maxCombo, totalCatches, nextLevel, resetGame, offerAdReward } = useParadeGame();
   const { playFireworks } = useAudio();
+  
+  const handleAdBonus = () => {
+    offerAdReward("power_up");
+  };
   
   useEffect(() => {
     if (phase === "won") {
@@ -79,6 +83,21 @@ export function WinScreen() {
           <p className="text-xl text-yellow-200 mb-8">
             {maxCombo >= 5 ? "🔥 Amazing combo streak!" : maxCombo >= 3 ? "⚡ Great combo!" : "Keep practicing your combos!"}
           </p>
+          
+          {/* Optional Ad Bonus */}
+          <div className="mb-6 bg-gradient-to-r from-green-900/50 to-emerald-900/50 rounded-xl p-4 border-2 border-green-400">
+            <div className="text-green-300 font-semibold mb-2">💡 Bonus Opportunity</div>
+            <p className="text-sm text-white mb-3">
+              Watch a short video to start Level {level + 1} with both Speed Boost + Double Points activated!
+            </p>
+            <Button
+              onClick={handleAdBonus}
+              size="sm"
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold"
+            >
+              Watch Ad for Power-Up Boost (+10 coins)
+            </Button>
+          </div>
           
           <div className="flex gap-4">
             <Button

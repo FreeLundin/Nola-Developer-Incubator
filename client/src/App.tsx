@@ -6,6 +6,7 @@ import { GameScene } from "./components/game/GameScene";
 import { GameUI } from "./components/game/GameUI";
 import { WinScreen } from "./components/game/WinScreen";
 import { AudioManager } from "./components/game/AudioManager";
+import { AdRewardScreen } from "./components/game/AdRewardScreen";
 import { TouchControls, type TouchInput } from "./components/game/TouchControls";
 import { Controls } from "./components/game/Player";
 
@@ -53,6 +54,7 @@ function App() {
         
         <GameUI />
         <WinScreen />
+        <AdRewardScreen />
         <TouchControls onInput={handleTouchInput} onCatch={handleCatchPress} />
         <AudioManager />
       </KeyboardControls>

@@ -24,7 +24,7 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
   const meshRef = useRef<THREE.Mesh>(null);
   const shadowRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls<Controls>();
-  const playerColor = useParadeGame((state) => state.playerColor);
+  const playerSkin = useParadeGame((state) => state.playerSkin);
   
   const playerPosition = useRef(new THREE.Vector3(...position));
   const playerVelocity = useRef(new THREE.Vector3());
@@ -35,13 +35,16 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
   const baseMoveSpeed = 5;
   const rotationSpeed = 3;
   
-  // Map player color to hex colors
-  const colorMap = {
-    beads: "#9b59b6",
-    doubloon: "#f1c40f",
-    cup: "#e74c3c",
+  // Map player skin to colors
+  const skinColorMap = {
+    default: "#9b59b6",
+    golden: "#FFD700",
+    rainbow: "#FF1493", // Use magenta as base, we'll add gradient effect
+    ghost: "#E0E0E0",
+    king: "#8B4513",
+    jester: "#FF1493",
   };
-  const playerHexColor = colorMap[playerColor];
+  const playerHexColor = skinColorMap[playerSkin];
   
   useEffect(() => {
     console.log("Player initialized at position:", position);

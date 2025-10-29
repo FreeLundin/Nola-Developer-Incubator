@@ -3,18 +3,20 @@ import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Volume2, VolumeX } from "lucide-react";
+import { X, Volume2, VolumeX, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { CosmeticShop } from "./CosmeticShop";
 
 export function GameUI() {
-  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores } = useParadeGame();
+  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [comboVisible, setComboVisible] = useState(false);
   const [comboTimeLeft, setComboTimeLeft] = useState(100);
   const [, forceUpdate] = useState(0); // For power-up countdown updates
+  const [showShop, setShowShop] = useState(false);
   const isMobile = useIsMobile();
   
   // Map player color to display info
@@ -183,8 +185,23 @@ export function GameUI() {
               </Card>
             </div>
             
-            {/* Right side - Power-ups and Sound Controls */}
+            {/* Right side - Coins, Power-ups and Controls */}
             <div className="flex flex-col gap-2">
+              {/* Coins and Shop Button */}
+              <div className="flex gap-2">
+                <Card className="bg-gradient-to-r from-yellow-900/90 to-orange-900/90 border-2 border-yellow-400 px-4 py-2">
+                  <div className="text-xs text-yellow-300 font-semibold">COINS</div>
+                  <div className="text-xl font-bold text-white">💰 {coins}</div>
+                </Card>
+                <Button
+                  onClick={() => setShowShop(true)}
+                  size="lg"
+                  className="bg-purple-900/90 hover:bg-purple-800 border-2 border-yellow-400 text-white"
+                >
+                  <ShoppingBag size={20} />
+                </Button>
+              </div>
+              
               {/* Active Power-ups */}
               {activePowerUps.map((powerUp) => {
                 const timeLeft = Math.max(0, powerUp.endTime - Date.now());
@@ -284,6 +301,9 @@ export function GameUI() {
           </div>
         </div>
       )}
+      
+      {/* Cosmetic Shop Modal */}
+      {showShop && <CosmeticShop onClose={() => setShowShop(false)} />}
     </>
   );
 }
