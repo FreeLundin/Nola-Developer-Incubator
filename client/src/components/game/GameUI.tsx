@@ -3,7 +3,7 @@ import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Volume2, VolumeX, ShoppingBag } from "lucide-react";
+import { X, Volume2, VolumeX, ShoppingBag, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -227,6 +227,18 @@ export function GameUI() {
                 {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
               </Button>
             </div>
+          </div>
+          
+          {/* Donate Button - Bottom Right */}
+          <div className="absolute bottom-4 right-4 pointer-events-auto">
+            <Button
+              onClick={() => window.open('https://www.buymeacoffee.com', '_blank')}
+              size="lg"
+              className="bg-gradient-to-r from-pink-600 to-red-600 hover:from-pink-700 hover:to-red-700 border-2 border-yellow-400 text-white font-bold shadow-lg"
+            >
+              <Heart size={20} className="mr-2" fill="currentColor" />
+              Support Development
+            </Button>
           </div>
           
           {/* Combo Timer - Top Center */}

@@ -8,6 +8,13 @@ The application uses a full-stack TypeScript architecture with Express backend, 
 
 ## Recent Changes
 
+**October 29, 2025 - Game Rebranding & Donation Button**
+- Renamed game from "Krew of Boo Parade" to "Mardi Gras Parade Simulator"
+- Updated all references from Halloween theme to Mardi Gras theme
+- Added "Support Development" donation button in bottom-right corner during gameplay
+- Button features heart icon and opens donation link in new tab
+- Styled with pink-to-red gradient and yellow border matching game theme
+
 **October 29, 2025 - Random Wandering NPCs & Obstacles with Level Scaling**
 - Aggressive NPCs now wander randomly around catching area instead of patrolling
 - NPCs pick random targets every 2-5 seconds within bounds (-6.5 to 6.5 x, -15 to 15 z)
