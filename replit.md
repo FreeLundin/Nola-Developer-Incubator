@@ -8,6 +8,14 @@ The application uses a full-stack TypeScript architecture with Express backend, 
 
 ## Recent Changes
 
+**October 29, 2025 - Moving Obstacles**
+- Added 4 moving obstacles that patrol back and forth across the street
+- Obstacles include trash cans (rotating boxes) and barriers (orange cylinders)
+- Each obstacle has unique speed (1.5-3 units/sec) and starting position/direction
+- Obstacles bounce at street boundaries (±6 units) and patrol continuously
+- Collision detection breaks player's combo chain as difficulty penalty
+- Obstacle types: trash (gray rotating boxes) and barriers (red cylinders)
+
 **October 29, 2025 - Bot Coordination & Anti-Clustering System**
 - Implemented shared claim coordination system in Zustand store to prevent bots from clustering
 - Added hash-based per-bot-per-collectible preference scoring for unique target selection
