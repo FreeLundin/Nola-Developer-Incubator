@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -8,6 +8,7 @@ interface AggressiveNPCProps {
   isChasing: boolean;
   playerPosition: THREE.Vector3;
   onHitPlayer: () => void;
+  onPlayerHitNPC: () => void;
   chaseEndTime: number | null;
   onChaseEnd: () => void;
 }
@@ -18,6 +19,7 @@ export function AggressiveNPC({
   isChasing,
   playerPosition,
   onHitPlayer,
+  onPlayerHitNPC,
   chaseEndTime,
   onChaseEnd,
 }: AggressiveNPCProps) {
@@ -26,6 +28,8 @@ export function AggressiveNPC({
   const patrolDirection = useRef(Math.random() > 0.5 ? 1 : -1);
   const patrolSpeed = 2; // Slower than regular bots
   const chaseSpeed = 3.5; // Still slower than player's base speed (5)
+  const lastHitTime = useRef(0);
+  const hitCooldown = 1000; // 1 second cooldown between hits
 
   useEffect(() => {
     console.log(`🟥 AggressiveNPC ${id} spawned at (${position[0]}, ${position[2]})`);
@@ -33,6 +37,9 @@ export function AggressiveNPC({
 
   useFrame((_, delta) => {
     if (!meshRef.current) return;
+
+    const now = Date.now();
+    const distance = npcPosition.current.distanceTo(playerPosition);
 
     if (isChasing) {
       // Chase the player
@@ -48,14 +55,13 @@ export function AggressiveNPC({
       npcPosition.current.z = THREE.MathUtils.clamp(npcPosition.current.z, -15, 15);
 
       // Check if chase time expired
-      if (chaseEndTime && Date.now() >= chaseEndTime) {
+      if (chaseEndTime && now >= chaseEndTime) {
         onChaseEnd();
       }
 
-      // Check collision with player
-      const distance = npcPosition.current.distanceTo(playerPosition);
-      if (distance < 1.2) {
-        console.log(`💥 AggressiveNPC ${id} hit player!`);
+      // Check collision with player (NPC hits player while chasing)
+      if (distance < 1.2 && now - lastHitTime.current > hitCooldown) {
+        lastHitTime.current = now;
         onHitPlayer();
       }
     } else {
@@ -66,6 +72,12 @@ export function AggressiveNPC({
       if (npcPosition.current.x > 6.5 || npcPosition.current.x < -6.5) {
         patrolDirection.current *= -1;
         npcPosition.current.x = THREE.MathUtils.clamp(npcPosition.current.x, -6.5, 6.5);
+      }
+      
+      // Check if player hits the NPC while it's patrolling
+      if (distance < 1.2 && now - lastHitTime.current > hitCooldown) {
+        lastHitTime.current = now;
+        onPlayerHitNPC();
       }
     }
 

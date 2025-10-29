@@ -11,6 +11,7 @@ import { Collectible } from "./Collectible";
 import { CatchEffect } from "./CatchEffect";
 import { ClickMarker } from "./ClickMarker";
 import { CompetitorBot } from "./CompetitorBot";
+import { AggressiveNPC } from "./AggressiveNPC";
 import { Obstacle } from "./Obstacle";
 import { TouchInput } from "./TouchControls";
 import * as THREE from "three";
@@ -32,7 +33,20 @@ interface GameSceneProps {
 }
 
 export function GameScene({ touchInput, catchAction }: GameSceneProps) {
-  const { phase, collectibles, addCatch, combo, totalFloats, level, getFloatSpeed, eliminatePlayer } = useParadeGame();
+  const { 
+    phase, 
+    collectibles, 
+    addCatch, 
+    combo, 
+    totalFloats, 
+    level, 
+    getFloatSpeed, 
+    eliminatePlayer,
+    aggressiveNPCs,
+    hitAggressiveNPC,
+    aggressiveNPCHitPlayer,
+    endNPCChase,
+  } = useParadeGame();
   const { playHit, playFireworks } = useAudio();
   const { camera, gl } = useThree();
   const isMobile = useIsMobile();
@@ -229,6 +243,21 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
           <CompetitorBot id="bot-4" startX={3} startZ={-12} color="#ffff44" />
           <CompetitorBot id="bot-5" startX={-4} startZ={-9} color="#ff44ff" />
           <CompetitorBot id="bot-6" startX={1} startZ={-8} color="#44ffff" />
+          
+          {/* Aggressive NPCs - black/white squares that chase player when hit */}
+          {aggressiveNPCs.map((npc) => (
+            <AggressiveNPC
+              key={npc.id}
+              id={npc.id}
+              position={npc.position}
+              isChasing={npc.isChasing}
+              playerPosition={playerPosition}
+              onHitPlayer={() => aggressiveNPCHitPlayer(npc.id)}
+              onPlayerHitNPC={() => hitAggressiveNPC(npc.id)}
+              chaseEndTime={npc.chaseEndTime}
+              onChaseEnd={() => endNPCChase(npc.id)}
+            />
+          ))}
           
           {/* Moving Obstacles - behind catchable area, creating dense obstacle zone */}
           <Obstacle id="obstacle-1" startPosition={[-3, 0.25, -16]} type="trash" playerPosition={playerPosition} onCollision={handleObstacleCollision} />

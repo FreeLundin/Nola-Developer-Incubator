@@ -160,12 +160,20 @@ export const useParadeGame = create<ParadeGameState>()(
         color: botColors[i],
       }));
       
+      // Initialize aggressive NPCs (3 NPCs spread across the street)
+      const initialAggressiveNPCs: AggressiveNPC[] = [
+        { id: "aggressive-1", position: [-4, 0.5, -5], isChasing: false, chaseEndTime: null },
+        { id: "aggressive-2", position: [3, 0.5, 2], isChasing: false, chaseEndTime: null },
+        { id: "aggressive-3", position: [-2, 0.5, -10], isChasing: false, chaseEndTime: null },
+      ];
+      
       set({ 
         phase: "playing", 
         playerColor: randomColor, 
         botScores: initialBotScores,
         totalFloats: 10, // Level 1 starts with 10 floats
         floatsPassed: 0,
+        aggressiveNPCs: initialAggressiveNPCs,
       });
     },
     
