@@ -8,13 +8,22 @@ The application uses a full-stack TypeScript architecture with Express backend, 
 
 ## Recent Changes
 
+**October 29, 2025 - Bot Coordination & Anti-Clustering System**
+- Implemented shared claim coordination system in Zustand store to prevent bots from clustering
+- Added hash-based per-bot-per-collectible preference scoring for unique target selection
+- Bots now claim targets via shared `botClaims` map (prevents multiple bots targeting same item)
+- Stale claim reclaiming: claims expire after 2 seconds, allowing other bots to reclaim abandoned items
+- Bots always pursue their claimed target (removed distance gate to prevent claim-holding while wandering)
+- Spread bots across street with unique X and Z starting positions for better initial distribution
+- Bot spawning: bot-1 (-5.5, -13), bot-2 (5, -10), bot-3 (-2, -7), bot-4 (3, -12), bot-5 (-4, -9), bot-6 (1, -8)
+
 **October 29, 2025 - Strategic Gameplay & Parade Route Redesign**
 - Added trajectory hints: pulsing target markers show where each throw will land before it hits the ground
 - Implemented 5-second ground despawn: uncollected items disappear after sitting on ground for 5 seconds
 - Redesigned street as proper parade route: narrower street (14 units) with yellow center line, curbs, and gray sidewalks
 - Moved parade to one side: all floats now travel on right side of street for authentic parade experience
-- Created competitor bots: 4 AI characters that actively compete for catches, adding challenge and urgency
-- Bots use smart pathfinding: chase nearest low-altitude collectibles and wander when idle
+- Created competitor bots: 6 AI characters that actively compete for catches, adding challenge and urgency
+- Bots use smart pathfinding: chase low-altitude collectibles with unique preferences per bot-item pair
 - Updated player boundaries: constrained to street width (-6.5 to 6.5) to stay on parade route
 - Fixed collectible position tracking: store updates each frame so bots can chase live targets
 
