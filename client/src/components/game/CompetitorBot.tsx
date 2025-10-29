@@ -6,45 +6,89 @@ import * as THREE from "three";
 interface CompetitorBotProps {
   id: string;
   startX: number;
+  startZ: number;
   color: string;
 }
 
-export function CompetitorBot({ id, startX, color }: CompetitorBotProps) {
+export function CompetitorBot({ id, startX, startZ, color }: CompetitorBotProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const headRef = useRef<THREE.Mesh>(null);
   const shadowRef = useRef<THREE.Mesh>(null);
-  const position = useRef(new THREE.Vector3(startX, 0.5, -12 + Math.random() * 6)); // Start behind center line (-12 to -6)
+  const position = useRef(new THREE.Vector3(startX, 0.5, startZ)); // Start at assigned position
   const velocity = useRef(new THREE.Vector3());
   const { collectibles, removeCollectible, addBotCatch, phase } = useParadeGame();
   
-  const moveSpeed = useMemo(() => Math.random() * 1.5 + 2, []); // Varying speeds
+  const moveSpeed = useMemo(() => Math.random() * 1.5 + 2.5, []); // Varying speeds (2.5-4)
+  const targetPreference = useMemo(() => Math.random(), []); // Random preference for target selection
+  const claimedTarget = useRef<string | null>(null); // Claimed collectible ID
+  const targetClaimTime = useRef(0); // When target was claimed
+  const CLAIM_DURATION = 2000; // Stick with a target for 2 seconds
   
   useEffect(() => {
-    console.log(`Competitor bot ${id} spawned at x:${startX}`);
-  }, [id, startX]);
+    console.log(`Competitor bot ${id} spawned at (${startX.toFixed(1)}, ${startZ.toFixed(1)})`);
+  }, [id, startX, startZ]);
   
   useFrame((state, delta) => {
     if (!meshRef.current || !headRef.current || !shadowRef.current || phase !== "playing") return;
     
-    // Find nearest collectible that's on ground or low enough
-    let nearestCollectible: typeof collectibles[0] | null = null;
-    let nearestDistance = Infinity;
+    const now = Date.now();
     
-    for (const collectible of collectibles) {
-      // Only chase items that are low enough or on ground
-      if (collectible.position.y < 1.5) {
-        const distance = position.current.distanceTo(collectible.position);
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestCollectible = collectible;
-        }
+    // Check if we still have a valid claimed target
+    let targetCollectible: typeof collectibles[0] | null = null;
+    const hasValidClaim = claimedTarget.current && (now - targetClaimTime.current) < CLAIM_DURATION;
+    
+    if (hasValidClaim) {
+      // Try to find our claimed target
+      targetCollectible = collectibles.find(c => c.id === claimedTarget.current) || null;
+      
+      // If claimed target is gone or too high, release claim
+      if (!targetCollectible || targetCollectible.position.y > 1.5) {
+        claimedTarget.current = null;
+        targetCollectible = null;
       }
     }
     
-    // Move toward nearest collectible
-    if (nearestCollectible && nearestDistance < 15) {
+    // If we don't have a valid target, find a new one
+    if (!targetCollectible) {
+      let bestCollectible: typeof collectibles[0] | null = null;
+      let bestScore = -Infinity;
+      
+      for (const collectible of collectibles) {
+        // Only consider items that are low enough or on ground
+        if (collectible.position.y < 1.5) {
+          const distance = position.current.distanceTo(collectible.position);
+          
+          // Score based on distance and persistent preference (no per-frame randomness)
+          const distanceScore = 20 - distance; // Closer = higher score
+          
+          // Use collectible ID hash for consistent per-item bias
+          const itemBias = (collectible.id.charCodeAt(collectible.id.length - 1) % 10) - 5;
+          
+          // Individual bot preference (persistent)
+          const preferenceBonus = targetPreference * 4;
+          
+          const totalScore = distanceScore + itemBias + preferenceBonus;
+          
+          if (totalScore > bestScore) {
+            bestScore = totalScore;
+            bestCollectible = collectible;
+          }
+        }
+      }
+      
+      // Claim the new target
+      if (bestCollectible) {
+        targetCollectible = bestCollectible;
+        claimedTarget.current = bestCollectible.id;
+        targetClaimTime.current = now;
+      }
+    }
+    
+    // Move toward target collectible
+    const targetDistance = targetCollectible ? position.current.distanceTo(targetCollectible.position) : Infinity;
+    if (targetCollectible && targetDistance < 15) {
       const direction = new THREE.Vector3()
-        .subVectors(nearestCollectible.position, position.current)
+        .subVectors(targetCollectible.position, position.current)
         .normalize();
       
       velocity.current.copy(direction).multiplyScalar(moveSpeed * delta);
@@ -59,10 +103,11 @@ export function CompetitorBot({ id, startX, color }: CompetitorBotProps) {
       );
       
       // "Catch" collectible if close enough
-      if (nearestDistance < 0.8 && nearestCollectible.position.y < 1) {
-        removeCollectible(nearestCollectible.id);
+      if (targetDistance < 0.8 && targetCollectible.position.y < 1) {
+        removeCollectible(targetCollectible.id);
         addBotCatch(id);
-        console.log(`Bot ${id} caught ${nearestCollectible.type}!`);
+        claimedTarget.current = null; // Release claim after catching
+        console.log(`Bot ${id} caught ${targetCollectible.type}!`);
       }
     } else {
       // Wander randomly if no target

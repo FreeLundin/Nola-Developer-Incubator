@@ -162,13 +162,13 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
           <ParadeFloat id="float-3" startZ={-35} lane={1} color="#ff6b35" playerPosition={playerPosition} />
           <ParadeFloat id="float-4" startZ={-5} lane={1} color="#3498db" playerPosition={playerPosition} />
           
-          {/* Competitor Bots - spread out more naturally to mimic human behavior */}
-          <CompetitorBot id="bot-1" startX={-5.5} color="#ff4444" />
-          <CompetitorBot id="bot-2" startX={4.5} color="#44ff44" />
-          <CompetitorBot id="bot-3" startX={-1.5} color="#4444ff" />
-          <CompetitorBot id="bot-4" startX={2.5} color="#ffff44" />
-          <CompetitorBot id="bot-5" startX={-3.5} color="#ff44ff" />
-          <CompetitorBot id="bot-6" startX={0.5} color="#44ffff" />
+          {/* Competitor Bots - spread out across street (x and z positions) */}
+          <CompetitorBot id="bot-1" startX={-5.5} startZ={-13} color="#ff4444" />
+          <CompetitorBot id="bot-2" startX={5} startZ={-10} color="#44ff44" />
+          <CompetitorBot id="bot-3" startX={-2} startZ={-7} color="#4444ff" />
+          <CompetitorBot id="bot-4" startX={3} startZ={-12} color="#ffff44" />
+          <CompetitorBot id="bot-5" startX={-4} startZ={-9} color="#ff44ff" />
+          <CompetitorBot id="bot-6" startX={1} startZ={-8} color="#44ffff" />
           
           {/* Collectibles */}
           {collectibles.map((collectible) => (
