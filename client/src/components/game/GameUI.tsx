@@ -232,7 +232,7 @@ export function GameUI() {
           {/* Donate Button - Bottom Right */}
           <div className="absolute bottom-4 right-4 pointer-events-auto">
             <Button
-              onClick={() => window.open('https://www.buymeacoffee.com', '_blank')}
+              onClick={() => window.open('https://replit.com/refer/blundin', '_blank')}
               size="lg"
               className="bg-gradient-to-r from-pink-600 to-red-600 hover:from-pink-700 hover:to-red-700 border-2 border-yellow-400 text-white font-bold shadow-lg"
             >
