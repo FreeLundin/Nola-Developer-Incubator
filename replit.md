@@ -8,6 +8,16 @@ The application uses a full-stack TypeScript architecture with Express backend, 
 
 ## Recent Changes
 
+**October 29, 2025 - Strategic Gameplay & Parade Route Redesign**
+- Added trajectory hints: pulsing target markers show where each throw will land before it hits the ground
+- Implemented 5-second ground despawn: uncollected items disappear after sitting on ground for 5 seconds
+- Redesigned street as proper parade route: narrower street (14 units) with yellow center line, curbs, and gray sidewalks
+- Moved parade to one side: all floats now travel on right side of street for authentic parade experience
+- Created competitor bots: 4 AI characters that actively compete for catches, adding challenge and urgency
+- Bots use smart pathfinding: chase nearest low-altitude collectibles and wander when idle
+- Updated player boundaries: constrained to street width (-6.5 to 6.5) to stay on parade route
+- Fixed collectible position tracking: store updates each frame so bots can chase live targets
+
 **October 28, 2025 - Gameplay Enhancements & Performance Optimizations**
 - Added power-up system: Speed Boost (1.5x movement for 5s) and Double Points (2x scoring for 8s)
 - Implemented power-up UI indicators with smooth countdown timers and progress bars
