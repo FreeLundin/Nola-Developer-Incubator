@@ -109,13 +109,13 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
       // Activate power-up
       useParadeGame.getState().activatePowerUp(type as "speed_boost" | "double_points");
     } else if (isSpecial) {
-      // King cake worth 5 points
+      // King cake worth flat 5 points (bypasses power-ups and color bonuses)
       for (let i = 0; i < 5; i++) {
-        addCatch();
+        addCatch(undefined, true); // Bypass power-up multiplier
       }
     } else {
-      // Regular collectible
-      addCatch();
+      // Regular collectible - pass type for color matching
+      addCatch(type);
     }
     
     // Add catch effect
@@ -141,9 +141,9 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
       {/* Environment - always visible */}
       <Environment />
       
-      {/* Player */}
+      {/* Player - starts behind center line */}
       <Player 
-        position={[0, 0.5, 0]} 
+        position={[0, 0.5, -8]} 
         onPositionChange={setPlayerPosition} 
         touchInput={touchInput} 
         mouseTarget={mouseTarget}

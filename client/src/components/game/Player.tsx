@@ -24,6 +24,7 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
   const meshRef = useRef<THREE.Mesh>(null);
   const shadowRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls<Controls>();
+  const playerColor = useParadeGame((state) => state.playerColor);
   
   const playerPosition = useRef(new THREE.Vector3(...position));
   const playerVelocity = useRef(new THREE.Vector3());
@@ -33,6 +34,14 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
   // Player settings (base values)
   const baseMoveSpeed = 5;
   const rotationSpeed = 3;
+  
+  // Map player color to hex colors
+  const colorMap = {
+    beads: "#9b59b6",
+    doubloon: "#f1c40f",
+    cup: "#e74c3c",
+  };
+  const playerHexColor = colorMap[playerColor];
   
   useEffect(() => {
     console.log("Player initialized at position:", position);
@@ -136,11 +145,11 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
   
   return (
     <group>
-      {/* Player character - simple capsule shape */}
+      {/* Player character - simple capsule shape with assigned color */}
       <mesh ref={meshRef} position={position} castShadow>
         {/* Body */}
         <capsuleGeometry args={[0.3, 1.0, 8, 16]} />
-        <meshStandardMaterial color="#ff6b35" />
+        <meshStandardMaterial color={playerHexColor} emissive={playerHexColor} emissiveIntensity={0.3} />
       </mesh>
       
       {/* Player shadow indicator on ground - optimized with ref */}

@@ -100,14 +100,17 @@ export function ParadeFloat({
       upwardArc = Math.random() * 0.3 + 0.8; // 0.8 to 1.1
     }
     
-    // Create a collectible thrown from the float toward the center of the street
+    // Create a collectible thrown from the float - most go OVER center line
+    // 80% of throws go over center line (negative Z direction from float's perspective)
+    const crossCenterLine = Math.random() < 0.8;
+    
     const throwDirection = new THREE.Vector3(
       -lane * (Math.random() * 0.5 + 0.5), // Toward center with some randomness
       upwardArc, // Variable upward arc
-      Math.random() * 0.4 - 0.2 // Slight forward/backward variance
+      crossCenterLine ? -(Math.random() * 0.6 + 0.4) : Math.random() * 0.4 - 0.2 // Most go backward (over center)
     ).normalize();
     
-    const throwForce = 6;
+    const throwForce = 6.5;
     
     const collectible = {
       id: `${id}-${Date.now()}-${Math.random()}`,
@@ -122,8 +125,8 @@ export function ParadeFloat({
   };
   
   return (
-    <group ref={meshRef} position={[position.current.x, position.current.y, position.current.z]}>
-      {/* Main float platform */}
+    <group ref={meshRef} position={[position.current.x, position.current.y, position.current.z]} scale={[1.5, 1.5, 1.5]}>
+      {/* Main float platform - larger scale */}
       <mesh castShadow>
         <boxGeometry args={[2, 1.5, 3]} />
         <meshStandardMaterial color={color} />

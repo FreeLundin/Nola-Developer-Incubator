@@ -9,13 +9,21 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
 export function GameUI() {
-  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime } = useParadeGame();
+  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [comboVisible, setComboVisible] = useState(false);
   const [comboTimeLeft, setComboTimeLeft] = useState(100);
   const [, forceUpdate] = useState(0); // For power-up countdown updates
   const isMobile = useIsMobile();
+  
+  // Map player color to display info
+  const colorDisplayMap = {
+    beads: { name: "Purple Beads", color: "#9b59b6" },
+    doubloon: { name: "Gold Doubloon", color: "#f1c40f" },
+    cup: { name: "Red Cup", color: "#e74c3c" },
+  };
+  const playerColorInfo = colorDisplayMap[playerColor];
   
   // Show combo animation when combo changes
   useEffect(() => {
@@ -113,9 +121,10 @@ export function GameUI() {
                       <h3 className="font-semibold text-yellow-200">Gameplay:</h3>
                       <ul className="space-y-1 text-sm">
                         <li>• Move close to falling items to catch them</li>
+                        <li>• <span className="text-yellow-300 font-bold">3x points for your color!</span></li>
+                        <li>• Target markers show where throws will land</li>
                         <li>• Catch quickly for combo bonuses!</li>
-                        <li>• Complete levels to increase difficulty</li>
-                        <li>• Watch for glowing items - they're catchable!</li>
+                        <li>• Compete with colorful bots for catches!</li>
                       </ul>
                     </div>
                   </div>
@@ -140,15 +149,36 @@ export function GameUI() {
           {/* Top HUD Bar */}
           <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-auto">
             {/* Level and Progress */}
-            <Card className="bg-gradient-to-r from-purple-900/90 to-orange-900/90 border-2 border-yellow-400 px-6 py-3">
-              <div className="space-y-2">
-                <div className="text-xs text-yellow-300 font-semibold">LEVEL {level}</div>
-                <div className="text-2xl font-bold text-white">
-                  {score} / {targetScore}
+            <div className="flex flex-col gap-2">
+              <Card className="bg-gradient-to-r from-purple-900/90 to-orange-900/90 border-2 border-yellow-400 px-6 py-3">
+                <div className="space-y-2">
+                  <div className="text-xs text-yellow-300 font-semibold">LEVEL {level}</div>
+                  <div className="text-2xl font-bold text-white">
+                    {score} / {targetScore}
+                  </div>
+                  <Progress value={progressPercentage} className="h-2 w-32" />
                 </div>
-                <Progress value={progressPercentage} className="h-2 w-32" />
-              </div>
-            </Card>
+              </Card>
+              
+              {/* Player Color Indicator */}
+              <Card className="bg-gradient-to-r from-black/80 to-gray-900/80 border-2 px-4 py-2" style={{ borderColor: playerColorInfo.color }}>
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="w-4 h-4 rounded-full" 
+                    style={{ 
+                      backgroundColor: playerColorInfo.color,
+                      boxShadow: `0 0 8px ${playerColorInfo.color}`
+                    }}
+                  />
+                  <div className="text-xs font-semibold" style={{ color: playerColorInfo.color }}>
+                    YOUR COLOR: {playerColorInfo.name.toUpperCase()}
+                  </div>
+                </div>
+                <div className="text-[10px] text-yellow-300 mt-1">
+                  3x points for matching color!
+                </div>
+              </Card>
+            </div>
             
             {/* Right side - Power-ups and Sound Controls */}
             <div className="flex flex-col gap-2">

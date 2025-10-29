@@ -30,11 +30,12 @@ interface ParadeGameState {
   lastCatchTime: number;
   collectibles: Collectible[];
   activePowerUps: PowerUp[];
+  playerColor: "beads" | "doubloon" | "cup"; // Player's assigned color for bonus points
   
   // Actions
   startGame: () => void;
   toggleCamera: () => void;
-  addCatch: () => void;
+  addCatch: (collectibleType?: Collectible["type"], bypassPowerUp?: boolean) => void;
   addCollectible: (collectible: Collectible) => void;
   updateCollectible: (id: string, updates: Partial<Collectible>) => void;
   removeCollectible: (id: string) => void;
@@ -63,10 +64,15 @@ export const useParadeGame = create<ParadeGameState>()(
     lastCatchTime: 0,
     collectibles: [],
     activePowerUps: [],
+    playerColor: "beads", // Default color, reassigned on game start
     
     startGame: () => {
       console.log("Starting game...");
-      set({ phase: "playing" });
+      // Randomly assign player color from the three main collectible types
+      const colors: Array<"beads" | "doubloon" | "cup"> = ["beads", "doubloon", "cup"];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      console.log(`Player color assigned: ${randomColor}`);
+      set({ phase: "playing", playerColor: randomColor });
     },
     
     toggleCamera: () => {
@@ -76,8 +82,8 @@ export const useParadeGame = create<ParadeGameState>()(
       set({ cameraMode: newMode });
     },
     
-    addCatch: () => {
-      const { score, targetScore, combo, maxCombo, lastCatchTime, totalCatches, hasActivePowerUp } = get();
+    addCatch: (collectibleType, bypassPowerUp = false) => {
+      const { score, targetScore, combo, maxCombo, lastCatchTime, totalCatches, hasActivePowerUp, playerColor } = get();
       const now = Date.now();
       const timeSinceLastCatch = now - lastCatchTime;
       
@@ -91,12 +97,20 @@ export const useParadeGame = create<ParadeGameState>()(
       
       const newMaxCombo = Math.max(maxCombo, newCombo);
       
-      // Apply double points power-up
-      const points = hasActivePowerUp("double_points") ? 2 : 1;
+      // Check for color match bonus (3x bonus points for matching player color)
+      const isColorMatch = collectibleType === playerColor;
+      let basePoints = 1;
+      if (isColorMatch) {
+        basePoints = 3; // 3 points for matching color (triple points!)
+        console.log(`🎨 COLOR MATCH! ${collectibleType} matches player color!`);
+      }
+      
+      // Apply double points power-up (unless bypassed for special items like King Cake)
+      const points = (!bypassPowerUp && hasActivePowerUp("double_points")) ? basePoints * 2 : basePoints;
       const newScore = score + points;
       const newTotalCatches = totalCatches + 1;
       
-      console.log(`Catch! Score: +${points} = ${newScore}/${targetScore}, Combo: ${newCombo}x`);
+      console.log(`Catch! Score: +${points} = ${newScore}/${targetScore}, Combo: ${newCombo}x${isColorMatch ? " (COLOR MATCH!)" : ""}`);
       
       if (newScore >= targetScore) {
         set({ 
@@ -158,6 +172,9 @@ export const useParadeGame = create<ParadeGameState>()(
     
     resetGame: () => {
       console.log("Resetting game...");
+      // Reassign random player color
+      const colors: Array<"beads" | "doubloon" | "cup"> = ["beads", "doubloon", "cup"];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
       set({
         phase: "tutorial",
         score: 0,
@@ -169,6 +186,7 @@ export const useParadeGame = create<ParadeGameState>()(
         totalCatches: 0,
         collectibles: [],
         activePowerUps: [],
+        playerColor: randomColor,
         cameraMode: "third-person",
       });
     },

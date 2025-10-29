@@ -13,7 +13,7 @@ export function CompetitorBot({ id, startX, color }: CompetitorBotProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const headRef = useRef<THREE.Mesh>(null);
   const shadowRef = useRef<THREE.Mesh>(null);
-  const position = useRef(new THREE.Vector3(startX, 0.5, Math.random() * 10 - 5));
+  const position = useRef(new THREE.Vector3(startX, 0.5, -12 + Math.random() * 6)); // Start behind center line (-12 to -6)
   const velocity = useRef(new THREE.Vector3());
   const { collectibles, removeCollectible, phase } = useParadeGame();
   
