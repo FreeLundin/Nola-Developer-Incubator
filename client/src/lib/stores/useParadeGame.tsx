@@ -30,6 +30,13 @@ interface BotClaim {
   claimTime: number;
 }
 
+export interface AggressiveNPC {
+  id: string;
+  position: [number, number, number];
+  isChasing: boolean;
+  chaseEndTime: number | null;
+}
+
 interface ParadeGameState {
   phase: GamePhase;
   cameraMode: CameraMode;
@@ -48,6 +55,7 @@ interface ParadeGameState {
   botClaims: Record<string, BotClaim>; // Track which bot claimed which collectible
   totalFloats: number; // Total floats for current level (10 * level)
   floatsPassed: number; // How many floats have passed the player
+  aggressiveNPCs: AggressiveNPC[]; // Aggressive NPCs that chase player when hit
   
   // Monetization features
   coins: number; // Currency earned from gameplay
@@ -90,6 +98,11 @@ interface ParadeGameState {
   
   // Float collision
   eliminatePlayer: () => void;
+  
+  // Aggressive NPC actions
+  hitAggressiveNPC: (npcId: string) => void;
+  aggressiveNPCHitPlayer: (npcId: string) => void;
+  endNPCChase: (npcId: string) => void;
 }
 
 // Combo timing window (milliseconds)
@@ -124,6 +137,7 @@ export const useParadeGame = create<ParadeGameState>()(
     botClaims: {},
     totalFloats: 10, // Start with 10 floats for level 1
     floatsPassed: 0,
+    aggressiveNPCs: [],
     
     // Monetization state
     coins: 0,
@@ -495,6 +509,45 @@ export const useParadeGame = create<ParadeGameState>()(
     eliminatePlayer: () => {
       console.log("💥 Player hit by parade float! Eliminated!");
       set({ phase: "won" });
+    },
+    
+    hitAggressiveNPC: (npcId: string) => {
+      console.log(`🔴 Player hit aggressive NPC ${npcId} - NPC is now chasing!`);
+      set((state) => ({
+        aggressiveNPCs: state.aggressiveNPCs.map((npc) =>
+          npc.id === npcId
+            ? { 
+                ...npc, 
+                isChasing: true, 
+                chaseEndTime: Date.now() + 5000 // Chase for 5 seconds
+              }
+            : npc
+        ),
+        combo: 0, // Break combo when hitting aggressive NPC
+      }));
+    },
+    
+    aggressiveNPCHitPlayer: (npcId: string) => {
+      console.log(`💥 Aggressive NPC ${npcId} hit player! -1 point`);
+      set((state) => ({
+        score: Math.max(0, state.score - 1), // Lose 1 point, minimum 0
+        aggressiveNPCs: state.aggressiveNPCs.map((npc) =>
+          npc.id === npcId
+            ? { ...npc, isChasing: false, chaseEndTime: null }
+            : npc
+        ),
+      }));
+    },
+    
+    endNPCChase: (npcId: string) => {
+      console.log(`⏰ Aggressive NPC ${npcId} stopped chasing (5 seconds elapsed)`);
+      set((state) => ({
+        aggressiveNPCs: state.aggressiveNPCs.map((npc) =>
+          npc.id === npcId
+            ? { ...npc, isChasing: false, chaseEndTime: null }
+            : npc
+        ),
+      }));
     },
   }))
 );
