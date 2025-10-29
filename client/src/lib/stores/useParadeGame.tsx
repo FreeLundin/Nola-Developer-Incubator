@@ -160,12 +160,19 @@ export const useParadeGame = create<ParadeGameState>()(
         color: botColors[i],
       }));
       
-      // Initialize aggressive NPCs (3 NPCs spread across the street)
-      const initialAggressiveNPCs: AggressiveNPC[] = [
-        { id: "aggressive-1", position: [-4, 0.5, -5], isChasing: false, chaseEndTime: null },
-        { id: "aggressive-2", position: [3, 0.5, 2], isChasing: false, chaseEndTime: null },
-        { id: "aggressive-3", position: [-2, 0.5, -10], isChasing: false, chaseEndTime: null },
-      ];
+      // Initialize aggressive NPCs (1 + level count, randompositions in catching area)
+      const currentLevel = get().level;
+      const npcCount = 1 + currentLevel; // Level 1: 2 NPCs, Level 2: 3 NPCs, etc.
+      const initialAggressiveNPCs: AggressiveNPC[] = Array.from({ length: npcCount }, (_, i) => ({
+        id: `aggressive-${i + 1}`,
+        position: [
+          Math.random() * 13 - 6.5, // Random x: -6.5 to 6.5
+          0.5,
+          Math.random() * 30 - 15, // Random z: -15 to 15
+        ] as [number, number, number],
+        isChasing: false,
+        chaseEndTime: null,
+      }));
       
       set({ 
         phase: "playing", 
@@ -325,7 +332,20 @@ export const useParadeGame = create<ParadeGameState>()(
       const newTotalFloats = newLevel * 10; // 10 floats per level
       const newTargetScore = 5 + (newLevel - 1) * 2; // Increase target each level: 5, 7, 9, 11...
       
-      console.log(`Advancing to level ${newLevel}! ${newTotalFloats} floats this level, target: ${newTargetScore} catches`);
+      // Generate more aggressive NPCs for higher levels (1 + level count)
+      const npcCount = 1 + newLevel; // Level 2: 3 NPCs, Level 3: 4 NPCs, etc.
+      const newAggressiveNPCs: AggressiveNPC[] = Array.from({ length: npcCount }, (_, i) => ({
+        id: `aggressive-${newLevel}-${i + 1}`,
+        position: [
+          Math.random() * 13 - 6.5, // Random x: -6.5 to 6.5
+          0.5,
+          Math.random() * 30 - 15, // Random z: -15 to 15
+        ] as [number, number, number],
+        isChasing: false,
+        chaseEndTime: null,
+      }));
+      
+      console.log(`Advancing to level ${newLevel}! ${newTotalFloats} floats, ${npcCount} aggressive NPCs, ${2 + newLevel} obstacles`);
       
       set({
         level: newLevel,
@@ -337,6 +357,7 @@ export const useParadeGame = create<ParadeGameState>()(
         collectibles: [],
         totalFloats: newTotalFloats,
         floatsPassed: 0,
+        aggressiveNPCs: newAggressiveNPCs,
       });
     },
     
