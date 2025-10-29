@@ -8,6 +8,7 @@ interface ParadeFloatProps {
   startZ: number;
   lane: number; // -1 or 1 for left or right side of street
   color: string;
+  playerPosition?: THREE.Vector3;
 }
 
 export function ParadeFloat({ 
@@ -15,6 +16,7 @@ export function ParadeFloat({
   startZ, 
   lane, 
   color,
+  playerPosition,
 }: ParadeFloatProps) {
   const meshRef = useRef<THREE.Group>(null);
   const position = useRef(new THREE.Vector3(lane * 5, 1, startZ));
@@ -84,33 +86,56 @@ export function ParadeFloat({
       randomType = throwTypes[Math.floor(Math.random() * throwTypes.length)];
     }
     
-    // Vary throw arc heights for different difficulty levels
-    // 40% low arc (easy to catch), 40% medium arc, 20% high arc
-    const arcRoll = Math.random();
-    let upwardArc: number;
+    // Decide if this is a targeted throw (30% chance) or random throw
+    const isTargetedThrow = playerPosition && Math.random() < 0.3;
     
-    if (arcRoll < 0.4) {
-      // Low arc - easier to catch (released earlier)
-      upwardArc = Math.random() * 0.2 + 0.4; // 0.4 to 0.6
-    } else if (arcRoll < 0.8) {
-      // Medium arc
-      upwardArc = Math.random() * 0.2 + 0.6; // 0.6 to 0.8
+    let throwDirection: THREE.Vector3;
+    let throwForce: number;
+    
+    if (isTargetedThrow && playerPosition) {
+      // Throw directly at player position with some leading
+      const targetPos = playerPosition.clone();
+      const direction = targetPos.sub(position.current).normalize();
+      
+      // Add upward arc for trajectory
+      direction.y = Math.random() * 0.3 + 0.5; // 0.5 to 0.8 upward
+      throwDirection = direction.normalize();
+      
+      // Stronger throw for targeted throws
+      throwForce = Math.random() * 2 + 9; // 9-11 force
+      console.log(`Float ${id} targeting player with force ${throwForce.toFixed(1)}`);
     } else {
-      // High arc - harder to catch
-      upwardArc = Math.random() * 0.3 + 0.8; // 0.8 to 1.1
+      // Random throw with varied difficulty
+      // Vary throw arc heights and distances
+      const difficultyRoll = Math.random();
+      let upwardArc: number;
+      let baseForce: number;
+      
+      if (difficultyRoll < 0.3) {
+        // Easy throws - low arc, moderate speed
+        upwardArc = Math.random() * 0.15 + 0.35; // 0.35 to 0.5
+        baseForce = Math.random() * 1.5 + 7; // 7-8.5 force
+      } else if (difficultyRoll < 0.7) {
+        // Medium throws - medium arc, higher speed
+        upwardArc = Math.random() * 0.2 + 0.5; // 0.5 to 0.7
+        baseForce = Math.random() * 2 + 8.5; // 8.5-10.5 force
+      } else {
+        // Hard throws - high arc or very fast
+        upwardArc = Math.random() * 0.3 + 0.7; // 0.7 to 1.0
+        baseForce = Math.random() * 2.5 + 10; // 10-12.5 force
+      }
+      
+      // Most throws go over center line toward players
+      const crossCenterLine = Math.random() < 0.8;
+      
+      throwDirection = new THREE.Vector3(
+        -lane * (Math.random() * 0.6 + 0.6), // Toward center/opposite side
+        upwardArc, // Variable upward arc
+        crossCenterLine ? -(Math.random() * 0.7 + 0.5) : Math.random() * 0.5 - 0.2 // Most go backward (over center)
+      ).normalize();
+      
+      throwForce = baseForce;
     }
-    
-    // Create a collectible thrown from the float - most go OVER center line
-    // 80% of throws go over center line (negative Z direction from float's perspective)
-    const crossCenterLine = Math.random() < 0.8;
-    
-    const throwDirection = new THREE.Vector3(
-      -lane * (Math.random() * 0.5 + 0.5), // Toward center with some randomness
-      upwardArc, // Variable upward arc
-      crossCenterLine ? -(Math.random() * 0.6 + 0.4) : Math.random() * 0.4 - 0.2 // Most go backward (over center)
-    ).normalize();
-    
-    const throwForce = 6.5;
     
     const collectible = {
       id: `${id}-${Date.now()}-${Math.random()}`,

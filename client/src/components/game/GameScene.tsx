@@ -156,11 +156,11 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
       {/* Gameplay elements only during playing phase */}
       {phase === "playing" && (
         <>
-          {/* Parade Floats - all on right side of street */}
-          <ParadeFloat id="float-1" startZ={-25} lane={1} color="#9b59b6" />
-          <ParadeFloat id="float-2" startZ={-15} lane={1} color="#e74c3c" />
-          <ParadeFloat id="float-3" startZ={-35} lane={1} color="#ff6b35" />
-          <ParadeFloat id="float-4" startZ={-5} lane={1} color="#3498db" />
+          {/* Parade Floats - all on right side of street, passing player position for targeted throws */}
+          <ParadeFloat id="float-1" startZ={-25} lane={1} color="#9b59b6" playerPosition={playerPosition} />
+          <ParadeFloat id="float-2" startZ={-15} lane={1} color="#e74c3c" playerPosition={playerPosition} />
+          <ParadeFloat id="float-3" startZ={-35} lane={1} color="#ff6b35" playerPosition={playerPosition} />
+          <ParadeFloat id="float-4" startZ={-5} lane={1} color="#3498db" playerPosition={playerPosition} />
           
           {/* Competitor Bots - competing for catches */}
           <CompetitorBot id="bot-1" startX={-4} color="#ff4444" />
