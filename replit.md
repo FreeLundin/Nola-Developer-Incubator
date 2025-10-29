@@ -8,6 +8,21 @@ The application uses a full-stack TypeScript architecture with Express backend, 
 
 ## Recent Changes
 
+**October 29, 2025 - Non-Intrusive Monetization Features**
+- Implemented rewarded video ad system (optional, player-initiated)
+- Three ad reward types: continue playing, bonus time (+5 floats), power-up boost (both power-ups)
+- Each ad view rewards 10 coins plus the specific benefit
+- Players can decline ads and continue normally - completely optional
+- Created cosmetic character customization with 6 skins (default, golden, rainbow, ghost, king, jester)
+- Skins are purely cosmetic - no gameplay advantages
+- Coin earning system: 1 coin per catch, bonus coins for combos (≥3x gives extra coins)
+- Cosmetic shop accessible via button in game UI during play
+- Skin prices: golden (100), rainbow (150), ghost (200), king (250), jester (200)
+- Ad reward offer appears on WinScreen between levels as optional bonus
+- Player component updated to display equipped skin colors
+- AdRewardScreen shows clear benefits before player commits to watching
+- CosmeticShop shows all skins with purchase/equip functionality
+
 **October 29, 2025 - Float-Based Timer System & Gameplay Refinements**
 - Implemented float-based timer: levels end when all floats pass, not when score target is reached
 - Score is now purely informational - tracks player performance but doesn't control level progression
