@@ -3,11 +3,12 @@ import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Volume2, VolumeX, ShoppingBag, Heart } from "lucide-react";
+import { X, Volume2, VolumeX, ShoppingBag, Heart, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CosmeticShop } from "./CosmeticShop";
+import { toast } from "sonner";
 
 export function GameUI() {
   const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
@@ -65,6 +66,21 @@ export function GameUI() {
   const handleStartGame = () => {
     setShowTutorial(false);
     startGame();
+  };
+  
+  const handleChimeDonation = () => {
+    const chimeSign = "$nolaDevelopmentIncubator";
+    navigator.clipboard.writeText(chimeSign).then(() => {
+      toast.success("Copied to clipboard!", {
+        description: `Send via Chime Pay Anyone to ${chimeSign}`,
+        duration: 5000,
+      });
+    }).catch(() => {
+      toast.info("Chime Donation", {
+        description: `Send via Chime Pay Anyone to ${chimeSign}`,
+        duration: 5000,
+      });
+    });
   };
   
   const progressPercentage = (score / targetScore) * 100;
@@ -229,8 +245,8 @@ export function GameUI() {
             </div>
           </div>
           
-          {/* Donate Button - Bottom Right */}
-          <div className="absolute bottom-4 right-4 pointer-events-auto">
+          {/* Donate Buttons - Bottom Right */}
+          <div className="absolute bottom-4 right-4 pointer-events-auto flex flex-col gap-2">
             <Button
               onClick={() => window.open('https://replit.com/refer/blundin', '_blank')}
               size="lg"
@@ -238,6 +254,14 @@ export function GameUI() {
             >
               <Heart size={20} className="mr-2" fill="currentColor" />
               Support Development
+            </Button>
+            <Button
+              onClick={handleChimeDonation}
+              size="lg"
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 border-2 border-yellow-400 text-white font-bold shadow-lg"
+            >
+              <DollarSign size={20} className="mr-2" />
+              Donate via Chime
             </Button>
           </div>
           

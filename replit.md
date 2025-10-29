@@ -8,12 +8,14 @@ The application uses a full-stack TypeScript architecture with Express backend, 
 
 ## Recent Changes
 
-**October 29, 2025 - Game Rebranding & Donation Button**
+**October 29, 2025 - Game Rebranding & Donation Buttons**
 - Renamed game from "Krew of Boo Parade" to "Mardi Gras Parade Simulator"
 - Updated all references from Halloween theme to Mardi Gras theme
-- Added "Support Development" donation button in bottom-right corner during gameplay
-- Button features heart icon and opens donation link in new tab
-- Styled with pink-to-red gradient and yellow border matching game theme
+- Added two donation buttons in bottom-right corner during gameplay:
+  - "Support Development" (pink-red gradient) - Opens Replit referral link in new tab
+  - "Donate via Chime" (green-emerald gradient) - Copies $nolaDevelopmentIncubator to clipboard with toast notification
+- Chime button provides instructions for Chime Pay Anyone transfers
+- Both buttons styled with yellow border matching game theme
 
 **October 29, 2025 - Random Wandering NPCs & Obstacles with Level Scaling**
 - Aggressive NPCs now wander randomly around catching area instead of patrolling
