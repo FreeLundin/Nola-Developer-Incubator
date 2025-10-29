@@ -10,6 +10,7 @@ import { Collectible } from "./Collectible";
 import { CatchEffect } from "./CatchEffect";
 import { ClickMarker } from "./ClickMarker";
 import { CompetitorBot } from "./CompetitorBot";
+import { Obstacle } from "./Obstacle";
 import { TouchInput } from "./TouchControls";
 import * as THREE from "three";
 
@@ -97,6 +98,16 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
     setMouseTarget(null);
   }, []);
   
+  // Handle obstacle collision
+  const handleObstacleCollision = useCallback(() => {
+    // Break combo on obstacle hit
+    const currentCombo = useParadeGame.getState().combo;
+    if (currentCombo > 0) {
+      useParadeGame.setState({ combo: 0, lastCatchTime: 0 });
+      console.log("Obstacle hit! Combo broken.");
+    }
+  }, []);
+  
   // Handle player catch
   const handleCatch = useCallback((type: "beads" | "doubloon" | "cup" | "king_cake" | "speed_boost" | "double_points") => {
     console.log("Catch successful!", type);
@@ -169,6 +180,12 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
           <CompetitorBot id="bot-4" startX={3} startZ={-12} color="#ffff44" />
           <CompetitorBot id="bot-5" startX={-4} startZ={-9} color="#ff44ff" />
           <CompetitorBot id="bot-6" startX={1} startZ={-8} color="#44ffff" />
+          
+          {/* Moving Obstacles - increase difficulty */}
+          <Obstacle id="obstacle-1" startPosition={[-3, 0.25, -5]} type="trash" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
+          <Obstacle id="obstacle-2" startPosition={[2, 0.25, -10]} type="barrier" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
+          <Obstacle id="obstacle-3" startPosition={[-4, 0.25, -2]} type="trash" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
+          <Obstacle id="obstacle-4" startPosition={[4, 0.25, -14]} type="barrier" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
           
           {/* Collectibles */}
           {collectibles.map((collectible) => (
