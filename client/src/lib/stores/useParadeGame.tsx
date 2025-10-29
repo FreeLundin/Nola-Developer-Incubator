@@ -84,6 +84,9 @@ interface ParadeGameState {
   addCoins: (amount: number) => void;
   purchaseSkin: (skin: PlayerSkin) => boolean;
   setSkin: (skin: PlayerSkin) => void;
+  
+  // Inactivity timeout
+  endGameDueToInactivity: () => void;
 }
 
 // Combo timing window (milliseconds)
@@ -479,6 +482,11 @@ export const useParadeGame = create<ParadeGameState>()(
       
       set({ playerSkin: skin });
       console.log(`Equipped skin: ${skin}`);
+    },
+    
+    endGameDueToInactivity: () => {
+      console.log("Game ended due to inactivity (30 seconds without movement)");
+      set({ phase: "won" });
     },
   }))
 );

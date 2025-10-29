@@ -8,6 +8,13 @@ The application uses a full-stack TypeScript architecture with Express backend, 
 
 ## Recent Changes
 
+**October 29, 2025 - Inactivity Timeout**
+- Game automatically ends if player stops moving for 30 seconds
+- Inactivity timer resets whenever player moves (keyboard, touch, or mouse input)
+- Only active during "playing" phase (not during tutorial or win screens)
+- Triggers endGameDueToInactivity action which sets phase to "won"
+- Prevents players from leaving game idle indefinitely
+
 **October 29, 2025 - Non-Intrusive Monetization Features**
 - Implemented rewarded video ad system (optional, player-initiated)
 - Three ad reward types: continue playing, bonus time (+5 floats), power-up boost (both power-ups)

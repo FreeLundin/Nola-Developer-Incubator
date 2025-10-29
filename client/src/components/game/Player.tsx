@@ -30,10 +30,13 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
   const playerVelocity = useRef(new THREE.Vector3());
   const playerDirection = useRef(new THREE.Vector3());
   const currentMouseTarget = useRef<THREE.Vector3 | null>(null);
+  const lastMoveTime = useRef(Date.now());
+  const inactivityWarned = useRef(false);
   
   // Player settings (base values)
   const baseMoveSpeed = 5;
   const rotationSpeed = 3;
+  const INACTIVITY_TIMEOUT = 30000; // 30 seconds in milliseconds
   
   // Map player skin to colors
   const skinColorMap = {
@@ -111,7 +114,9 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
     }
     
     // Update player direction and movement
-    if (moveX !== 0 || moveZ !== 0) {
+    const isMoving = moveX !== 0 || moveZ !== 0;
+    
+    if (isMoving) {
       playerDirection.current.set(moveX, 0, moveZ).normalize();
       
       // Move player
@@ -126,6 +131,10 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
         targetRotation,
         rotationSpeed * delta
       );
+      
+      // Update last move time when player moves
+      lastMoveTime.current = Date.now();
+      inactivityWarned.current = false;
     }
     
     // Keep player on the street (constrain movement to street boundaries)
@@ -143,6 +152,19 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
     // Notify parent of position change
     if (onPositionChange) {
       onPositionChange(playerPosition.current);
+    }
+    
+    // Check for inactivity timeout (only during playing phase)
+    const gamePhase = useParadeGame.getState().phase;
+    if (gamePhase === "playing") {
+      const timeSinceLastMove = Date.now() - lastMoveTime.current;
+      
+      if (timeSinceLastMove >= INACTIVITY_TIMEOUT) {
+        if (!inactivityWarned.current) {
+          inactivityWarned.current = true;
+          useParadeGame.getState().endGameDueToInactivity();
+        }
+      }
     }
   });
   
