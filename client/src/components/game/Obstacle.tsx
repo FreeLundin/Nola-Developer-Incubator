@@ -5,7 +5,6 @@ import * as THREE from "three";
 interface ObstacleProps {
   id: string;
   startPosition: [number, number, number];
-  type: "trash" | "barrier";
   playerPosition: THREE.Vector3;
   onCollision: () => void;
 }
@@ -13,36 +12,51 @@ interface ObstacleProps {
 const OBSTACLE_RADIUS = 0.6;
 const COLLISION_DISTANCE = 0.8;
 
-export function Obstacle({ id, startPosition, type, playerPosition, onCollision }: ObstacleProps) {
+export function Obstacle({ id, startPosition, playerPosition, onCollision }: ObstacleProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const shadowRef = useRef<THREE.Mesh>(null);
   const hasCollided = useRef(false);
   const position = useRef(new THREE.Vector3(...startPosition));
   
-  // Random movement speed and direction for each obstacle (mutable direction)
+  // Random wandering behavior
+  const wanderTarget = useRef(new THREE.Vector3(
+    Math.random() * 13 - 6.5, // Random x between -6.5 and 6.5
+    0.5,
+    Math.random() * 30 - 15 // Random z between -15 and 15
+  ));
   const moveSpeed = useMemo(() => Math.random() * 1.5 + 1.5, []); // 1.5 to 3
-  const moveDirection = useRef((Math.random() > 0.5 ? 1 : -1)); // Left or right
+  const nextTargetTime = useRef(Date.now() + Math.random() * 3000 + 2000); // Change target every 2-5 seconds
   
   useFrame((state, delta) => {
     if (!meshRef.current || !shadowRef.current) return;
     
-    // Move obstacle left-right across the street
-    position.current.x += moveDirection.current * moveSpeed * delta;
+    const now = Date.now();
     
-    // Reverse direction when hitting street boundaries
-    if (position.current.x > 6 || position.current.x < -6) {
-      position.current.x = THREE.MathUtils.clamp(position.current.x, -6, 6);
-      moveDirection.current *= -1; // Bounce back
+    // Pick new random target periodically
+    if (now >= nextTargetTime.current) {
+      wanderTarget.current.set(
+        Math.random() * 13 - 6.5, // Random x between -6.5 and 6.5
+        0.5,
+        Math.random() * 30 - 15 // Random z between -15 and 15
+      );
+      nextTargetTime.current = now + Math.random() * 3000 + 2000; // Next target in 2-5 seconds
     }
+    
+    // Move toward wander target
+    const direction = new THREE.Vector3()
+      .subVectors(wanderTarget.current, position.current)
+      .normalize();
+    
+    position.current.x += direction.x * moveSpeed * delta;
+    position.current.z += direction.z * moveSpeed * delta;
+    
+    // Constrain to catching area bounds
+    position.current.x = THREE.MathUtils.clamp(position.current.x, -6.5, 6.5);
+    position.current.z = THREE.MathUtils.clamp(position.current.z, -15, 15);
     
     // Update mesh position
     meshRef.current.position.copy(position.current);
     shadowRef.current.position.set(position.current.x, 0.01, position.current.z);
-    
-    // Simple rotation animation for trash
-    if (type === "trash") {
-      meshRef.current.rotation.y += 0.02;
-    }
     
     // Check collision with player
     if (!hasCollided.current) {
@@ -63,27 +77,20 @@ export function Obstacle({ id, startPosition, type, playerPosition, onCollision 
     }
   });
   
-  const color = type === "trash" ? "#4a4a4a" : "#ff4444";
-  const size = type === "trash" ? 0.5 : 0.4;
-  
   return (
     <group>
       <mesh ref={meshRef} castShadow>
-        {type === "trash" ? (
-          <boxGeometry args={[size, size, size]} />
-        ) : (
-          <cylinderGeometry args={[size, size, 0.8, 6]} />
-        )}
+        <sphereGeometry args={[OBSTACLE_RADIUS, 8, 8]} />
         <meshStandardMaterial 
-          color={color}
-          roughness={0.8}
-          metalness={0.2}
+          color="#ff6b6b"
+          roughness={0.7}
+          metalness={0.3}
         />
       </mesh>
       
       {/* Ground shadow */}
       <mesh ref={shadowRef} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[size * 1.2, 8]} />
+        <circleGeometry args={[OBSTACLE_RADIUS * 1.2, 8]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.3} />
       </mesh>
     </group>

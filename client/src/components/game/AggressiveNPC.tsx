@@ -25,11 +25,16 @@ export function AggressiveNPC({
 }: AggressiveNPCProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const npcPosition = useRef(new THREE.Vector3(...position));
-  const patrolDirection = useRef(Math.random() > 0.5 ? 1 : -1);
-  const patrolSpeed = 2; // Slower than regular bots
+  const wanderTarget = useRef(new THREE.Vector3(
+    Math.random() * 13 - 6.5, // Random x between -6.5 and 6.5
+    0.5,
+    Math.random() * 30 - 15 // Random z between -15 and 15
+  ));
+  const wanderSpeed = 2; // Slower than regular bots
   const chaseSpeed = 3.5; // Still slower than player's base speed (5)
   const lastHitTime = useRef(0);
   const hitCooldown = 1000; // 1 second cooldown between hits
+  const nextTargetTime = useRef(Date.now() + Math.random() * 3000 + 2000); // Change target every 2-5 seconds
 
   useEffect(() => {
     console.log(`🟥 AggressiveNPC ${id} spawned at (${position[0]}, ${position[2]})`);
@@ -65,16 +70,30 @@ export function AggressiveNPC({
         onHitPlayer();
       }
     } else {
-      // Patrol behavior - move back and forth on the street
-      npcPosition.current.x += patrolDirection.current * patrolSpeed * delta;
-
-      // Bounce at street boundaries
-      if (npcPosition.current.x > 6.5 || npcPosition.current.x < -6.5) {
-        patrolDirection.current *= -1;
-        npcPosition.current.x = THREE.MathUtils.clamp(npcPosition.current.x, -6.5, 6.5);
+      // Wander behavior - move randomly around the catching area
+      // Pick new random target periodically
+      if (now >= nextTargetTime.current) {
+        wanderTarget.current.set(
+          Math.random() * 13 - 6.5, // Random x between -6.5 and 6.5
+          0.5,
+          Math.random() * 30 - 15 // Random z between -15 and 15
+        );
+        nextTargetTime.current = now + Math.random() * 3000 + 2000; // Next target in 2-5 seconds
       }
       
-      // Check if player hits the NPC while it's patrolling
+      // Move toward wander target
+      const direction = new THREE.Vector3()
+        .subVectors(wanderTarget.current, npcPosition.current)
+        .normalize();
+      
+      npcPosition.current.x += direction.x * wanderSpeed * delta;
+      npcPosition.current.z += direction.z * wanderSpeed * delta;
+      
+      // Constrain to catching area bounds
+      npcPosition.current.x = THREE.MathUtils.clamp(npcPosition.current.x, -6.5, 6.5);
+      npcPosition.current.z = THREE.MathUtils.clamp(npcPosition.current.z, -15, 15);
+      
+      // Check if player hits the NPC while it's wandering
       if (distance < 1.2 && now - lastHitTime.current > hitCooldown) {
         lastHitTime.current = now;
         onPlayerHitNPC();
@@ -84,7 +103,7 @@ export function AggressiveNPC({
     // Update mesh position
     meshRef.current.position.copy(npcPosition.current);
 
-    // Rotate cube for visual effect
+    // Rotate for visual effect
     meshRef.current.rotation.y += delta * 0.5;
     meshRef.current.rotation.x += delta * 0.3;
   });

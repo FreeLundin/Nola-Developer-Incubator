@@ -259,11 +259,20 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
             />
           ))}
           
-          {/* Moving Obstacles - behind catchable area, creating dense obstacle zone */}
-          <Obstacle id="obstacle-1" startPosition={[-3, 0.25, -16]} type="trash" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
-          <Obstacle id="obstacle-2" startPosition={[2, 0.25, -18]} type="barrier" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
-          <Obstacle id="obstacle-3" startPosition={[-4, 0.25, -17]} type="trash" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
-          <Obstacle id="obstacle-4" startPosition={[4, 0.25, -19]} type="barrier" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
+          {/* Moving Obstacles - randomwander around catching area, more with higher levels */}
+          {Array.from({ length: 2 + level }, (_, i) => {
+            const startX = (Math.random() * 13 - 6.5);
+            const startZ = (Math.random() * 30 - 15);
+            return (
+              <Obstacle 
+                key={`obstacle-${level}-${i}`}
+                id={`obstacle-${level}-${i}`}
+                startPosition={[startX, 0.5, startZ]}
+                playerPosition={playerPosition}
+                onCollision={handleObstacleCollision}
+              />
+            );
+          })}
           
           {/* Collectibles */}
           {collectibles.map((collectible) => (
