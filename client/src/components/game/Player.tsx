@@ -116,8 +116,8 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, touchInput, m
       );
     }
     
-    // Keep player on the street (constrain movement)
-    playerPosition.current.x = THREE.MathUtils.clamp(playerPosition.current.x, -8, 8);
+    // Keep player on the street (constrain movement to street boundaries)
+    playerPosition.current.x = THREE.MathUtils.clamp(playerPosition.current.x, -6.5, 6.5);
     playerPosition.current.z = THREE.MathUtils.clamp(playerPosition.current.z, -15, 15);
     
     // Update mesh position

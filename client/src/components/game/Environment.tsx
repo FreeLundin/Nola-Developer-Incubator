@@ -63,25 +63,41 @@ export function Environment() {
       <pointLight position={[0, 10, -15]} intensity={0.5} color="#ff6b35" distance={30} />
       <pointLight position={[0, 10, 15]} intensity={0.5} color="#9b59b6" distance={30} />
       
-      {/* Street/Ground */}
+      {/* Street/Ground - Main parade route */}
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-        <planeGeometry args={[20, 50]} />
+        <planeGeometry args={[14, 50]} />
         <meshStandardMaterial 
           map={asphaltTexture} 
-          map-repeat={new THREE.Vector2(4, 10)}
+          map-repeat={new THREE.Vector2(3, 10)}
           map-wrapS={THREE.RepeatWrapping}
           map-wrapT={THREE.RepeatWrapping}
         />
       </mesh>
       
-      {/* Sidewalks */}
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[-10.5, 0.01, 0]}>
-        <planeGeometry args={[3, 50]} />
-        <meshStandardMaterial color="#555555" />
+      {/* Street yellow center line */}
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
+        <planeGeometry args={[0.2, 50]} />
+        <meshStandardMaterial color="#ffd700" emissive="#ffd700" emissiveIntensity={0.3} />
       </mesh>
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[10.5, 0.01, 0]}>
+      
+      {/* Sidewalks */}
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[-8.5, 0.01, 0]}>
         <planeGeometry args={[3, 50]} />
-        <meshStandardMaterial color="#555555" />
+        <meshStandardMaterial color="#666666" />
+      </mesh>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[8.5, 0.01, 0]}>
+        <planeGeometry args={[3, 50]} />
+        <meshStandardMaterial color="#666666" />
+      </mesh>
+      
+      {/* Curbs - visual street boundaries */}
+      <mesh castShadow position={[-7, 0.15, 0]}>
+        <boxGeometry args={[0.3, 0.3, 50]} />
+        <meshStandardMaterial color="#cccccc" />
+      </mesh>
+      <mesh castShadow position={[7, 0.15, 0]}>
+        <boxGeometry args={[0.3, 0.3, 50]} />
+        <meshStandardMaterial color="#cccccc" />
       </mesh>
       
       {/* Buildings */}

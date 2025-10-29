@@ -1,6 +1,7 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useParadeGame, type Collectible as CollectibleType } from "@/lib/stores/useParadeGame";
+import { TrajectoryHint } from "./TrajectoryHint";
 import * as THREE from "three";
 
 interface CollectibleProps {
@@ -31,6 +32,9 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
   const { updateCollectible, removeCollectible } = useParadeGame();
   const hasBeenCaught = useRef(false);
   const previousCatchAction = useRef(catchAction);
+  const [showHint, setShowHint] = useState(true);
+  const [timeOnGround, setTimeOnGround] = useState(0);
+  const onGroundStartTime = useRef<number | null>(null);
   
   useEffect(() => {
     return () => {
@@ -55,6 +59,21 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
     if (isOnGround) {
       position.current.y = 0.3;
       
+      // Hide trajectory hint once landed
+      if (showHint) setShowHint(false);
+      
+      // Start ground timer if not already started
+      if (onGroundStartTime.current === null) {
+        onGroundStartTime.current = Date.now();
+      }
+      
+      // Check if been on ground for 5 seconds
+      const timeOnGroundMs = Date.now() - onGroundStartTime.current;
+      if (timeOnGroundMs > 5000) {
+        removeCollectible(collectible.id);
+        return;
+      }
+      
       // Bounce with energy loss
       if (Math.abs(velocity.current.y) > 0.5) {
         velocity.current.y = -velocity.current.y * 0.4; // Bounce with 40% energy
@@ -64,10 +83,19 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
       
       velocity.current.x *= 0.9; // Friction
       velocity.current.z *= 0.9;
+    } else {
+      // Reset ground timer if in air
+      onGroundStartTime.current = null;
     }
     
     // Update mesh position
     meshRef.current.position.copy(position.current);
+    
+    // Update store with current position/velocity for competitor bots
+    updateCollectible(collectible.id, { 
+      position: position.current.clone(), 
+      velocity: velocity.current.clone() 
+    });
     
     // Rotation animation
     meshRef.current.rotation.x += delta * 2;
@@ -112,6 +140,15 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
   
   return (
     <group>
+      {/* Trajectory hint - shows where item will land */}
+      {showHint && position.current.y > GROUND_LEVEL && (
+        <TrajectoryHint 
+          initialPosition={position.current}
+          initialVelocity={velocity.current}
+          color={color}
+        />
+      )}
+      
       <mesh ref={meshRef} castShadow>
         {collectible.type === "cup" ? (
           <cylinderGeometry args={[size, size * 0.8, size * 1.2, 6]} />

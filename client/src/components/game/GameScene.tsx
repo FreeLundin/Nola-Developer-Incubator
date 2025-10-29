@@ -9,6 +9,7 @@ import { ParadeFloat } from "./ParadeFloat";
 import { Collectible } from "./Collectible";
 import { CatchEffect } from "./CatchEffect";
 import { ClickMarker } from "./ClickMarker";
+import { CompetitorBot } from "./CompetitorBot";
 import { TouchInput } from "./TouchControls";
 import * as THREE from "three";
 
@@ -67,7 +68,7 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
       
       if (intersected) {
         // Constrain to street bounds
-        target.x = THREE.MathUtils.clamp(target.x, -8, 8);
+        target.x = THREE.MathUtils.clamp(target.x, -6.5, 6.5);
         target.z = THREE.MathUtils.clamp(target.z, -15, 15);
         target.y = 0.5; // Player height
         
@@ -155,11 +156,17 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
       {/* Gameplay elements only during playing phase */}
       {phase === "playing" && (
         <>
-          {/* Parade Floats - no longer need throwInterval, it's dynamic */}
-          <ParadeFloat id="float-1" startZ={-25} lane={-1} color="#9b59b6" />
+          {/* Parade Floats - all on right side of street */}
+          <ParadeFloat id="float-1" startZ={-25} lane={1} color="#9b59b6" />
           <ParadeFloat id="float-2" startZ={-15} lane={1} color="#e74c3c" />
-          <ParadeFloat id="float-3" startZ={-35} lane={-1} color="#ff6b35" />
+          <ParadeFloat id="float-3" startZ={-35} lane={1} color="#ff6b35" />
           <ParadeFloat id="float-4" startZ={-5} lane={1} color="#3498db" />
+          
+          {/* Competitor Bots - competing for catches */}
+          <CompetitorBot id="bot-1" startX={-4} color="#ff4444" />
+          <CompetitorBot id="bot-2" startX={2} color="#44ff44" />
+          <CompetitorBot id="bot-3" startX={-2} color="#4444ff" />
+          <CompetitorBot id="bot-4" startX={4} color="#ffff44" />
           
           {/* Collectibles */}
           {collectibles.map((collectible) => (
