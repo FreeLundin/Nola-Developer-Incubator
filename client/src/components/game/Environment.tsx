@@ -58,7 +58,7 @@ export function Environment() {
         shadow-camera-bottom={-20}
       />
       
-      {/* Atmospheric purple/orange glow for Halloween night */}
+      {/* Atmospheric purple/orange glow for festive parade atmosphere */}
       <pointLight position={[0, 10, 0]} intensity={0.5} color="#9b59b6" distance={30} />
       <pointLight position={[0, 10, -15]} intensity={0.5} color="#ff6b35" distance={30} />
       <pointLight position={[0, 10, 15]} intensity={0.5} color="#9b59b6" distance={30} />

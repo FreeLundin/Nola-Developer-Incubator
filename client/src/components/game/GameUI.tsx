@@ -82,7 +82,7 @@ export function GameUI() {
           >
             <Card className="bg-gradient-to-br from-purple-900/95 to-orange-900/95 border-2 border-yellow-400 p-8 max-w-2xl mx-4 text-white">
               <div className="flex justify-between items-start mb-6">
-                <h1 className="text-4xl font-bold text-yellow-300">Krew of Boo Parade</h1>
+                <h1 className="text-4xl font-bold text-yellow-300">Mardi Gras Parade Simulator</h1>
                 <button
                   onClick={handleStartGame}
                   className="text-white/70 hover:text-white transition-colors"
@@ -93,7 +93,7 @@ export function GameUI() {
               
               <div className="space-y-6">
                 <p className="text-xl text-yellow-200">
-                  Welcome to the New Orleans Halloween parade! Catch throws from the parade floats to win!
+                  Welcome to the Mardi Gras parade! Catch throws from the parade floats to win!
                 </p>
                 
                 <div className="bg-black/30 rounded-lg p-6 space-y-4">

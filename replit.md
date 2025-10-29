@@ -1,4 +1,4 @@
-# Krew of Boo Parade Game
+# Mardi Gras Parade Simulator
 
 ## Overview
 
