@@ -29,7 +29,7 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
   const meshRef = useRef<THREE.Mesh>(null);
   const position = useRef(collectible.position.clone());
   const velocity = useRef(collectible.velocity.clone());
-  const { updateCollectible, removeCollectible } = useParadeGame();
+  const { updateCollectible, removeCollectible, incrementMisses } = useParadeGame();
   const hasBeenCaught = useRef(false);
   const previousCatchAction = useRef(catchAction);
   const [showHint, setShowHint] = useState(true);
@@ -70,6 +70,11 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
       // Check if been on ground for 5 seconds
       const timeOnGroundMs = Date.now() - onGroundStartTime.current;
       if (timeOnGroundMs > 5000) {
+        // Count as a missed throw (not power-ups though)
+        const isRegularItem = collectible.type === "beads" || collectible.type === "doubloon" || collectible.type === "cup" || collectible.type === "king_cake";
+        if (isRegularItem) {
+          incrementMisses();
+        }
         removeCollectible(collectible.id);
         return;
       }

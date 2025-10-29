@@ -31,11 +31,13 @@ interface ParadeGameState {
   collectibles: Collectible[];
   activePowerUps: PowerUp[];
   playerColor: "beads" | "doubloon" | "cup"; // Player's assigned color for bonus points
+  missedThrows: number; // Track missed throws for bot gift system
   
   // Actions
   startGame: () => void;
   toggleCamera: () => void;
   addCatch: (collectibleType?: Collectible["type"], bypassPowerUp?: boolean) => void;
+  incrementMisses: () => void;
   addCollectible: (collectible: Collectible) => void;
   updateCollectible: (id: string, updates: Partial<Collectible>) => void;
   removeCollectible: (id: string) => void;
@@ -65,6 +67,7 @@ export const useParadeGame = create<ParadeGameState>()(
     collectibles: [],
     activePowerUps: [],
     playerColor: "beads", // Default color, reassigned on game start
+    missedThrows: 0,
     
     startGame: () => {
       console.log("Starting game...");
@@ -170,6 +173,29 @@ export const useParadeGame = create<ParadeGameState>()(
       });
     },
     
+    incrementMisses: () => {
+      const { missedThrows } = get();
+      const newMissCount = missedThrows + 1;
+      
+      if (newMissCount >= 3) {
+        console.log("🎁 Bot Gift! You missed 3 throws, bot gives you a bonus point!");
+        // Reset counter and give player a point
+        set({ missedThrows: 0 });
+        // Award a bonus point as a "gift" from the bots
+        const { score, targetScore } = get();
+        const newScore = score + 1;
+        if (newScore >= targetScore) {
+          set({ score: newScore });
+          get().nextLevel();
+        } else {
+          set({ score: newScore });
+        }
+      } else {
+        set({ missedThrows: newMissCount });
+        console.log(`Missed throw ${newMissCount}/3`);
+      }
+    },
+    
     resetGame: () => {
       console.log("Resetting game...");
       // Reassign random player color
@@ -187,6 +213,7 @@ export const useParadeGame = create<ParadeGameState>()(
         collectibles: [],
         activePowerUps: [],
         playerColor: randomColor,
+        missedThrows: 0,
         cameraMode: "third-person",
       });
     },
