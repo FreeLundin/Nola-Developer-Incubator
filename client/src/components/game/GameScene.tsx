@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useThree } from "@react-three/fiber";
 import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { Player, Controls } from "./Player";
 import { GameCamera } from "./GameCamera";
 import { Environment } from "./Environment";
@@ -31,9 +32,10 @@ interface GameSceneProps {
 }
 
 export function GameScene({ touchInput, catchAction }: GameSceneProps) {
-  const { phase, collectibles, addCatch, combo } = useParadeGame();
+  const { phase, collectibles, addCatch, combo, totalFloats, level } = useParadeGame();
   const { playHit, playFireworks } = useAudio();
   const { camera, gl } = useThree();
+  const isMobile = useIsMobile();
   const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(0, 0.5, 0));
   const [mouseTarget, setMouseTarget] = useState<THREE.Vector3 | null>(null);
   const [catchEffects, setCatchEffects] = useState<CatchEffectInstance[]>([]);
@@ -46,9 +48,9 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
     }
   }, [combo, playFireworks]);
   
-  // Handle mouse click for movement
+  // Handle mouse click for movement (disabled on mobile/tablet)
   useEffect(() => {
-    if (phase !== "playing") return;
+    if (phase !== "playing" || isMobile) return;
     
     const handleClick = (event: MouseEvent) => {
       // Calculate mouse position in normalized device coordinates
@@ -91,7 +93,7 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
     
     gl.domElement.addEventListener("click", handleClick);
     return () => gl.domElement.removeEventListener("click", handleClick);
-  }, [phase, camera, gl]);
+  }, [phase, camera, gl, isMobile]);
   
   // Handle clearing mouse target
   const handleClearMouseTarget = useCallback(() => {
@@ -167,11 +169,22 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
       {/* Gameplay elements only during playing phase */}
       {phase === "playing" && (
         <>
-          {/* Parade Floats - all on right side of street, passing player position for targeted throws */}
-          <ParadeFloat id="float-1" startZ={-25} lane={1} color="#9b59b6" playerPosition={playerPosition} />
-          <ParadeFloat id="float-2" startZ={-15} lane={1} color="#e74c3c" playerPosition={playerPosition} />
-          <ParadeFloat id="float-3" startZ={-35} lane={1} color="#ff6b35" playerPosition={playerPosition} />
-          <ParadeFloat id="float-4" startZ={-5} lane={1} color="#3498db" playerPosition={playerPosition} />
+          {/* Parade Floats - dynamically generated based on level (10 floats per level) */}
+          {Array.from({ length: totalFloats }, (_, i) => {
+            const colors = ["#9b59b6", "#e74c3c", "#ff6b35", "#3498db", "#f39c12", "#1abc9c", "#e91e63", "#9c27b0"];
+            const color = colors[i % colors.length];
+            const startZ = -30 - (i * 10); // Space floats 10 units apart
+            return (
+              <ParadeFloat 
+                key={`float-${level}-${i}`}
+                id={`float-${level}-${i}`}
+                startZ={startZ}
+                lane={1}
+                color={color}
+                playerPosition={playerPosition}
+              />
+            );
+          })}
           
           {/* Competitor Bots - spread out across street (x and z positions) */}
           <CompetitorBot id="bot-1" startX={-5.5} startZ={-13} color="#ff4444" />
@@ -181,11 +194,11 @@ export function GameScene({ touchInput, catchAction }: GameSceneProps) {
           <CompetitorBot id="bot-5" startX={-4} startZ={-9} color="#ff44ff" />
           <CompetitorBot id="bot-6" startX={1} startZ={-8} color="#44ffff" />
           
-          {/* Moving Obstacles - increase difficulty */}
-          <Obstacle id="obstacle-1" startPosition={[-3, 0.25, -5]} type="trash" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
-          <Obstacle id="obstacle-2" startPosition={[2, 0.25, -10]} type="barrier" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
-          <Obstacle id="obstacle-3" startPosition={[-4, 0.25, -2]} type="trash" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
-          <Obstacle id="obstacle-4" startPosition={[4, 0.25, -14]} type="barrier" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
+          {/* Moving Obstacles - behind catchable area, creating dense obstacle zone */}
+          <Obstacle id="obstacle-1" startPosition={[-3, 0.25, -16]} type="trash" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
+          <Obstacle id="obstacle-2" startPosition={[2, 0.25, -18]} type="barrier" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
+          <Obstacle id="obstacle-3" startPosition={[-4, 0.25, -17]} type="trash" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
+          <Obstacle id="obstacle-4" startPosition={[4, 0.25, -19]} type="barrier" playerPosition={playerPosition} onCollision={handleObstacleCollision} />
           
           {/* Collectibles */}
           {collectibles.map((collectible) => (

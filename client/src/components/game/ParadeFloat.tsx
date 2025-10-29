@@ -21,7 +21,8 @@ export function ParadeFloat({
   const meshRef = useRef<THREE.Group>(null);
   const position = useRef(new THREE.Vector3(lane * 5, 1, startZ));
   const lastThrowTime = useRef(Date.now());
-  const { addCollectible, phase, getFloatSpeed, getThrowInterval } = useParadeGame();
+  const hasPassed = useRef(false);
+  const { addCollectible, phase, getFloatSpeed, getThrowInterval, markFloatPassed } = useParadeGame();
   
   // Pre-calculate random decorative elements positions
   const decorations = useMemo(() => {
@@ -47,10 +48,11 @@ export function ParadeFloat({
     // Move float forward along the street
     position.current.z += floatSpeed * delta;
     
-    // Reset float position when it goes too far
-    if (position.current.z > 20) {
-      position.current.z = -30;
-      lastThrowTime.current = Date.now(); // Reset throw timer
+    // Mark as passed when it goes beyond the player (no more looping)
+    if (position.current.z > 20 && !hasPassed.current) {
+      hasPassed.current = true;
+      markFloatPassed();
+      console.log(`Float ${id} has passed!`);
     }
     
     meshRef.current.position.copy(position.current);
@@ -125,13 +127,25 @@ export function ParadeFloat({
         baseForce = Math.random() * 2.5 + 10; // 10-12.5 force
       }
       
-      // Most throws go over center line toward players
-      const crossCenterLine = Math.random() < 0.8;
+      // Determine throw depth - some go into dense obstacle area
+      const throwDepthRoll = Math.random();
+      let zDirection: number;
+      
+      if (throwDepthRoll < 0.25) {
+        // 25% go deep into obstacle zone (Z: -16 to -19 area)
+        zDirection = -(Math.random() * 0.5 + 1.2); // Strong backward throw
+      } else if (throwDepthRoll < 0.75) {
+        // 50% go to catchable area (normal)
+        zDirection = -(Math.random() * 0.7 + 0.5); // Moderate backward
+      } else {
+        // 25% go short or forward
+        zDirection = Math.random() * 0.5 - 0.2; // Short/forward throw
+      }
       
       throwDirection = new THREE.Vector3(
         -lane * (Math.random() * 0.6 + 0.6), // Toward center/opposite side
         upwardArc, // Variable upward arc
-        crossCenterLine ? -(Math.random() * 0.7 + 0.5) : Math.random() * 0.5 - 0.2 // Most go backward (over center)
+        zDirection // Varied depth including obstacle zone
       ).normalize();
       
       throwForce = baseForce;

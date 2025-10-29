@@ -45,6 +45,8 @@ interface ParadeGameState {
   missedThrows: number; // Track missed throws for bot gift system
   botScores: BotScore[]; // Track bot catches
   botClaims: Record<string, BotClaim>; // Track which bot claimed which collectible
+  totalFloats: number; // Total floats for current level (10 * level)
+  floatsPassed: number; // How many floats have passed the player
   
   // Actions
   startGame: () => void;
@@ -58,6 +60,8 @@ interface ParadeGameState {
   claimCollectible: (collectibleId: string, botId: string) => boolean;
   releaseCollectibleClaim: (collectibleId: string) => void;
   getCollectibleClaim: (collectibleId: string) => BotClaim | null;
+  markFloatPassed: () => void;
+  getTotalFloatsForLevel: (level: number) => number;
   resetGame: () => void;
   nextLevel: () => void;
   getFloatSpeed: () => number;
@@ -87,6 +91,8 @@ export const useParadeGame = create<ParadeGameState>()(
     missedThrows: 0,
     botScores: [],
     botClaims: {},
+    totalFloats: 10, // Start with 10 floats for level 1
+    floatsPassed: 0,
     
     startGame: () => {
       console.log("Starting game...");
@@ -103,7 +109,13 @@ export const useParadeGame = create<ParadeGameState>()(
         color: botColors[i],
       }));
       
-      set({ phase: "playing", playerColor: randomColor, botScores: initialBotScores });
+      set({ 
+        phase: "playing", 
+        playerColor: randomColor, 
+        botScores: initialBotScores,
+        totalFloats: 10, // Level 1 starts with 10 floats
+        floatsPassed: 0,
+      });
     },
     
     addBotCatch: (botId: string) => {
@@ -151,24 +163,14 @@ export const useParadeGame = create<ParadeGameState>()(
       
       console.log(`Catch! Score: +${points} = ${newScore}/${targetScore}, Combo: ${newCombo}x${isColorMatch ? " (COLOR MATCH!)" : ""}`);
       
-      if (newScore >= targetScore) {
-        set({ 
-          score: newScore, 
-          phase: "won",
-          combo: newCombo,
-          maxCombo: newMaxCombo,
-          lastCatchTime: now,
-          totalCatches: newTotalCatches,
-        });
-      } else {
-        set({ 
-          score: newScore,
-          combo: newCombo,
-          maxCombo: newMaxCombo,
-          lastCatchTime: now,
-          totalCatches: newTotalCatches,
-        });
-      }
+      // Score is now just for points - floats represent time, not score
+      set({ 
+        score: newScore,
+        combo: newCombo,
+        maxCombo: newMaxCombo,
+        lastCatchTime: now,
+        totalCatches: newTotalCatches,
+      });
     },
     
     addCollectible: (collectible) => {
@@ -231,12 +233,36 @@ export const useParadeGame = create<ParadeGameState>()(
       return botClaims[collectibleId] || null;
     },
     
+    markFloatPassed: () => {
+      const { floatsPassed, totalFloats } = get();
+      const newFloatsPassed = floatsPassed + 1;
+      
+      console.log(`Float passed! ${newFloatsPassed}/${totalFloats}`);
+      
+      // Check if all floats have passed - level complete!
+      if (newFloatsPassed >= totalFloats) {
+        console.log("All floats have passed! Level complete!");
+        set({ floatsPassed: newFloatsPassed });
+        // Small delay before advancing level
+        setTimeout(() => {
+          get().nextLevel();
+        }, 1000);
+      } else {
+        set({ floatsPassed: newFloatsPassed });
+      }
+    },
+    
+    getTotalFloatsForLevel: (level: number) => {
+      return level * 10; // Level 1: 10 floats, Level 2: 20 floats, etc.
+    },
+    
     nextLevel: () => {
       const { level, totalCatches } = get();
       const newLevel = level + 1;
+      const newTotalFloats = newLevel * 10; // 10 floats per level
       const newTargetScore = 5 + (newLevel - 1) * 2; // Increase target each level: 5, 7, 9, 11...
       
-      console.log(`Advancing to level ${newLevel}! New target: ${newTargetScore} catches`);
+      console.log(`Advancing to level ${newLevel}! ${newTotalFloats} floats this level, target: ${newTargetScore} catches`);
       
       set({
         level: newLevel,
@@ -246,6 +272,8 @@ export const useParadeGame = create<ParadeGameState>()(
         lastCatchTime: 0,
         phase: "playing",
         collectibles: [],
+        totalFloats: newTotalFloats,
+        floatsPassed: 0,
       });
     },
     
@@ -255,17 +283,10 @@ export const useParadeGame = create<ParadeGameState>()(
       
       if (newMissCount >= 3) {
         console.log("🎁 Bot Gift! You missed 3 throws, bot gives you a bonus point!");
-        // Reset counter and give player a point
-        set({ missedThrows: 0 });
-        // Award a bonus point as a "gift" from the bots
-        const { score, targetScore } = get();
+        // Reset counter and give player a point (but don't advance level - floats control that)
+        const { score } = get();
         const newScore = score + 1;
-        if (newScore >= targetScore) {
-          set({ score: newScore });
-          get().nextLevel();
-        } else {
-          set({ score: newScore });
-        }
+        set({ missedThrows: 0, score: newScore });
       } else {
         set({ missedThrows: newMissCount });
         console.log(`Missed throw ${newMissCount}/3`);
@@ -292,6 +313,8 @@ export const useParadeGame = create<ParadeGameState>()(
         missedThrows: 0,
         botScores: [],
         botClaims: {},
+        totalFloats: 10,
+        floatsPassed: 0,
         cameraMode: "third-person",
       });
     },
