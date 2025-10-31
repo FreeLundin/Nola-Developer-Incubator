@@ -17,9 +17,10 @@ export function TouchControls({ onInput }: TouchControlsProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [stickPosition, setStickPosition] = useState({ x: 0, y: 0 });
   
-  // Larger controls for better tablet visibility
-  const joystickSize = 140;
-  const stickSize = 60;
+  // Responsive joystick sizing - smaller on phones, larger on tablets
+  const isSmallScreen = typeof window !== 'undefined' && window.innerWidth < 640;
+  const joystickSize = isSmallScreen ? 100 : 140;
+  const stickSize = isSmallScreen ? 40 : 60;
   const maxDistance = (joystickSize - stickSize) / 2;
   
   useEffect(() => {
@@ -75,8 +76,8 @@ export function TouchControls({ onInput }: TouchControlsProps) {
   
   return (
     <>
-      {/* Movement Joystick */}
-      <div className="absolute bottom-20 left-4 pointer-events-auto">
+      {/* Movement Joystick - Compact on phones */}
+      <div className="absolute bottom-16 sm:bottom-20 left-2 sm:left-4 pointer-events-auto">
         <div
           ref={joystickRef}
           className="relative bg-black/40 rounded-full border-4 border-white/40 backdrop-blur-sm shadow-2xl"
