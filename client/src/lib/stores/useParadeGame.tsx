@@ -63,6 +63,9 @@ interface ParadeGameState {
   unlockedSkins: PlayerSkin[]; // Skins the player owns
   adRewardType: "continue" | "bonus_time" | "power_up" | null; // Type of reward for watching ad
   
+  // Settings
+  joystickEnabled: boolean; // Enable joystick controls for mobile/tablet
+  
   // Actions
   startGame: () => void;
   toggleCamera: () => void;
@@ -105,6 +108,9 @@ interface ParadeGameState {
   hitAggressiveNPC: (npcId: string) => void;
   aggressiveNPCHitPlayer: (npcId: string) => void;
   endNPCChase: (npcId: string) => void;
+  
+  // Settings actions
+  toggleJoystick: () => void;
 }
 
 // Combo timing window (milliseconds)
@@ -140,6 +146,11 @@ export const useParadeGame = create<ParadeGameState>()(
     totalFloats: 10, // Start with 10 floats for level 1
     floatsPassed: 0,
     aggressiveNPCs: [],
+    
+    // Settings state
+    joystickEnabled: typeof window !== 'undefined' 
+      ? localStorage.getItem('joystickEnabled') === 'true' 
+      : false,
     
     // Monetization state
     coins: 0,
@@ -605,6 +616,17 @@ export const useParadeGame = create<ParadeGameState>()(
             : npc
         ),
       }));
+    },
+    
+    toggleJoystick: () => {
+      set((state) => {
+        const newValue = !state.joystickEnabled;
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('joystickEnabled', String(newValue));
+        }
+        console.log(`Joystick controls ${newValue ? 'enabled' : 'disabled'}`);
+        return { joystickEnabled: newValue };
+      });
     },
   }))
 );

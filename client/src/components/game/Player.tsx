@@ -11,14 +11,20 @@ export enum Controls {
   right = "right",
 }
 
+export interface JoystickInput {
+  x: number; // -1 to 1
+  y: number; // -1 to 1
+}
+
 interface PlayerProps {
   position?: [number, number, number];
   onPositionChange?: (position: THREE.Vector3) => void;
   mouseTarget?: THREE.Vector3 | null;
   onClearMouseTarget?: () => void;
+  joystickInput?: JoystickInput | null;
 }
 
-export function Player({ position = [0, 0.5, 0], onPositionChange, mouseTarget, onClearMouseTarget }: PlayerProps) {
+export function Player({ position = [0, 0.5, 0], onPositionChange, mouseTarget, onClearMouseTarget, joystickInput = null }: PlayerProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const shadowRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls<Controls>();
@@ -72,7 +78,13 @@ export function Player({ position = [0, 0.5, 0], onPositionChange, mouseTarget, 
     if (keys.left) moveX -= 1;
     if (keys.right) moveX += 1;
     
-    // Mouse click movement (only if no keyboard/touch input)
+    // Joystick input (overrides keyboard if active)
+    if (joystickInput && (joystickInput.x !== 0 || joystickInput.y !== 0)) {
+      moveX = joystickInput.x;
+      moveZ = joystickInput.y;
+    }
+    
+    // Mouse click movement (only if no keyboard/touch/joystick input)
     const hasManualInput = moveX !== 0 || moveZ !== 0;
     if (!hasManualInput && currentMouseTarget.current) {
       const distanceToTarget = playerPosition.current.distanceTo(currentMouseTarget.current);

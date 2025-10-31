@@ -1,19 +1,3 @@
-import { useState, useEffect, useCallback } from "react";
-import { useThree } from "@react-three/fiber";
-import { useParadeGame } from "@/lib/stores/useParadeGame";
-import { useAudio } from "@/lib/stores/useAudio";
-import { useIsMobile } from "@/hooks/use-is-mobile";
-import { Player, Controls } from "./Player";
-import { GameCamera } from "./GameCamera";
-import { Environment } from "./Environment";
-import { ParadeFloat } from "./ParadeFloat";
-import { Collectible } from "./Collectible";
-import { CatchEffect } from "./CatchEffect";
-import { ClickMarker } from "./ClickMarker";
-import { CompetitorBot } from "./CompetitorBot";
-import { AggressiveNPC } from "./AggressiveNPC";
-import { Obstacle } from "./Obstacle";
-import * as THREE from "three";
 
 interface CatchEffectInstance {
   id: string;
