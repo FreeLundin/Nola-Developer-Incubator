@@ -98,31 +98,31 @@ export function FirstLevelTutorial({ onComplete }: FirstLevelTutorialProps) {
         exit={{ opacity: 0 }}
         className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
       >
-        <Card className="bg-purple-900/95 border-2 border-yellow-400 p-6 max-w-lg mx-4 text-white">
-          <div className="mb-4 text-center">
-            <h1 className="text-2xl font-bold text-yellow-300">{currentStep.title}</h1>
-            <div className="text-xs text-white/60 mt-2">
+        <Card className="bg-purple-900/95 border-2 border-yellow-400 p-4 sm:p-6 max-w-sm sm:max-w-lg mx-4 text-white">
+          <div className="mb-3 sm:mb-4 text-center">
+            <h1 className="text-lg sm:text-2xl font-bold text-yellow-300">{currentStep.title}</h1>
+            <div className="text-[10px] sm:text-xs text-white/60 mt-1 sm:mt-2">
               {step + 1} of {tutorialSteps.length}
             </div>
           </div>
           
-          <div className="mb-4">
+          <div className="mb-3 sm:mb-4 text-sm sm:text-base">
             {currentStep.content}
           </div>
           
           <div className="flex gap-2">
             <Button
               onClick={skipTutorial}
-              size="lg"
+              size="sm"
               variant="outline"
-              className="flex-1 border-yellow-400 text-white hover:bg-yellow-400/20"
+              className="flex-1 border-yellow-400 text-white hover:bg-yellow-400/20 text-xs sm:text-sm"
             >
               Skip
             </Button>
             <Button
               onClick={nextStep}
-              size="lg"
-              className="flex-1 bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold"
+              size="sm"
+              className="flex-1 bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold text-xs sm:text-sm"
             >
               {step < tutorialSteps.length - 1 ? "Next" : "Start!"}
             </Button>
