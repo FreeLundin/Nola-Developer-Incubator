@@ -8,12 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CosmeticShop } from "./CosmeticShop";
+import { FirstLevelTutorial } from "./FirstLevelTutorial";
 import { toast } from "sonner";
 
 export function GameUI() {
   const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
+  const [showFirstLevelTutorial, setShowFirstLevelTutorial] = useState(false);
   const [comboVisible, setComboVisible] = useState(false);
   const [comboTimeLeft, setComboTimeLeft] = useState(100);
   const [, forceUpdate] = useState(0); // For power-up countdown updates
@@ -65,6 +67,16 @@ export function GameUI() {
   
   const handleStartGame = () => {
     setShowTutorial(false);
+    // Show first-level tutorial on level 1
+    if (level === 1) {
+      setShowFirstLevelTutorial(true);
+    } else {
+      startGame();
+    }
+  };
+  
+  const handleTutorialComplete = () => {
+    setShowFirstLevelTutorial(false);
     startGame();
   };
   
@@ -169,68 +181,70 @@ export function GameUI() {
         <div className="absolute inset-0 pointer-events-none">
           {/* Top HUD Bar */}
           <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-auto">
-            {/* Level and Progress */}
+            {/* Level and Progress - Enhanced with glassmorphism */}
             <div className="flex flex-col gap-2">
-              <Card className="bg-gradient-to-r from-purple-900/90 to-orange-900/90 border-2 border-yellow-400 px-6 py-3">
+              <Card className="bg-gradient-to-br from-purple-600/30 to-orange-600/30 backdrop-blur-md border-2 border-yellow-400 shadow-2xl px-6 py-3">
                 <div className="space-y-2">
-                  <div className="text-xs text-yellow-300 font-semibold">LEVEL {level}</div>
-                  <div className="text-2xl font-bold text-white">
-                    {score} / {targetScore}
+                  <div className="text-xs text-yellow-300 font-bold tracking-wider flex items-center gap-2">
+                    <span className="text-2xl">👑</span> LEVEL {level}
                   </div>
-                  <Progress value={progressPercentage} className="h-2 w-32" />
+                  <div className="text-3xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                    {score} <span className="text-yellow-300">/ {targetScore}</span>
+                  </div>
+                  <Progress value={progressPercentage} className="h-3 w-32 shadow-lg" />
                 </div>
               </Card>
               
-              {/* Player Color Indicator */}
-              <Card className="bg-gradient-to-r from-black/80 to-gray-900/80 border-2 px-4 py-2" style={{ borderColor: playerColorInfo.color }}>
+              {/* Player Color Indicator - Enhanced */}
+              <Card className="bg-black/40 backdrop-blur-md border-2 px-4 py-2 shadow-2xl" style={{ borderColor: playerColorInfo.color, boxShadow: `0 0 12px ${playerColorInfo.color}40` }}>
                 <div className="flex items-center gap-2">
                   <div 
-                    className="w-4 h-4 rounded-full" 
+                    className="w-5 h-5 rounded-full animate-pulse" 
                     style={{ 
                       backgroundColor: playerColorInfo.color,
-                      boxShadow: `0 0 8px ${playerColorInfo.color}`
+                      boxShadow: `0 0 12px ${playerColorInfo.color}, inset 0 0 8px rgba(255,255,255,0.5)`
                     }}
                   />
-                  <div className="text-xs font-semibold" style={{ color: playerColorInfo.color }}>
+                  <div className="text-xs font-bold" style={{ color: playerColorInfo.color, textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
                     YOUR COLOR: {playerColorInfo.name.toUpperCase()}
                   </div>
                 </div>
-                <div className="text-[10px] text-yellow-300 mt-1">
-                  3x points for matching color!
+                <div className="text-[11px] text-yellow-300 font-semibold mt-1">
+                  ⭐ 3x points for matching color!
                 </div>
               </Card>
             </div>
             
             {/* Right side - Coins, Power-ups and Controls */}
             <div className="flex flex-col gap-2">
-              {/* Coins and Shop Button */}
+              {/* Coins and Shop Button - Enhanced */}
               <div className="flex gap-2">
-                <Card className="bg-gradient-to-r from-yellow-900/90 to-orange-900/90 border-2 border-yellow-400 px-4 py-2">
-                  <div className="text-xs text-yellow-300 font-semibold">COINS</div>
-                  <div className="text-xl font-bold text-white">💰 {coins}</div>
+                <Card className="bg-gradient-to-br from-yellow-600/40 to-orange-600/40 backdrop-blur-md border-2 border-yellow-400 shadow-2xl px-4 py-2">
+                  <div className="text-xs text-yellow-200 font-bold tracking-wide">COINS</div>
+                  <div className="text-2xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">💰 {coins}</div>
                 </Card>
                 <Button
                   onClick={() => setShowShop(true)}
                   size="lg"
-                  className="bg-purple-900/90 hover:bg-purple-800 border-2 border-yellow-400 text-white"
+                  className="bg-purple-600/50 hover:bg-purple-500/60 backdrop-blur-md border-2 border-yellow-400 text-white shadow-2xl font-bold"
                 >
                   <ShoppingBag size={20} />
                 </Button>
               </div>
               
-              {/* Active Power-ups */}
+              {/* Active Power-ups - Enhanced */}
               {activePowerUps.map((powerUp) => {
                 const timeLeft = Math.max(0, powerUp.endTime - Date.now());
                 const percentage = (timeLeft / 8000) * 100;
                 return (
-                  <Card key={powerUp.type} className="bg-gradient-to-r from-cyan-900/90 to-blue-900/90 border-2 border-cyan-400 px-4 py-2">
+                  <Card key={powerUp.type} className="bg-gradient-to-br from-cyan-500/40 to-blue-600/40 backdrop-blur-md border-2 border-cyan-300 shadow-2xl px-4 py-2 animate-pulse">
                     <div className="flex items-center gap-2">
-                      <div className="text-xs text-cyan-300 font-semibold whitespace-nowrap">
-                        {powerUp.type === "speed_boost" ? "⚡ SPEED" : "💎 2X POINTS"}
+                      <div className="text-sm text-cyan-100 font-bold whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                        {powerUp.type === "speed_boost" ? "⚡ SPEED BOOST" : "💎 2X POINTS"}
                       </div>
-                      <div className="text-white text-xs font-bold">{Math.ceil(timeLeft / 1000)}s</div>
+                      <div className="text-white text-sm font-black">{Math.ceil(timeLeft / 1000)}s</div>
                     </div>
-                    <Progress value={percentage} className="h-1 w-24 mt-1" />
+                    <Progress value={percentage} className="h-2 w-28 mt-1 shadow-lg" />
                   </Card>
                 );
               })}
@@ -238,7 +252,7 @@ export function GameUI() {
               <Button
                 onClick={toggleMute}
                 size="lg"
-                className="bg-purple-900/90 hover:bg-purple-800 border-2 border-yellow-400 text-white"
+                className="bg-purple-600/50 hover:bg-purple-500/60 backdrop-blur-md border-2 border-yellow-400 text-white shadow-2xl font-bold"
               >
                 {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
               </Button>
@@ -265,14 +279,14 @@ export function GameUI() {
             </Button>
           </div>
           
-          {/* Combo Timer - Top Center */}
+          {/* Combo Timer - Top Center - Enhanced */}
           {combo > 0 && (
             <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
-              <Card className="bg-gradient-to-r from-yellow-900/90 to-orange-900/90 border-2 border-yellow-400 px-6 py-2">
+              <Card className="bg-gradient-to-br from-yellow-500/40 to-orange-600/40 backdrop-blur-lg border-3 border-yellow-300 shadow-2xl px-8 py-3 animate-pulse">
                 <div className="text-center">
-                  <div className="text-xs text-yellow-300 font-semibold">COMBO</div>
-                  <div className="text-3xl font-bold text-white">{combo}x</div>
-                  <Progress value={comboTimeLeft} className="h-1 w-24 mt-1" />
+                  <div className="text-sm text-yellow-200 font-black tracking-widest">🔥 COMBO 🔥</div>
+                  <div className="text-5xl font-black text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)]">{combo}x</div>
+                  <Progress value={comboTimeLeft} className="h-2 w-32 mt-2 shadow-lg" />
                 </div>
               </Card>
             </div>
@@ -299,24 +313,24 @@ export function GameUI() {
             )}
           </AnimatePresence>
           
-          {/* Bot Scores - Bottom Left */}
+          {/* Bot Scores - Bottom Left - Enhanced */}
           <div className="absolute bottom-4 left-4 pointer-events-auto">
-            <Card className="bg-gradient-to-r from-black/85 to-gray-900/85 border-2 border-gray-500 px-4 py-3">
-              <div className="text-xs text-gray-300 font-semibold mb-2">🤖 BOT CATCHES</div>
-              <div className="space-y-1 max-h-48 overflow-y-auto">
+            <Card className="bg-black/40 backdrop-blur-md border-2 border-gray-400 shadow-2xl px-4 py-3">
+              <div className="text-sm text-gray-200 font-black mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">🤖 COMPETITOR CATCHES</div>
+              <div className="space-y-1.5 max-h-48 overflow-y-auto">
                 {sortedBots.map((bot) => (
                   <div key={bot.id} className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
                       <div 
-                        className="w-3 h-3 rounded-full" 
+                        className="w-4 h-4 rounded-full" 
                         style={{ 
                           backgroundColor: bot.color,
-                          boxShadow: `0 0 6px ${bot.color}`
+                          boxShadow: `0 0 10px ${bot.color}, inset 0 0 6px rgba(255,255,255,0.4)`
                         }}
                       />
-                      <span className="text-xs text-white font-medium">{bot.id}</span>
+                      <span className="text-xs text-white font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{bot.id}</span>
                     </div>
-                    <span className="text-sm font-bold text-yellow-300">{bot.catches}</span>
+                    <span className="text-base font-black text-yellow-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{bot.catches}</span>
                   </div>
                 ))}
               </div>
@@ -340,6 +354,9 @@ export function GameUI() {
       
       {/* Cosmetic Shop Modal */}
       {showShop && <CosmeticShop onClose={() => setShowShop(false)} />}
+      
+      {/* First Level Tutorial */}
+      {showFirstLevelTutorial && <FirstLevelTutorial onComplete={handleTutorialComplete} />}
     </>
   );
 }

@@ -165,17 +165,29 @@ export function ParadeFloat({
   
   return (
     <group ref={meshRef} position={[position.current.x, position.current.y, position.current.z]} scale={[1.5, 1.5, 1.5]}>
-      {/* Main float platform - larger scale */}
+      {/* Main float platform with enhanced emissive glow */}
       <mesh castShadow>
         <boxGeometry args={[2, 1.5, 3]} />
-        <meshStandardMaterial color={color} />
+        <meshStandardMaterial 
+          color={color}
+          emissive={color}
+          emissiveIntensity={0.4}
+          metalness={0.3}
+          roughness={0.4}
+        />
       </mesh>
       
-      {/* Decorative elements on the float - optimized */}
+      {/* Decorative elements on the float with glow */}
       {decorations.map((dec, i) => (
         <mesh key={i} position={[dec.x, dec.y, dec.z]} castShadow>
           <sphereGeometry args={[dec.scale, 6, 6]} />
-          <meshStandardMaterial color="#ffd700" metalness={0.6} roughness={0.3} />
+          <meshStandardMaterial 
+            color="#FFD700" 
+            emissive="#FFD700"
+            emissiveIntensity={1.2}
+            metalness={0.8} 
+            roughness={0.2} 
+          />
         </mesh>
       ))}
       

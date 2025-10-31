@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useParadeGame, type Collectible as CollectibleType } from "@/lib/stores/useParadeGame";
 import { TrajectoryHint } from "./TrajectoryHint";
+import { GlowingTrail } from "./GlowingTrail";
 import * as THREE from "three";
 
 interface CollectibleProps {
@@ -163,11 +164,16 @@ export function Collectible({ collectible, playerPosition, onCatch, catchAction 
         <meshStandardMaterial 
           color={color} 
           emissive={color} 
-          emissiveIntensity={0.3}
+          emissiveIntensity={0.8}
           metalness={0.6}
           roughness={0.2}
         />
       </mesh>
+      
+      {/* Glowing trail effect when falling */}
+      {position.current.y > GROUND_LEVEL && (
+        <GlowingTrail targetRef={meshRef} color={color} length={6} />
+      )}
       
       {/* Catchable highlight ring - optimized */}
       <mesh position={[position.current.x, 0.05, position.current.z]} rotation={[-Math.PI / 2, 0, 0]}>

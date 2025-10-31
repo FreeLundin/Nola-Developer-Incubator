@@ -17,16 +17,16 @@ interface Particle {
 export function CatchEffect({ position, color, onComplete }: CatchEffectProps) {
   const particlesRef = useRef<THREE.InstancedMesh>(null);
   const startTime = useRef(Date.now());
-  const duration = 1000; // 1 second
+  const duration = 1200; // Extended to 1.2 seconds for better visual
   
   const particles = useMemo<Particle[]>(() => {
-    const count = 12; // Reduced from 20 for better performance
+    const count = 20; // Increased for more spectacular effect
     return Array.from({ length: count }, () => ({
       position: position.clone(),
       velocity: new THREE.Vector3(
-        (Math.random() - 0.5) * 3,
-        Math.random() * 4 + 2,
-        (Math.random() - 0.5) * 3
+        (Math.random() - 0.5) * 6, // Wider spread
+        Math.random() * 6 + 3, // Higher velocity
+        (Math.random() - 0.5) * 6
       ),
       life: 1.0,
     }));
@@ -68,8 +68,13 @@ export function CatchEffect({ position, color, onComplete }: CatchEffectProps) {
   
   return (
     <instancedMesh ref={particlesRef} args={[undefined, undefined, particles.length]}>
-      <sphereGeometry args={[0.1, 6, 6]} />
-      <meshBasicMaterial color={color} />
+      <sphereGeometry args={[0.15, 8, 8]} />
+      <meshBasicMaterial 
+        color={color} 
+        transparent 
+        opacity={0.9}
+        blending={THREE.AdditiveBlending}
+      />
     </instancedMesh>
   );
 }
