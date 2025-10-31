@@ -3,16 +3,17 @@ import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Volume2, VolumeX, ShoppingBag, Heart, DollarSign } from "lucide-react";
+import { X, Volume2, VolumeX, ShoppingBag, Heart, DollarSign, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CosmeticShop } from "./CosmeticShop";
 import { FirstLevelTutorial } from "./FirstLevelTutorial";
+import { SettingsModal } from "./SettingsModal";
 import { toast } from "sonner";
 
 export function GameUI() {
-  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
+  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins, joystickEnabled } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [showFirstLevelTutorial, setShowFirstLevelTutorial] = useState(false);
@@ -20,6 +21,7 @@ export function GameUI() {
   const [comboTimeLeft, setComboTimeLeft] = useState(100);
   const [, forceUpdate] = useState(0); // For power-up countdown updates
   const [showShop, setShowShop] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const isMobile = useIsMobile();
   
   // Map player color to display info
@@ -208,6 +210,16 @@ export function GameUI() {
               >
                 {isMuted ? <VolumeX size={14} className="md:w-[18px] md:h-[18px]" /> : <Volume2 size={14} className="md:w-[18px] md:h-[18px]" />}
               </Button>
+              
+              {isMobile && (
+                <Button
+                  onClick={() => setShowSettings(true)}
+                  size="sm"
+                  className="bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white p-1 md:p-2"
+                >
+                  <Settings size={14} className="md:w-[18px] md:h-[18px]" />
+                </Button>
+              )}
             </div>
           </div>
           
@@ -306,6 +318,9 @@ export function GameUI() {
       
       {/* Cosmetic Shop Modal */}
       {showShop && <CosmeticShop onClose={() => setShowShop(false)} />}
+      
+      {/* Settings Modal */}
+      <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
       
       {/* First Level Tutorial */}
       {showFirstLevelTutorial && <FirstLevelTutorial onComplete={handleTutorialComplete} />}

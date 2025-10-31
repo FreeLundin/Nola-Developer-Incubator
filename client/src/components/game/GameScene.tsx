@@ -1,3 +1,20 @@
+import { useState, useEffect, useCallback } from "react";
+import { useThree } from "@react-three/fiber";
+import { useParadeGame } from "@/lib/stores/useParadeGame";
+import { useAudio } from "@/lib/stores/useAudio";
+import { useIsMobile } from "@/hooks/use-is-mobile";
+import { Player, Controls, JoystickInput } from "./Player";
+import { GameCamera } from "./GameCamera";
+import { Environment } from "./Environment";
+import { ParadeFloat } from "./ParadeFloat";
+import { Collectible } from "./Collectible";
+import { CatchEffect } from "./CatchEffect";
+import { ClickMarker } from "./ClickMarker";
+import { CompetitorBot } from "./CompetitorBot";
+import { AggressiveNPC } from "./AggressiveNPC";
+import { Obstacle } from "./Obstacle";
+import { TouchControls, TouchInput } from "./TouchControls";
+import * as THREE from "three";
 
 interface CatchEffectInstance {
   id: string;
@@ -10,7 +27,11 @@ interface ClickMarkerInstance {
   position: THREE.Vector3;
 }
 
-export function GameScene() {
+interface GameSceneProps {
+  joystickInput?: JoystickInput | null;
+}
+
+export function GameScene({ joystickInput: externalJoystickInput = null }: GameSceneProps) {
   const { 
     phase, 
     collectibles, 
@@ -24,6 +45,7 @@ export function GameScene() {
     hitAggressiveNPC,
     aggressiveNPCHitPlayer,
     endNPCChase,
+    joystickEnabled,
   } = useParadeGame();
   const { playHit, playFireworks } = useAudio();
   const { camera, gl } = useThree();
@@ -76,9 +98,9 @@ export function GameScene() {
     }
   }, [combo, playFireworks]);
   
-  // Handle click/tap for movement on all devices
+  // Handle click/tap for movement on all devices (only when joystick is disabled)
   useEffect(() => {
-    if (phase !== "playing") return;
+    if (phase !== "playing" || (isMobile && joystickEnabled)) return;
     
     const handleClick = (event: MouseEvent) => {
       // Calculate mouse position in normalized device coordinates
@@ -121,7 +143,7 @@ export function GameScene() {
     
     gl.domElement.addEventListener("click", handleClick);
     return () => gl.domElement.removeEventListener("click", handleClick);
-  }, [phase, camera, gl, isMobile]);
+  }, [phase, camera, gl, isMobile, joystickEnabled]);
   
   // Handle clearing mouse target
   const handleClearMouseTarget = useCallback(() => {
@@ -188,6 +210,7 @@ export function GameScene() {
         onPositionChange={setPlayerPosition} 
         mouseTarget={mouseTarget}
         onClearMouseTarget={handleClearMouseTarget}
+        joystickInput={externalJoystickInput}
       />
       
       {/* Camera */}
