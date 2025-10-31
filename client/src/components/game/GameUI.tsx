@@ -108,59 +108,28 @@ export function GameUI() {
             exit={{ opacity: 0 }}
             className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
           >
-            <Card className="bg-gradient-to-br from-purple-900/95 to-orange-900/95 border-2 border-yellow-400 p-8 max-w-2xl mx-4 text-white">
-              <div className="flex justify-between items-start mb-6">
-                <h1 className="text-4xl font-bold text-yellow-300">Mardi Gras Parade Simulator</h1>
-                <button
-                  onClick={handleStartGame}
-                  className="text-white/70 hover:text-white transition-colors"
-                >
-                  <X size={24} />
-                </button>
-              </div>
+            <Card className="bg-purple-900/95 border-2 border-yellow-400 p-8 max-w-lg mx-4 text-white">
+              <h1 className="text-3xl font-bold text-yellow-300 mb-4 text-center">Mardi Gras Parade</h1>
               
-              <div className="space-y-6">
-                <p className="text-xl text-yellow-200">
-                  Welcome to the Mardi Gras parade! Catch throws from the parade floats to win!
+              <div className="space-y-4">
+                <p className="text-lg text-center">
+                  Catch throws from parade floats!
                 </p>
                 
-                <div className="bg-black/30 rounded-lg p-6 space-y-4">
-                  <h2 className="text-2xl font-bold text-yellow-300 mb-4">Controls</h2>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {!isMobile && (
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-yellow-200">PC Controls:</h3>
-                        <ul className="space-y-1 text-sm">
-                          <li>• <kbd className="px-2 py-1 bg-white/20 rounded">W A S D</kbd> or <kbd className="px-2 py-1 bg-white/20 rounded">Arrow Keys</kbd> - Move</li>
-                          <li>• <kbd className="px-2 py-1 bg-white/20 rounded">Click</kbd> anywhere to move there</li>
-                          <li>• Move close to highlighted items to catch them</li>
-                        </ul>
-                      </div>
-                    )}
-                    
-                    {isMobile && (
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-yellow-200">Touch Controls:</h3>
-                        <ul className="space-y-1 text-sm">
-                          <li>• Use left joystick to move around</li>
-                          <li>• Tap <span className="text-yellow-300 font-semibold">CATCH 🎯</span> button when near highlighted items</li>
-                          <li>• Items glow and pulse when you can catch them</li>
-                        </ul>
-                      </div>
-                    )}
-                    
+                <div className="bg-black/30 rounded-lg p-4 space-y-3">
+                  {!isMobile ? (
                     <div className="space-y-2">
-                      <h3 className="font-semibold text-yellow-200">Gameplay:</h3>
-                      <ul className="space-y-1 text-sm">
-                        <li>• Move close to falling items to catch them</li>
-                        <li>• <span className="text-yellow-300 font-bold">3x points for your color!</span></li>
-                        <li>• Target markers show where throws will land</li>
-                        <li>• Catch quickly for combo bonuses!</li>
-                        <li>• Compete with colorful bots for catches!</li>
-                      </ul>
+                      <p className="text-sm">• Move: <kbd className="px-2 py-1 bg-white/20 rounded text-xs">WASD</kbd> or <kbd className="px-2 py-1 bg-white/20 rounded text-xs">Arrows</kbd></p>
+                      <p className="text-sm">• Click to move to location</p>
+                      <p className="text-sm">• Get close to items to catch them</p>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <p className="text-sm">• Move: Use joystick</p>
+                      <p className="text-sm">• Catch: Tap button when near items</p>
+                    </div>
+                  )}
+                  <p className="text-sm text-yellow-300 font-bold">• Match your color for 3x points!</p>
                 </div>
                 
                 <Button
@@ -179,82 +148,65 @@ export function GameUI() {
       {/* In-Game HUD */}
       {phase === "playing" && (
         <div className="absolute inset-0 pointer-events-none">
-          {/* Top HUD Bar */}
+          {/* Top HUD Bar - Simplified */}
           <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-auto">
-            {/* Level and Progress - Enhanced with glassmorphism */}
+            {/* Level and Score - Simplified */}
             <div className="flex flex-col gap-2">
-              <Card className="bg-gradient-to-br from-purple-600/30 to-orange-600/30 backdrop-blur-md border-2 border-yellow-400 shadow-2xl px-6 py-3">
-                <div className="space-y-2">
-                  <div className="text-xs text-yellow-300 font-bold tracking-wider flex items-center gap-2">
-                    <span className="text-2xl">👑</span> LEVEL {level}
-                  </div>
-                  <div className="text-3xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                    {score} <span className="text-yellow-300">/ {targetScore}</span>
-                  </div>
-                  <Progress value={progressPercentage} className="h-3 w-32 shadow-lg" />
+              <Card className="bg-black/70 border-2 border-yellow-400 px-4 py-2">
+                <div className="space-y-1">
+                  <div className="text-sm text-yellow-300 font-bold">LEVEL {level}</div>
+                  <div className="text-2xl font-bold text-white">{score}</div>
                 </div>
               </Card>
               
-              {/* Player Color Indicator - Enhanced */}
-              <Card className="bg-black/40 backdrop-blur-md border-2 px-4 py-2 shadow-2xl" style={{ borderColor: playerColorInfo.color, boxShadow: `0 0 12px ${playerColorInfo.color}40` }}>
+              {/* Player Color - Simplified */}
+              <Card className="bg-black/70 border-2 px-3 py-2" style={{ borderColor: playerColorInfo.color }}>
                 <div className="flex items-center gap-2">
-                  <div 
-                    className="w-5 h-5 rounded-full animate-pulse" 
-                    style={{ 
-                      backgroundColor: playerColorInfo.color,
-                      boxShadow: `0 0 12px ${playerColorInfo.color}, inset 0 0 8px rgba(255,255,255,0.5)`
-                    }}
-                  />
-                  <div className="text-xs font-bold" style={{ color: playerColorInfo.color, textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
-                    YOUR COLOR: {playerColorInfo.name.toUpperCase()}
+                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: playerColorInfo.color }} />
+                  <div className="text-xs font-bold text-white">
+                    {playerColorInfo.name.toUpperCase()}
                   </div>
-                </div>
-                <div className="text-[11px] text-yellow-300 font-semibold mt-1">
-                  ⭐ 3x points for matching color!
                 </div>
               </Card>
             </div>
             
-            {/* Right side - Coins, Power-ups and Controls */}
+            {/* Right side - Simplified */}
             <div className="flex flex-col gap-2">
-              {/* Coins and Shop Button - Enhanced */}
+              {/* Coins */}
               <div className="flex gap-2">
-                <Card className="bg-gradient-to-br from-yellow-600/40 to-orange-600/40 backdrop-blur-md border-2 border-yellow-400 shadow-2xl px-4 py-2">
-                  <div className="text-xs text-yellow-200 font-bold tracking-wide">COINS</div>
-                  <div className="text-2xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">💰 {coins}</div>
+                <Card className="bg-black/70 border-2 border-yellow-400 px-3 py-2">
+                  <div className="text-lg font-bold text-white">💰 {coins}</div>
                 </Card>
                 <Button
                   onClick={() => setShowShop(true)}
-                  size="lg"
-                  className="bg-purple-600/50 hover:bg-purple-500/60 backdrop-blur-md border-2 border-yellow-400 text-white shadow-2xl font-bold"
+                  size="sm"
+                  className="bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white"
                 >
-                  <ShoppingBag size={20} />
+                  <ShoppingBag size={18} />
                 </Button>
               </div>
               
-              {/* Active Power-ups - Enhanced */}
+              {/* Active Power-ups - Simplified */}
               {activePowerUps.map((powerUp) => {
                 const timeLeft = Math.max(0, powerUp.endTime - Date.now());
-                const percentage = (timeLeft / 8000) * 100;
                 return (
-                  <Card key={powerUp.type} className="bg-gradient-to-br from-cyan-500/40 to-blue-600/40 backdrop-blur-md border-2 border-cyan-300 shadow-2xl px-4 py-2 animate-pulse">
+                  <Card key={powerUp.type} className="bg-cyan-600/90 border-2 border-cyan-300 px-3 py-2">
                     <div className="flex items-center gap-2">
-                      <div className="text-sm text-cyan-100 font-bold whitespace-nowrap drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                        {powerUp.type === "speed_boost" ? "⚡ SPEED BOOST" : "💎 2X POINTS"}
+                      <div className="text-xs text-white font-bold">
+                        {powerUp.type === "speed_boost" ? "⚡ SPEED" : "💎 2X"}
                       </div>
-                      <div className="text-white text-sm font-black">{Math.ceil(timeLeft / 1000)}s</div>
+                      <div className="text-white text-xs font-bold">{Math.ceil(timeLeft / 1000)}s</div>
                     </div>
-                    <Progress value={percentage} className="h-2 w-28 mt-1 shadow-lg" />
                   </Card>
                 );
               })}
               
               <Button
                 onClick={toggleMute}
-                size="lg"
-                className="bg-purple-600/50 hover:bg-purple-500/60 backdrop-blur-md border-2 border-yellow-400 text-white shadow-2xl font-bold"
+                size="sm"
+                className="bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white"
               >
-                {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
               </Button>
             </div>
           </div>
