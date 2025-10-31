@@ -36,8 +36,8 @@ Preferred communication style: Simple, everyday language.
 - **Difficulty Scaling**: Gentle early levels (L1: 0 NPCs, 1 obstacle, 2 bots; L2-3: 1 NPC, 2 obstacles), gradual ramp after level 3 via centralized getNPCCount/getObstacleCount functions.
 - **Pacing**: Level 1 at 3.5s throw interval, constant 2 units/sec float speed through L3, gentle progression thereafter.
 - **Visuals**: Extensive 3D scene lighting (Mardi Gras tri-colors), atmospheric effects, gradient sky, street decorations, glowing collectible trails, emissive materials on floats/collectibles.
-- **UI/HUD**: Redesigned with glassmorphism effects, improved visual hierarchy.
-- **Tutorial**: Comprehensive 7-step first-level tutorial covering game goals, controls, mechanics, bonuses, power-ups, and obstacles.
+- **UI/HUD**: Simplified for clarity - clean black backgrounds with simple borders, high-contrast text, essential information only (level, score, coins, power-ups), no glassmorphism or decorative effects.
+- **Tutorial**: Simplified 3-step first-level tutorial (How to Play, Controls, Tips) - concise and clear for better accessibility.
 - **Monetization**: Optional rewarded video ads (continue, bonus time, power-ups) and cosmetic character customization (6 skins) purchased with in-game coins.
 - **Gameplay Mechanics**: Float-based timer (levels end when all floats pass), dynamic float generation, random wandering NPCs and obstacles with level-based scaling, float collision elimination, inactivity timeout.
 - **Strategic Gameplay**: Trajectory hints, 5-second ground despawn for uncollected items, redesigned narrower street with parade route on one side, competitor bots with shared claim coordination and smart pathfinding.
