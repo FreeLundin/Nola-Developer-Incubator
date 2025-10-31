@@ -46,7 +46,7 @@ export function FirstLevelTutorial({ onComplete }: FirstLevelTutorialProps) {
             {isMobile ? (
               <div className="space-y-2 text-white">
                 <p className="text-lg">• Use joystick to move</p>
-                <p className="text-lg">• Tap CATCH button when near items</p>
+                <p className="text-lg">• Get close to items to catch them</p>
               </div>
             ) : (
               <div className="space-y-2 text-white">

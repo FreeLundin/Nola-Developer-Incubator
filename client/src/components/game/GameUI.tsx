@@ -126,7 +126,7 @@ export function GameUI() {
                   ) : (
                     <div className="space-y-2">
                       <p className="text-sm">• Move: Use joystick</p>
-                      <p className="text-sm">• Catch: Tap button when near items</p>
+                      <p className="text-sm">• Get close to items to catch them</p>
                     </div>
                   )}
                   <p className="text-sm text-yellow-300 font-bold">• Match your color for 3x points!</p>
