@@ -11,12 +11,11 @@ interface TouchControlsProps {
   onCatch?: () => void;
 }
 
-export function TouchControls({ onInput, onCatch }: TouchControlsProps) {
+export function TouchControls({ onInput }: TouchControlsProps) {
   const isMobile = useIsMobile();
   const joystickRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [stickPosition, setStickPosition] = useState({ x: 0, y: 0 });
-  const [isCatchPressed, setIsCatchPressed] = useState(false);
   
   // Larger controls for better tablet visibility
   const joystickSize = 140;
@@ -74,15 +73,6 @@ export function TouchControls({ onInput, onCatch }: TouchControlsProps) {
   
   if (!isMobile) return null;
   
-  const handleCatchPress = () => {
-    setIsCatchPressed(true);
-    if (onCatch) onCatch();
-  };
-  
-  const handleCatchRelease = () => {
-    setIsCatchPressed(false);
-  };
-  
   return (
     <>
       {/* Movement Joystick */}
@@ -118,27 +108,6 @@ export function TouchControls({ onInput, onCatch }: TouchControlsProps) {
             <div className="w-full h-full rounded-full bg-gradient-to-br from-purple-400 to-orange-400 border-2 border-white/60" />
           </div>
         </div>
-      </div>
-      
-      {/* Catch Button */}
-      <div className="absolute bottom-20 right-4 pointer-events-auto">
-        <button
-          className={`w-32 h-32 rounded-full border-4 backdrop-blur-sm shadow-2xl transition-all flex flex-col items-center justify-center font-bold text-white ${
-            isCatchPressed 
-              ? "bg-gradient-to-br from-purple-600 to-orange-600 scale-95 border-yellow-300" 
-              : "bg-gradient-to-br from-purple-500 to-orange-500 border-white/50 hover:border-yellow-300"
-          }`}
-          onTouchStart={handleCatchPress}
-          onTouchEnd={handleCatchRelease}
-          onTouchCancel={handleCatchRelease}
-          style={{
-            WebkitTapHighlightColor: 'transparent',
-            touchAction: 'manipulation'
-          }}
-        >
-          <div className="text-4xl mb-1">🎯</div>
-          <div className="text-sm font-extrabold tracking-wide">CATCH</div>
-        </button>
       </div>
     </>
   );

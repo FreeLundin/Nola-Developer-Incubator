@@ -44,7 +44,7 @@ Preferred communication style: Simple, everyday language.
 - **Power-ups**: Speed Boost and Double Points with UI indicators, rare King Cake collectible.
 - **Physics**: Bouncing physics for collectibles, combo timer visual meter.
 - **Performance**: Optimized geometry, reduced particle effects.
-- **Controls**: Locked third-person camera, platform-specific controls (keyboard for PC, joystick/button for tablets), dynamic throw arcs.
+- **Controls**: Locked third-person camera, platform-specific controls (keyboard/mouse for PC, joystick for tablets), auto-catch when close to items, dynamic throw arcs.
 - **Audio**: Festive fireworks sounds for level completion and high combos.
 
 ## External Dependencies
