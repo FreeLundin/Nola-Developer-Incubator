@@ -44,7 +44,8 @@ Preferred communication style: Simple, everyday language.
 - **Power-ups**: Speed Boost and Double Points with UI indicators, rare King Cake collectible.
 - **Physics**: Bouncing physics for collectibles, combo timer visual meter.
 - **Performance**: Optimized geometry, reduced particle effects.
-- **Controls**: Locked third-person camera, platform-specific controls (keyboard/mouse for PC, joystick for tablets), auto-catch when close to items, dynamic throw arcs.
+- **Controls**: Locked third-person camera, platform-specific controls (keyboard/mouse for PC, optional on-screen joystick for tablets/phones), auto-catch when close to items, dynamic throw arcs.
+  - **Joystick Controls**: Optional toggleable on-screen joystick for mobile/tablet devices. Settings accessible via gear icon in GameUI (mobile only). Preference persists in localStorage. When enabled, joystick appears in bottom-left during gameplay with purple/orange styling. Click-to-move automatically disabled when joystick is active.
 - **Audio**: Festive fireworks sounds for level completion and high combos.
 
 ## External Dependencies
