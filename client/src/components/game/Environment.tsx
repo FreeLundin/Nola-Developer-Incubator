@@ -2,6 +2,7 @@ import { useMemo, useRef } from "react";
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { InstanceSetter } from "./InstanceSetter";
 
 export function Environment() {
   // Load texture with safe loader and fallback to undefined on error to avoid uncaught throws
@@ -306,13 +307,18 @@ export function Environment() {
         );
       })}
       
-      {/* Crowd silhouettes on sidewalks */}
-      {crowdPositions.map((person) => (
-        <mesh key={person.id} position={person.position} castShadow>
-          <boxGeometry args={[0.3, person.height, 0.3]} />
-          <meshStandardMaterial color="#1a1a1a" />
-        </mesh>
-      ))}
+      {/* Crowd silhouettes on sidewalks - use instancing for performance */}
+      {(() => {
+        const count = crowdPositions.length;
+        const instRef = useRef<THREE.InstancedMesh>(null);
+        return (
+          <instancedMesh ref={instRef} args={[undefined as any, undefined as any, count]} castShadow receiveShadow>
+            <boxGeometry args={[0.3, 1, 0.3]} />
+            <meshStandardMaterial color="#1a1a1a" />
+            <InstanceSetter positions={crowdPositions} meshRef={instRef} />
+          </instancedMesh>
+        );
+      })()}
     </group>
   );
 }

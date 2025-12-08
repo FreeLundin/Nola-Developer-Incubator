@@ -39,6 +39,22 @@ a { color: #7c3aed; }
   margin-top: 8px;
 }
 
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255,255,255,0.2);
+  border-top-color: rgba(255,255,255,0.95);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+#play-status .btn-secondary { margin-left: 0; margin-top: 8px; }
+
 /* responsive tweaks */
 @media (max-width: 640px) {
   .site-header { padding: 28px 12px; }

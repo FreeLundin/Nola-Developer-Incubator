@@ -17,6 +17,7 @@
       <button id="open-site" class="btn-secondary">Open Docs Site</button>
     </div>
     <div id="play-status" style="margin-top:12px;color:#fff;opacity:0.95;display:none"></div>
+    <div id="play-spinner" style="display:none;margin-top:8px;"></div>
   </header>
 
   <main class="content">
@@ -61,6 +62,7 @@
       const PLAY_URL = 'http://127.0.0.1:5000';
       const HEALTH_URL = `${PLAY_URL.replace(/\/$/, '')}/health`;
       const STATUS_EL = document.getElementById('play-status');
+      const SPINNER_EL = document.getElementById('play-spinner');
       const btn = document.getElementById('play-now');
       const openSiteBtn = document.getElementById('open-site');
 
@@ -70,7 +72,39 @@
         STATUS_EL.style.color = isError ? '#ffdddd' : '#ddffdd';
       }
 
-      function hideStatus(){ STATUS_EL.style.display = 'none'; }
+      function clearStatus(){ 
+        STATUS_EL.style.display = 'none';
+        STATUS_EL.textContent = '';
+        SPINNER_EL.style.display = 'none';
+        SPINNER_EL.innerHTML = '';
+      }
+
+      function showSpinner() {
+        SPINNER_EL.style.display = 'block';
+        SPINNER_EL.innerHTML = '<div class="spinner"></div>';
+      }
+
+      function hideSpinner() {
+        SPINNER_EL.style.display = 'none';
+        SPINNER_EL.innerHTML = '';
+      }
+
+      function createCopyButton(cmd) {
+        const btn = document.createElement('button');
+        btn.textContent = 'Copy command';
+        btn.style.marginTop = '8px';
+        btn.className = 'btn-secondary';
+        btn.onclick = async () => {
+          try {
+            await navigator.clipboard.writeText(cmd);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy command', 2000);
+          } catch (e) {
+            alert('Copy failed — please copy manually: ' + cmd);
+          }
+        };
+        return btn;
+      }
 
       btn.addEventListener('click', () => {
         // open blank window/tab to ensure open allowed by user gesture
@@ -81,30 +115,41 @@
         }
 
         showStatus('Checking local server (this may take a few seconds)...');
+        showSpinner();
         const start = Date.now();
         const TIMEOUT = 20000; // 20s
         const INTERVAL = 1000;
 
         function probe() {
-          fetch(HEALTH_URL, {cache: 'no-store', mode: 'no-cors'}).then((res) => {
-            // If fetch succeeds or CORS blocks but server responds, we attempt to open
-            win.location = PLAY_URL;
-            showStatus('Server ready — opening game...', false);
-          }).catch((err) => {
-            if (Date.now() - start > TIMEOUT) {
-              showStatus('Could not reach local server. Please start dev server: `npm run dev` and then click "Play Now" again.', true);
-              // offer copyable command
-              const cmd = document.createElement('div');
-              cmd.style.marginTop = '8px';
-              cmd.style.fontFamily = 'monospace';
-              cmd.textContent = 'Command: npm run dev';
-              STATUS_EL.appendChild(cmd);
-              win.close();
-              return;
-            }
-            // try again
-            setTimeout(probe, INTERVAL);
-          });
+          fetch(HEALTH_URL, {cache: 'no-store'})
+            .then((res) => {
+              if (res.ok) {
+                win.location = PLAY_URL;
+                showStatus('Server ready — opening game...', false);
+                hideSpinner();
+              } else {
+                throw new Error('Non-OK status');
+              }
+            })
+            .catch((err) => {
+              if (Date.now() - start > TIMEOUT) {
+                showStatus('Could not reach local server. Please start dev server: `npm run dev` and then click "Play Now" again.', true);
+                hideSpinner();
+                // offer copyable command
+                const cmd = 'npm run dev';
+                const copyBtn = createCopyButton(cmd);
+                // append copy button below status
+                if (!document.getElementById('copy-cmd-btn')) {
+                  copyBtn.id = 'copy-cmd-btn';
+                  STATUS_EL.appendChild(document.createElement('br'));
+                  STATUS_EL.appendChild(copyBtn);
+                }
+                win.close();
+                return;
+              }
+              // try again
+              setTimeout(probe, INTERVAL);
+            });
         }
 
         probe();

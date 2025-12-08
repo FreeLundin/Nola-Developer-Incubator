@@ -3,7 +3,7 @@ import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Volume2, VolumeX, ShoppingBag, Heart, DollarSign, Settings } from "lucide-react";
+import { Volume2, VolumeX, ShoppingBag, Heart, DollarSign, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -13,7 +13,7 @@ import { SettingsModal } from "./SettingsModal";
 import { toast } from "sonner";
 
 export function GameUI() {
-  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins, joystickEnabled } = useParadeGame();
+  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [showFirstLevelTutorial, setShowFirstLevelTutorial] = useState(false);
@@ -97,8 +97,6 @@ export function GameUI() {
     });
   };
   
-  const progressPercentage = (score / targetScore) * 100;
-  
   return (
     <>
       {/* Tutorial Overlay */}
@@ -112,8 +110,18 @@ export function GameUI() {
           >
             <Card className="bg-purple-900/95 border-2 border-yellow-400 p-4 sm:p-8 max-w-sm sm:max-w-lg mx-4 text-white">
               <h1 className="text-xl sm:text-3xl font-bold text-yellow-300 mb-3 sm:mb-4 text-center">Mardi Gras Parade</h1>
+
+              {/* Start menu logo (WebP preferred, PNG fallback). Place before the tutorial copy. */}
+              <div className="flex justify-center">
+                <img
+                  src="/images/start-logo.webp"
+                  alt="Mardi Gras Parade Simulator"
+                  className="w-40 sm:w-56 mx-auto mb-3 rounded-md shadow-lg"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/start-logo.png'; }}
+                />
+              </div>
               
-              <div className="space-y-3 sm:space-y-4">
+               <div className="space-y-3 sm:space-y-4">
                 <p className="text-sm sm:text-lg text-center">
                   Catch throws from parade floats!
                 </p>

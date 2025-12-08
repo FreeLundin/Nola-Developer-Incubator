@@ -8,6 +8,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Lightweight health/readiness endpoint for CI and probes
   app.get('/health', (_req, res) => {
+    // Add CORS headers to make the endpoint fetchable from the docs site during local testing
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.json({
       status: 'ok',
       uptime: process.uptime(),

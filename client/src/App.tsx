@@ -12,6 +12,7 @@ import { Controls, JoystickInput } from "./components/game/Player";
 import { useParadeGame } from "./lib/stores/useParadeGame";
 import { useIsMobile } from "./hooks/use-is-mobile";
 import { CanvasGuard } from "./components/game/CanvasGuard";
+import { DevPerf } from "./components/game/DevPerf";
 
 const controls = [
   { name: Controls.forward, keys: ["KeyW", "ArrowUp"] },
@@ -71,6 +72,9 @@ function App() {
 
           {/* CanvasGuard listens for WebGL context lost/restore and shows overlay */}
           <CanvasGuard />
+
+          {/* Dev performance overlay (dev-only) */}
+          {DEV_LOW_DETAIL && <DevPerf />}
         </Canvas>
         
         <GameUI />
