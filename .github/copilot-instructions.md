@@ -193,7 +193,10 @@ export function registerRoutes(app: Express) {
 Use Drizzle ORM in `server/storage.ts`:
 ```typescript
 import { drizzle } from 'drizzle-orm/neon-serverless';
+import { eq } from 'drizzle-orm';
 import { players } from '../shared/schema';
+
+const db = drizzle(process.env.DATABASE_URL!);
 
 export async function getProfile(id: string) {
   return db.select().from(players).where(eq(players.id, id));
@@ -204,14 +207,29 @@ export async function getProfile(id: string) {
 
 ### Collision Detection
 ```typescript
-// Distance-based collision detection
+import { Vector3 } from 'three';
+
+// Distance-based collision detection using THREE.Vector3
 const distance = playerPosition.distanceTo(collectiblePosition);
 const isCaught = distance < CATCH_RADIUS;
+
+// Alternative: Manual distance calculation
+const dx = playerPosition.x - collectiblePosition.x;
+const dy = playerPosition.y - collectiblePosition.y;
+const dz = playerPosition.z - collectiblePosition.z;
+const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 ```
 
 ### Physics Simulation
 ```typescript
-// Apply gravity to objects
+import { Vector3 } from 'three';
+
+// Apply gravity to objects with proper THREE.Vector3 types
+const velocity = new Vector3(0, 5, 0); // Initial velocity
+const position = new Vector3(0, 10, 0); // Current position
+const GRAVITY = 9.81; // Gravity constant
+
+// Update physics each frame
 velocity.y -= GRAVITY * delta;
 position.add(velocity.clone().multiplyScalar(delta));
 ```
