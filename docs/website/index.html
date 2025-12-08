@@ -10,6 +10,13 @@
   <header class="site-header">
     <h1>Mardi Gras Parade Simulator</h1>
     <p class="tagline">A 3D browser-based parade game built with React, React Three Fiber, and Express.</p>
+
+    <!-- Play Now button: opens a new tab and polls the local /health endpoint; falls back to instructions -->
+    <div style="margin-top:16px;">
+      <button id="play-now" class="btn-play">▶ Play Now</button>
+      <button id="open-site" class="btn-secondary">Open Docs Site</button>
+    </div>
+    <div id="play-status" style="margin-top:12px;color:#fff;opacity:0.95;display:none"></div>
   </header>
 
   <main class="content">
@@ -47,6 +54,66 @@
   <footer class="site-footer">
     <small>Generated: 2025-12-08 · Local preview available at <a href="http://127.0.0.1:5000">127.0.0.1:5000</a></small>
   </footer>
+
+  <script>
+    // Play Now logic
+    (function(){
+      const PLAY_URL = 'http://127.0.0.1:5000';
+      const HEALTH_URL = `${PLAY_URL.replace(/\/$/, '')}/health`;
+      const STATUS_EL = document.getElementById('play-status');
+      const btn = document.getElementById('play-now');
+      const openSiteBtn = document.getElementById('open-site');
+
+      function showStatus(msg, isError) {
+        STATUS_EL.style.display = 'block';
+        STATUS_EL.textContent = msg;
+        STATUS_EL.style.color = isError ? '#ffdddd' : '#ddffdd';
+      }
+
+      function hideStatus(){ STATUS_EL.style.display = 'none'; }
+
+      btn.addEventListener('click', () => {
+        // open blank window/tab to ensure open allowed by user gesture
+        const win = window.open('about:blank', '_blank');
+        if (!win) {
+          alert('Please allow popups for this page to open the game in a new tab.');
+          return;
+        }
+
+        showStatus('Checking local server (this may take a few seconds)...');
+        const start = Date.now();
+        const TIMEOUT = 20000; // 20s
+        const INTERVAL = 1000;
+
+        function probe() {
+          fetch(HEALTH_URL, {cache: 'no-store', mode: 'no-cors'}).then((res) => {
+            // If fetch succeeds or CORS blocks but server responds, we attempt to open
+            win.location = PLAY_URL;
+            showStatus('Server ready — opening game...', false);
+          }).catch((err) => {
+            if (Date.now() - start > TIMEOUT) {
+              showStatus('Could not reach local server. Please start dev server: `npm run dev` and then click "Play Now" again.', true);
+              // offer copyable command
+              const cmd = document.createElement('div');
+              cmd.style.marginTop = '8px';
+              cmd.style.fontFamily = 'monospace';
+              cmd.textContent = 'Command: npm run dev';
+              STATUS_EL.appendChild(cmd);
+              win.close();
+              return;
+            }
+            // try again
+            setTimeout(probe, INTERVAL);
+          });
+        }
+
+        probe();
+      });
+
+      openSiteBtn.addEventListener('click', () => {
+        window.open('./index.html', '_self');
+      });
+    })();
+  </script>
 </body>
 </html>
-

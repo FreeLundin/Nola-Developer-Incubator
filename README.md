@@ -11,9 +11,39 @@
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start — Test in browser (recommended)
 
-Get the simulator running in under 2 minutes:
+Prefer a fast, visual check first? Open the lightweight project landing page or launch the dev server and open the game in your browser immediately.
+
+1) Open the project landing page (static):
+- Open `docs/website/index.html` in your browser, or serve it quickly:
+
+```powershell
+# from repo root
+python -m http.server 8081 -d docs/website
+# then open http://127.0.0.1:8081 in your browser
+```
+
+2) Start the dev server and auto-open the game in your browser (recommended):
+- In one terminal run:
+
+```powershell
+npm run dev
+```
+
+- In another terminal, run the helper which will wait for the server health endpoint and open your default browser automatically:
+
+```powershell
+npm run open:browser
+```
+
+This helper polls `http://127.0.0.1:5000/health` and opens the page when the server is ready.
+
+---
+
+## 🚀 Quick Start (alternate: developer flow)
+
+Get the simulator running in under 2 minutes (developer workflow):
 
 ```bash
 # Clone repository
