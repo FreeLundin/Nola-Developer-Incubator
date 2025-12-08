@@ -8,6 +8,8 @@ The Mardi Gras Parade project has refocused on browser-based development for bro
 
 **For the current active project**, see the main [README.md](../../README.md) in the repository root.
 
+**For details about this change**, see [docs/DEPRECATED.md](../../docs/DEPRECATED.md).
+
 This code remains for historical reference and potential future use.
 
 ### Why the Change?
