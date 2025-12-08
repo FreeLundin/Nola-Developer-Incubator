@@ -1,100 +1,43 @@
-﻿# Mardi Gras Parade - Unreal Engine Project
+# Mardi Gras Parade - Unreal Engine Project
 
-## ?? Quick Start
+## ⚠️ DEPRECATED
 
-1. **Generate Visual Studio project files:**
-   - Right-click \$ProjectName.uproject\
-   - Select "Generate Visual Studio project files"
+**This Unreal Engine project is no longer being actively developed.**
 
-2. **Open in Visual Studio:**
-   - Open \$ProjectName.sln\
- - Build Solution (F7)
-   - Wait for compilation to complete
+The Mardi Gras Parade project has refocused on browser-based development for broader accessibility and immediate playability. 
 
-3. **Open in Unreal Editor:**
-   - Double-click \$ProjectName.uproject\
-   - Press Play (Alt+P) to test
+**For the current active project**, see the main [README.md](../../README.md) in the repository root.
 
-## ?? Project Structure
+This code remains for historical reference and potential future use.
 
-\\\
-Source/MardiGrasParade/
-??? Characters/          # Player character C++ classes
-?   ??? ParadePlayerCharacter.h
-?   ??? ParadePlayerCharacter.cpp
-??? GameModes/     # Game mode C++ classes
-? ??? ParadeGameMode.h
-?   ??? ParadeGameMode.cpp
-??? Collectibles/       # Collectible item classes (to be created)
-??? AI/        # AI bot classes (to be created)
+### Why the Change?
 
-Content/
-??? Blueprints/      # Blueprint classes
-?   ??? Characters/     # BP_ParadePlayer
-?   ??? Floats/  # BP_ParadeFloat
-?   ??? Collectibles/ # BP_Collectible_[Type]
-?   ??? AI/             # BP_CompetitorBot, BP_AggressiveNPC
-?   ??? Core/       # BP_ParadeGameMode
-??? Materials/ # Materials and material instances
-??? Meshes/        # 3D models
-??? Textures/           # Textures
-??? Audio/       # Sounds and music
-??? UI/      # UMG widgets
-??? Maps/           # Levels (ParadeStreet_Level)
-\\\
+The project shifted focus to:
+- **Browser accessibility** - Play instantly without installation
+- **Cross-platform support** - Works on any device with a web browser
+- **Faster development** - Web technologies enable quicker iteration
+- **Broader reach** - More players can access the game
 
-## ?? Next Steps
+---
 
-### Phase 1 - Foundation (Current)
+## 📚 Historical Documentation
 
-- [x] Project structure created
-- [x] C++ player character class
-- [x] C++ game mode class
-- [ ] Create player Blueprint (BP_ParadePlayer)
-- [ ] Create basic level (ParadeStreet_Level)
-- [ ] Test player movement
+The original Unreal Engine documentation has been archived in `docs/archive/`. If you need reference materials for the Unreal implementation, you can find them there.
 
-### Phase 2 - Core Gameplay
+---
 
-- [ ] Create parade float C++ class
-- [ ] Create collectible C++ class
-- [ ] Create Blueprint variants
-- [ ] Implement catching mechanics
-- [ ] Add scoring system
+## 🔮 Future Possibilities
 
-See \UNREAL_CONVERSION_PLAN.md\ in root directory for full roadmap.
+While this Unreal Engine version is not currently active, the door remains open for:
+- Native mobile apps using different technologies
+- Desktop applications
+- VR experiences
+- Console ports
 
-## ??? Development Workflow
+The current priority is delivering the best browser-based experience.
 
-1. **Edit C++ code in Visual Studio**
-2. **Compile (Ctrl+Alt+F11 in Unreal or F7 in VS)**
-3. **Create/edit Blueprints in Unreal Editor**
-4. **Test with Play (Alt+P)**
-5. **Commit changes to Git**
+---
 
-## ?? Documentation
+**For current development, visit**: [Main Repository](../../README.md)
 
-- **Full Conversion Plan:** ../UNREAL_CONVERSION_PLAN.md
-- **Blueprint Guide:** ../UNREAL_BLUEPRINT_GUIDE.md
-- **Quick Start:** ../QUICK_START_UNREAL.md
-- **Running Both Versions:** ../RUNNING_BOTH_VERSIONS.md
-
-## ?? Troubleshooting
-
-**Project won't open:**
-- Regenerate VS project files
-- Build in Visual Studio first
-
-**Code won't compile:**
-- Delete Binaries/, Intermediate/, Saved/
-- Regenerate VS project files
-- Clean rebuild
-
-**Need help?**
-- Check troubleshooting docs
-- Ask in team chat
-- Create GitHub issue
-
-## ?? Happy Developing!
-
-Laissez les bons temps rouler! ??
+**Laissez les bons temps rouler!** 🎭
