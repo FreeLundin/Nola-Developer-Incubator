@@ -11,9 +11,10 @@ import { CosmeticShop } from "./CosmeticShop";
 import { FirstLevelTutorial } from "./FirstLevelTutorial";
 import { SettingsModal } from "./SettingsModal";
 import { toast } from "sonner";
+import startLogo from "@/assets/start-logo.svg";
 
 export function GameUI() {
-  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
+  const { phase, score, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [showFirstLevelTutorial, setShowFirstLevelTutorial] = useState(false);
@@ -113,12 +114,19 @@ export function GameUI() {
 
               {/* Start menu logo (WebP preferred, PNG fallback). Place before the tutorial copy. */}
               <div className="flex justify-center">
-                <img
-                  src="/images/start-logo.webp"
-                  alt="Mardi Gras Parade Simulator"
-                  className="w-40 sm:w-56 mx-auto mb-3 rounded-md shadow-lg"
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/start-logo.png'; }}
-                />
+                {/* Logo acts as a quick link to open the project landing page in the browser */}
+                <button
+                  type="button"
+                  onClick={() => window.open('/', '_blank', 'noopener,noreferrer')}
+                  aria-label="Open project landing page"
+                  className="p-0 bg-transparent border-0 cursor-pointer"
+                >
+                  <img
+                    src={startLogo}
+                    alt="Mardi Gras Parade Simulator"
+                    className="w-40 sm:w-56 mx-auto mb-3 rounded-md shadow-lg"
+                  />
+                </button>
               </div>
               
                <div className="space-y-3 sm:space-y-4">
@@ -234,7 +242,8 @@ export function GameUI() {
           {/* Donate Buttons - Hidden on phones */}
           <div className="hidden md:flex absolute bottom-4 right-4 pointer-events-auto flex-col gap-2">
             <Button
-              onClick={() => window.open('https://replit.com/refer/blundin', '_blank')}
+              onClick={() => window.open('https://www.patreon.com/c/NolaDeveloperIncubator', '_blank', 'noopener,noreferrer')}
+              aria-label="Support development (Patreon)"
               size="lg"
               className="bg-gradient-to-r from-pink-600 to-red-600 hover:from-pink-700 hover:to-red-700 border-2 border-yellow-400 text-white font-bold shadow-lg"
             >

@@ -3,3 +3,11 @@
 > tsx server/index.ts
 
 12:43:29 PM [express] serving on port 5000
+[2m1:39:03 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/game/Environment.tsx[22m
+[2m1:39:03 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[2m1:40:53 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/game/Environment.tsx[22m
+[2m1:50:14 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/game/GameUI.tsx, /src/index.css[22m
+[2m2:12:06 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/game/GameUI.tsx, /src/index.css[22m
+[2m2:15:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/game/GameUI.tsx, /src/index.css[22m
+[2m3:00:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/game/GameUI.tsx, /src/index.css[22m
+[2m3:06:04 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/game/GameUI.tsx, /src/index.css[22m

@@ -24,6 +24,9 @@ These files represent previous directions and approaches for the Mardi Gras Para
 - `START_HERE.md` - Entry point for Unreal development
 - `RUNNING_BOTH_VERSIONS.md` - Running web and Unreal simultaneously
 
+### Archived Notice
+- The full Unreal conversion plan has been archived into `UNREAL_ARCHIVE.md` to avoid duplication in active docs. See `docs/archive/UNREAL_ARCHIVE.md` for the archival note and pointers to original content.
+
 ### Consolidated Documentation
 - `README_CREATION_COMPLETE.md` - Original project completion notes
 - `README_DUAL_PLATFORM.md` - Dual-platform project overview

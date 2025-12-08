@@ -15,6 +15,8 @@
 
 Prefer a fast, visual check first? Open the lightweight project landing page or launch the dev server and open the game in your browser immediately.
 
+Note: You can also click the start logo on the game's tutorial overlay to open the project landing page in a new browser tab.
+
 1) Open the project landing page (static):
 - Open `docs/website/index.html` in your browser, or serve it quickly:
 
@@ -299,7 +301,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Stay Connected
 - **GitHub** - [FreeLundin/Nola-Developer-Incubator](https://github.com/FreeLundin/Nola-Developer-Incubator)
-- **Project Lead** - Brandon Lundin
+- **Project Lead** - Brian Christopher Lundin
 
 ---
 
@@ -311,7 +313,7 @@ This simulator brings the excitement of Mardi Gras parades to players everywhere
 
 ---
 
-<div align="center">
+<div style="text-align:center">
 
 **⭐ Star this repo if you like the project! ⭐**
 
