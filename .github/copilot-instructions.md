@@ -178,12 +178,16 @@ import type { Express } from 'express';
 import { storage } from './storage';
 
 export function registerRoutes(app: Express) {
-  app.get('/api/profile/:id', async (req, res) => {
+  app.get('/api/user/:id', async (req, res) => {
     try {
-      const profile = await storage.getProfile(req.params.id);
-      res.json(profile);
+      const userId = parseInt(req.params.id);
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json(user);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch profile' });
+      res.status(500).json({ error: 'Failed to fetch user' });
     }
   });
 }
@@ -194,12 +198,13 @@ Use Drizzle ORM in `server/storage.ts`:
 ```typescript
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { eq } from 'drizzle-orm';
-import { players } from '../shared/schema';
+import { users, type User } from '../shared/schema';
 
 const db = drizzle(process.env.DATABASE_URL!);
 
-export async function getProfile(id: string) {
-  return db.select().from(players).where(eq(players.id, id));
+export async function getUser(id: number): Promise<User | undefined> {
+  const result = await db.select().from(users).where(eq(users.id, id));
+  return result[0];
 }
 ```
 
