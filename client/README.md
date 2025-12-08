@@ -166,11 +166,23 @@ npm run check
 ```
 
 ### Browser Compatibility Issues
-Modern browsers are targeted (ESNext). For older browser support, update `vite.config.ts`:
+
+Modern browsers are targeted (ESNext). Supported browsers include:
+- Chrome 91+
+- Firefox 90+
+- Safari 14+
+- Edge 91+
+
+For older browser support, you can update the `build.target` in `vite.config.ts`:
 ```typescript
-build: {
-  target: 'es2015'  // Instead of 'esnext'
-}
+// In vite.config.ts
+export default defineConfig({
+  // ... other config
+  build: {
+    // ... other build options
+    target: 'es2015',  // Change from 'esnext' for wider compatibility
+  },
+});
 ```
 
 ## 📚 Additional Resources
