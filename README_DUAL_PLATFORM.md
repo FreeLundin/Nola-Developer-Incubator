@@ -14,7 +14,7 @@ Both versions share the same backend API and game design, allowing players to ex
 ## ?? Project Structure
 
 ```
-Nola-Developer-Incubator/
+Mardi-Gras-Parade-Game/
 ??? client/   # React Three.js frontend (WEB VERSION)
 ?   ??? src/
 ?   ?   ??? components/game/  # Game components

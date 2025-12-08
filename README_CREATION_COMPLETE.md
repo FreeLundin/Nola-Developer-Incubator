@@ -180,7 +180,7 @@ I've successfully created a comprehensive **README.md** for your GitHub reposito
 
 **Share this link:**
 ```
-https://github.com/FreeLundin/Nola-Developer-Incubator
+https://github.com/FreeLundin/Mardi-Gras-Parade-Game
 ```
 
 **New team members see:**
@@ -262,10 +262,10 @@ mkdir -p docs/images
 **Additional badges you can add:**
 
 ```markdown
-[![Build Status](https://img.shields.io/github/workflow/status/FreeLundin/Nola-Developer-Incubator/CI)]
-[![Code Coverage](https://img.shields.io/codecov/c/github/FreeLundin/Nola-Developer-Incubator)]
-[![Contributors](https://img.shields.io/github/contributors/FreeLundin/Nola-Developer-Incubator)]
-[![Last Commit](https://img.shields.io/github/last-commit/FreeLundin/Nola-Developer-Incubator)]
+[![Build Status](https://img.shields.io/github/workflow/status/FreeLundin/Mardi-Gras-Parade-Game/CI)]
+[![Code Coverage](https://img.shields.io/codecov/c/github/FreeLundin/Mardi-Gras-Parade-Game)]
+[![Contributors](https://img.shields.io/github/contributors/FreeLundin/Mardi-Gras-Parade-Game)]
+[![Last Commit](https://img.shields.io/github/last-commit/FreeLundin/Mardi-Gras-Parade-Game)]
 ```
 
 ---
@@ -285,7 +285,7 @@ mkdir -p docs/images
 
 **Your README is now visible at:**
 ```
-https://github.com/FreeLundin/Nola-Developer-Incubator
+https://github.com/FreeLundin/Mardi-Gras-Parade-Game
 ```
 
 **Visitors will see:**
@@ -446,7 +446,7 @@ Your repository now has:
 
 **Repository URL:**
 ```
-https://github.com/FreeLundin/Nola-Developer-Incubator
+https://github.com/FreeLundin/Mardi-Gras-Parade-Game
 ```
 
 ---

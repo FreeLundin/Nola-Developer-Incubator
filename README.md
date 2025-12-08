@@ -29,8 +29,8 @@
 
 ```bash
 # Clone repository
-git clone https://github.com/FreeLundin/Nola-Developer-Incubator.git
-cd Nola-Developer-Incubator
+git clone https://github.com/FreeLundin/Mardi-Gras-Parade-Game.git
+cd Mardi-Gras-Parade-Game
 
 # Install dependencies
 npm install
@@ -94,7 +94,7 @@ npm run dev
 ## ??? Project Structure
 
 ```
-Nola-Developer-Incubator/
+Mardi-Gras-Parade-Game/
 ?
 ??? ?? WEB VERSION (React Three.js)
 ?   ??? client/            # React frontend
@@ -544,11 +544,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Core Team
 - **Project Lead:** Brandon Lundin
-- **Repository:** [Nola-Developer-Incubator](https://github.com/FreeLundin/Nola-Developer-Incubator)
+- **Repository:** [Mardi-Gras-Parade-Game](https://github.com/FreeLundin/Mardi-Gras-Parade-Game)
 
 ### Contact
-- **GitHub Issues:** [Create Issue](https://github.com/FreeLundin/Nola-Developer-Incubator/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/FreeLundin/Nola-Developer-Incubator/discussions)
+- **GitHub Issues:** [Create Issue](https://github.com/FreeLundin/Mardi-Gras-Parade-Game/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/FreeLundin/Mardi-Gras-Parade-Game/discussions)
 
 ---
 
@@ -647,8 +647,8 @@ This project combines the accessibility of web games with the power of native ga
 
 **Star ? this repo if you like the project!**
 
-[![GitHub stars](https://img.shields.io/github/stars/FreeLundin/Nola-Developer-Incubator?style=social)](https://github.com/FreeLundin/Nola-Developer-Incubator/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/FreeLundin/Nola-Developer-Incubator?style=social)](https://github.com/FreeLundin/Nola-Developer-Incubator/network/members)
+[![GitHub stars](https://img.shields.io/github/stars/FreeLundin/Mardi-Gras-Parade-Game?style=social)](https://github.com/FreeLundin/Mardi-Gras-Parade-Game/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/FreeLundin/Mardi-Gras-Parade-Game?style=social)](https://github.com/FreeLundin/Mardi-Gras-Parade-Game/network/members)
 
 **Made with ?? in the spirit of Mardi Gras**
 

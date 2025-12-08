@@ -59,7 +59,7 @@ I've successfully created a **complete Unreal Engine 5.7 project** for your Mard
 1. Open File Explorer
 2. Navigate to:
    ```
-   C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\unreal\MardiGrasParade
+   C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game\unreal\MardiGrasParade
    ```
 3. **Right-click `MardiGrasParade.uproject`**
 4. Select: **"Generate Visual Studio project files"**
@@ -291,7 +291,7 @@ Install: Game development with C++
 
 **Solution 2 - Corrupt files:**
 ```powershell
-cd C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\unreal\MardiGrasParade
+cd C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game\unreal\MardiGrasParade
 
 # Delete build folders
 Remove-Item -Recurse -Force Binaries, Intermediate, Saved

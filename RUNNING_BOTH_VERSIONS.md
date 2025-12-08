@@ -33,7 +33,7 @@ This guide explains how to run the **React Three.js web version** and the **Unre
 ## ?? Directory Structure
 
 ```
-C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\
+C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game\
 ??? client/  # React Three.js frontend (EXISTING)
 ?   ??? src/
 ?   ??? public/
@@ -62,7 +62,7 @@ C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\
 
 ```bash
 # In the root directory
-cd C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator
+cd C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game
 
 # Install dependencies (if not already)
 npm install
@@ -104,7 +104,7 @@ cd unreal
  - Target Platform: **Desktop and Mobile**
      - Quality Preset: **Scalable**
      - Starter Content: **No** (we'll create custom assets)
-   - Project Location: `C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\unreal`
+   - Project Location: `C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game\unreal`
    - Project Name: **MardiGrasParade**
 
 4. **Click "Create"**

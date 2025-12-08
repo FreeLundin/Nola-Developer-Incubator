@@ -159,7 +159,7 @@ BP_ParadeGameMode (from AParadeGameMode)
 
 ### Terminal 1: Backend (Required)
 ```bash
-cd C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator
+cd C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game
 npm run dev
 # Runs on http://localhost:5000
 ```

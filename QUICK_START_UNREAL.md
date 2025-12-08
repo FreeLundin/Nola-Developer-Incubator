@@ -57,7 +57,7 @@
    ??? Raytracing: Disabled (enable later if needed)
    
    Project Location:
-   ??? C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\unreal
+   ??? C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game\unreal
    
    Project Name:
    ??? MardiGrasParade
@@ -69,7 +69,7 @@
 
 If your team creates a starter template:
 ```bash
-cd C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\unreal
+cd C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game\unreal
 git clone [template-repo-url] MardiGrasParade
 cd MardiGrasParade
 # Right-click MardiGrasParade.uproject ? Generate Visual Studio project files
@@ -141,7 +141,7 @@ Content/
 
 1. **Navigate to project root:**
    ```bash
-   cd C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator
+   cd C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game
    ```
 
 2. **Create/Update .gitignore:**

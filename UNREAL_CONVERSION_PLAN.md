@@ -17,7 +17,7 @@ This document provides a complete roadmap for converting the React Three.js Mard
 
 ### Current React Three.js Structure
 ```
-Nola-Developer-Incubator/
+Mardi-Gras-Parade-Game/
 ??? client/       # React frontend
 ?   ??? src/
 ?       ??? components/game/  # Game components
@@ -29,7 +29,7 @@ Nola-Developer-Incubator/
 
 ### New Unreal Engine Structure (Side-by-Side)
 ```
-Nola-Developer-Incubator/
+Mardi-Gras-Parade-Game/
 ??? client/         # React frontend (EXISTING)
 ??? server/       # Express backend (SHARED)
 ??? shared/        # Database schema (SHARED)

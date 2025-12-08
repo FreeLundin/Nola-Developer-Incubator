@@ -139,7 +139,7 @@ Using GitHub as task tracker:
 2. Install to: unreal/MardiGrasParade/Plugins/
 3. Configure:
  Edit ? Project Settings ? GitHub
-   ??? Repository: FreeLundin/Nola-Developer-Incubator
+   ??? Repository: FreeLundin/Mardi-Gras-Parade-Game
    ??? Token: [Personal Access Token]
    ??? Default Labels: unreal, bug, task
 ```

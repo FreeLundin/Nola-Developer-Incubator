@@ -60,7 +60,7 @@ unreal/MardiGrasParade/
 
 1. **Navigate to:**
    ```
-   C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\unreal\MardiGrasParade
+   C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game\unreal\MardiGrasParade
  ```
 
 2. **Right-click on `MardiGrasParade.uproject`**
@@ -263,7 +263,7 @@ Everything in the C++ classes is exposed to Blueprint! Here's what you can chang
 **Morning:**
 ```bash
 # 1. Start backend (in separate terminal)
-cd C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator
+cd C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game
 npm run dev
 
 # 2. Open Unreal project
@@ -305,7 +305,7 @@ git push
 **Solution:**
 ```powershell
 # Regenerate VS project files
-cd C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\unreal\MardiGrasParade
+cd C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game\unreal\MardiGrasParade
 # Right-click MardiGrasParade.uproject ? "Generate Visual Studio project files"
 ```
 
@@ -313,7 +313,7 @@ cd C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\unreal\MardiG
 **Solution:**
 ```powershell
 # Clean rebuild
-cd C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator\unreal\MardiGrasParade
+cd C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game\unreal\MardiGrasParade
 
 # Delete these folders:
 Remove-Item -Recurse -Force Binaries, Intermediate, Saved -ErrorAction SilentlyContinue
@@ -333,7 +333,7 @@ Remove-Item -Recurse -Force Binaries, Intermediate, Saved -ErrorAction SilentlyC
 ### "Git LFS not tracking files"
 **Solution:**
 ```bash
-cd C:\Users\BLund\source\repos\FreeLundin\Nola-Developer-Incubator
+cd C:\Users\BLund\source\repos\FreeLundin\Mardi-Gras-Parade-Game
 git lfs install
 git lfs track "*.uasset"
 git lfs track "*.umap"
