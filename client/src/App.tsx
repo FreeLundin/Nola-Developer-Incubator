@@ -13,6 +13,7 @@ import { useParadeGame } from "./lib/stores/useParadeGame";
 import { useIsMobile } from "./hooks/use-is-mobile";
 import { CanvasGuard } from "./components/game/CanvasGuard";
 import { DevPerf } from "./components/game/DevPerf";
+import DevQRCode from "./components/ui/DevQRCode";
 
 const controls = [
   { name: Controls.forward, keys: ["KeyW", "ArrowUp"] },
@@ -75,6 +76,8 @@ function App() {
 
           {/* Dev performance overlay (dev-only) */}
           {DEV_LOW_DETAIL && <DevPerf />}
+          {/* Dev QR overlay to scan and open app on another device */}
+          <DevQRCode />
         </Canvas>
         
         <GameUI />

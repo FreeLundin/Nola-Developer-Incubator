@@ -11,3 +11,6 @@
 [2m2:15:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/game/GameUI.tsx, /src/index.css[22m
 [2m3:00:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/game/GameUI.tsx, /src/index.css[22m
 [2m3:06:04 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/game/GameUI.tsx, /src/index.css[22m
+[2m3:47:47 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/game/GameScene.tsx, /src/index.css[22m
+[2m4:10:01 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/game/GameScene.tsx, /src/index.css[22m
+[2m4:10:01 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
