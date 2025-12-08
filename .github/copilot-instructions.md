@@ -120,15 +120,14 @@ useFrame((state, delta) => {
 ```
 
 #### 3D Components
-Structure game objects as React components:
+Structure game objects as React components. This is a simplified example for illustration:
 ```typescript
 interface FloatProps {
   position: [number, number, number];
   speed: number;
-  onPass?: () => void;
 }
 
-export function ParadeFloat({ position, speed, onPass }: FloatProps) {
+export function ExampleFloat({ position, speed }: FloatProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame((state, delta) => {
@@ -146,21 +145,29 @@ export function ParadeFloat({ position, speed, onPass }: FloatProps) {
 }
 ```
 
+**Note:** Real components like `ParadeFloat` use more complex props including `id`, `startZ`, `lane`, `color`, and `playerPosition`. See actual implementations in `client/src/components/game/` for production-ready examples.
+
 ### State Management with Zustand
 
-Create stores in `client/src/lib/stores/`:
+Create stores in `client/src/lib/stores/` using the double function call pattern with middleware:
 ```typescript
+import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
+
 interface GameStore {
   score: number;
   level: number;
   addScore: (points: number) => void;
 }
 
-export const useGameStore = create<GameStore>((set) => ({
-  score: 0,
-  level: 1,
-  addScore: (points) => set((state) => ({ score: state.score + points })),
-}));
+// Note: Use create<GameStore>()() pattern with middleware
+export const useGameStore = create<GameStore>()(
+  subscribeWithSelector((set) => ({
+    score: 0,
+    level: 1,
+    addScore: (points) => set((state) => ({ score: state.score + points })),
+  }))
+);
 ```
 
 Usage in components:
@@ -194,7 +201,18 @@ export function registerRoutes(app: Express) {
 ```
 
 #### Database Operations
-Use Drizzle ORM in `server/storage.ts`:
+The codebase uses an in-memory storage implementation via the `IStorage` interface:
+```typescript
+import { users, type User, type InsertUser } from '@shared/schema';
+
+export interface IStorage {
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+}
+```
+
+For PostgreSQL integration with Drizzle ORM, follow this pattern:
 ```typescript
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { eq } from 'drizzle-orm';
