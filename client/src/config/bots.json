@@ -1,7 +1,7 @@
 ﻿[
   {
     "id": "bot-rex",
-    "name": "King Rex",
+    "name": "King Rex (TEST)",
     "persona": "aggressive",
     "color": "#ff4444",
     "startX": -5.5,
@@ -10,7 +10,7 @@
   },
   {
     "id": "bot-zulu",
-    "name": "Queen Zulu",
+    "name": "Queen Zulu (TEST)",
     "persona": "focused",
     "color": "#44ff44",
     "startX": 5,
@@ -19,7 +19,7 @@
   },
   {
     "id": "bot-saint",
-    "name": "Saint Mardi",
+    "name": "Saint Mardi (TEST)",
     "persona": "playful",
     "color": "#4444ff",
     "startX": -2,
@@ -28,7 +28,7 @@
   },
   {
     "id": "bot-jester",
-    "name": "Jester Jo",
+    "name": "Jester Jo (TEST)",
     "persona": "sneaky",
     "color": "#ffff44",
     "startX": 3,
@@ -37,7 +37,7 @@
   },
   {
     "id": "bot-voodoo",
-    "name": "Voodoo Vee",
+    "name": "Voodoo Vee (TEST)",
     "persona": "lucky",
     "color": "#ff44ff",
     "startX": -4,
@@ -46,7 +46,7 @@
   },
   {
     "id": "bot-mambo",
-    "name": "Mambo Mike",
+    "name": "Mambo Mike (TEST)",
     "persona": "steady",
     "color": "#44ffff",
     "startX": 1,
@@ -54,4 +54,3 @@
     "minLevel": 6
   }
 ]
-
