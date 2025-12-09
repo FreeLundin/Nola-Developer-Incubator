@@ -1,5 +1,11 @@
 ﻿# Game Design Document (GDD)
 
+<!-- Prefer user-provided embedded logo if available, otherwise use built-in logo -->
+<picture>
+  <source srcset="./images/logo-embedded.svg" type="image/svg+xml">
+  <img src="./images/logo.svg" alt="Mardi Gras Parade Logo" width="420" />
+</picture>
+
 Date: 2025-12-09
 
 **Project:** [Mardi Gras Parade Simulator — Repository](https://github.com/FreeLundin/Nola-Developer-Incubator)
@@ -7,11 +13,29 @@ Date: 2025-12-09
 ## Vision
 An accessible, browser-based 3D Mardi Gras parade simulator where players catch throws from parade floats while competing with AI bots. The game aims to be family-friendly, playable on desktop and mobile, and emphasize fun mechanics with light strategy via color-matching and power-ups.
 
-> Quick test: [Test now — Open in browser](http://localhost:5000)
->
-> Scan to open on mobile (QR):
->
-> ![QR code](../docs/browser-qr.svg)
+<div>
+  <a href="http://localhost:5000" style="display:inline-block;padding:10px 14px;background:#ffd700;color:#000;font-weight:700;border-radius:8px;text-decoration:none;margin-bottom:8px;">▶ Test now — Open in browser</a>
+</div>
+
+**Quick start (dev)**
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Start the dev server (Vite + Express dev integration):
+
+```bash
+npm run dev
+```
+
+3. Open the game in your desktop browser: http://localhost:5000
+
+4. To test from a mobile device on the same network: scan the QR code below (or regenerate with `npm run qr`):
+
+![QR code](./browser-qr.svg)
 
 ## Core mechanics
 - Movement: WASD / arrow keys, click-to-move, and touch controls for mobile.

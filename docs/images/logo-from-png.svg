@@ -1,0 +1,13 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="700" height="140" viewBox="0 0 700 140">
+  <rect width="100%" height="100%" fill="#0b0b12" rx="10"/>
+  <!-- raster image placeholder: place a file named 'logo-source.png' in the same directory -->
+  <image href="./logo-source.png" x="24" y="10" width="652" height="120" preserveAspectRatio="xMidYMid slice" />
+  <!-- decorative crowns to bookend the name in case png has transparent background -->
+  <g transform="translate(18,38) scale(0.8)" fill="#FFD700" stroke="#8a6b00" stroke-width="1">
+    <path d="M8 40 L12 20 L22 34 L32 20 L36 40 Z" />
+  </g>
+  <g transform="translate(562,38) scale(0.8)" fill="#FFD700" stroke="#8a6b00" stroke-width="1">
+    <path d="M8 40 L12 20 L22 34 L32 20 L36 40 Z" />
+  </g>
+</svg>
+

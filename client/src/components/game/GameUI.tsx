@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
+import { useBotsConfig } from '@/lib/hooks/useBotsConfig';
 import { motion, AnimatePresence } from "framer-motion";
 import { Volume2, VolumeX, ShoppingBag, Heart, DollarSign, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,8 @@ import { FirstLevelTutorial } from "./FirstLevelTutorial";
 import { SettingsModal } from "./SettingsModal";
 import { BotAdmin } from "./BotAdmin";
 import { toast } from "sonner";
-import startLogo from "@/assets/start-logo.svg";
+import startLogoSvg from "@/assets/start-logo.svg";
+import startLogoPng from "@/assets/start-logo.png";
 
 export function GameUI() {
   const { phase, score, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
@@ -29,6 +31,8 @@ export function GameUI() {
     try { return localStorage.getItem('showBotPersonas') === 'true'; } catch { return false; }
   });
   const isMobile = useIsMobile();
+  // Detect dev mode (Vite) so TEST badges are shown only during development
+  const IS_DEV = (() => { try { return Boolean((import.meta as any)?.env?.DEV); } catch { return false; } })();
   
   // Map player color to display info
   const colorDisplayMap = {
@@ -40,15 +44,9 @@ export function GameUI() {
   
   // Sort bots by catches (descending)
   const sortedBots = [...botScores].sort((a, b) => b.catches - a.catches);
-  // Load bot config for display names and personas
-  let botsConfig: Array<any> = [];
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    botsConfig = require('@/config/bots.json');
-  } catch (e) {
-    botsConfig = [];
-  }
-  const botMeta = Object.fromEntries(botsConfig.map((b: any) => [b.id, b]));
+  // Load bot config for display names and personas (runtime override respected)
+  const { bots: runtimeBots } = useBotsConfig();
+  const botMeta = Object.fromEntries(runtimeBots.map((b: any) => [b.id, b]));
   
   // Show combo animation when combo changes
   useEffect(() => {
@@ -136,7 +134,7 @@ export function GameUI() {
                   className="p-0 bg-transparent border-0 cursor-pointer"
                 >
                   <img
-                    src={startLogo}
+                    src={startLogoPng || startLogoSvg}
                     alt="Mardi Gras Parade Simulator"
                     className="w-40 sm:w-56 mx-auto mb-3 rounded-md shadow-lg"
                   />
@@ -347,7 +345,9 @@ export function GameUI() {
               <div className="space-y-1.5 max-h-48 overflow-y-auto">
                 {sortedBots.map((bot) => {
                   const meta = botMeta[bot.id];
-                  const label = meta ? `${meta.name}${showPersonaLabels ? ` (${meta.persona})` : ''}` : bot.id;
+                  const nameText = meta ? meta.name : bot.id;
+                  const personaText = meta && showPersonaLabels ? ` (${meta.persona})` : '';
+                  const isTest = typeof nameText === 'string' && nameText.includes('(TEST)');
                   return (
                     <div key={bot.id} className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
@@ -358,7 +358,12 @@ export function GameUI() {
                             boxShadow: `0 0 10px ${bot.color}, inset 0 0 6px rgba(255,255,255,0.4)`
                           }}
                         />
-                        <span className="text-xs text-white font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{label}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-white font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{nameText}{personaText}</span>
+                          {isTest && IS_DEV && (
+                            <span className="ml-2 text-[10px] font-bold bg-yellow-300 text-black px-1 rounded">TEST</span>
+                          )}
+                        </div>
                       </div>
                       <span className="text-base font-black text-yellow-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{bot.catches}</span>
                     </div>
