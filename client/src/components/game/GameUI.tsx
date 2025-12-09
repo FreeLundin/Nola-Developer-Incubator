@@ -120,12 +120,13 @@ export function GameUI() {
                   aria-label="Open project landing page"
                   className="p-0 bg-transparent border-0 cursor-pointer"
                 >
-                  <img
-                    src={startLogoPng || startLogoSvg}
-                    alt="Mardi Gras Parade Simulator"
-                    className="mx-auto mb-3 rounded-md shadow-lg w-full h-36 sm:h-56 md:h-72 object-contain"
-                    style={{ objectFit: 'contain' }}
-                  />
+                  <div className="logo-container">
+                    <img
+                      src={startLogoPng || startLogoSvg}
+                      alt="Mardi Gras Parade Simulator"
+                      className="rounded-md shadow-lg mb-3"
+                    />
+                  </div>
                 </button>
               </div>
               
