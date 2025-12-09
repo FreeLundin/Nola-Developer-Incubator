@@ -124,7 +124,7 @@ export function GameUI() {
                     <img
                       src={startLogoPng || startLogoSvg}
                       alt="Mardi Gras Parade Simulator"
-                      className="rounded-md shadow-lg mb-3"
+                      className="logo rounded-md shadow-lg mb-3 w-full max-w-[200px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-[448px]"
                     />
                   </div>
                 </button>

@@ -84,3 +84,11 @@ canvas {
 .logo-container--height-sm img { height: 4.5rem; }
 .logo-container--height-md img { height: 8rem; }
 .logo-container--height-lg img { height: 12rem; }
+
+/* Logo utility: safe defaults for responsive images */
+.logo {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain; /* keep full logo visible */
+}
