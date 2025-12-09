@@ -23,3 +23,24 @@ Follow-ups
 - Audit and compress large assets; add an asset budget and automated check in CI.
 
 This file is a living summary — update it when new patterns are discovered or when the CI process evolves.
+
+start## 2025-12-09 — Runtime/Interface defaults audit and minor fixes
+
+Summary
+- Ran a repo-wide audit for function implementations that use default parameter initializers in signatures where the corresponding interface declares the method without defaults (pattern: interface contract must not rely on implementation defaults).
+- Goal: avoid situations where an interface says `addCollectible(collectible: Collectible): void` but the implementation uses `addCollectible(collectible: Collectible = defaultCollectible) => {}` which changes the runtime contract and can mislead callers and type-checkers.
+
+What I did
+- Scanned `client/src/lib/stores` and related code for implementations that use parameter defaults in signatures.
+- Confirmed the `ParadeGameState` interface methods do not include default parameter initializers. Implementations in `useParadeGame.tsx` follow the safe pattern (no `param = default` in signatures).
+- Where applicable earlier in this session, store method signatures were tightened to avoid implicit `any` and to match interface types (e.g., `addCatch` typed as optional second parameter rather than providing a default in the interface).
+- No occurrences were found that required automatic rewrites; therefore no mass changes were necessary.
+
+Takeaways / recommended practice
+- Keep interface method signatures declarative (no default parameter values). If you want defaults, apply them inside the function body using `const safeParam = providedParam ?? defaultValue;`.
+- Prefer explicit parameter types in interfaces and implementations (avoid implicit any) to satisfy strict TypeScript settings.
+- Add a small code search or an ESLint rule to flag `=(.*)` inside parameter lists for store/contract implementations if you want automated enforcement.
+
+Next steps
+- Optionally add a lightweight lint rule or a pre-commit grep check that fails when `functionName(param: Type =` is detected within `client/src/lib/stores` to prevent regressions.
+- Continue updating the lessons log as we find other cross-cutting patterns.
