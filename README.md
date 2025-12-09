@@ -10,6 +10,15 @@
 
 A browser-based 3D Mardi Gras parade simulator (React + R3F + Howler) – catch throws, compete with bots, and enjoy the parade.
 
+<!-- Link to Game Design Document -->
+## Game Design
+
+See the full Game Design Document (GDD) for vision, mechanics, balancing, assets, and quick-start instructions:
+
+[docs/GAME_DESIGN.md](./docs/GAME_DESIGN.md)
+
+Quick start and the project Quick Start in the GDD also describe how to generate a QR for testing on mobile devices.
+
 ## Quick start (dev)
 
 1. Install dependencies:

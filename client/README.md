@@ -192,10 +192,18 @@ export default defineConfig({
 - [Three.js Documentation](https://threejs.org/docs)
 - [TailwindCSS Documentation](https://tailwindcss.com/docs)
 
-## 🤝 Contributing
+## Game Design & Quick Start
 
-See the main [README.md](../README.md) for contribution guidelines.
+See the Game Design Document for the vision, mechanics, and a quick-start guide (including QR instructions for mobile testing):
 
-## 📄 License
+[docs/GAME_DESIGN.md](../docs/GAME_DESIGN.md)
 
-MIT License - See [LICENSE](../LICENSE) file for details.
+Quick start (development):
+
+1. From project root, install and run:
+```powershell
+npm install
+npm run dev
+```
+2. Open http://localhost:5000
+3. To test on mobile in the same LAN, run `npm run qr` and scan the generated `docs/browser-qr.svg`.
