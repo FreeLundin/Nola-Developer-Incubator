@@ -26,16 +26,25 @@ ls -Recurse archive/generated-2025-12-09
 type archive/generated-2025-12-09/npm-audit-report.json
 ```
 
+Note: the archive was also compressed into a single zip to reduce repository tree clutter. The zip is located at:
+
+- `archive/generated-2025-12-09.zip`
+
 How to restore archived files (if needed)
 - To restore a single file using git (recommended so the move is recorded):
 
 ```powershell
 # Example: restore audit.json from archive back to repo root
-git mv archive/generated-2025-12-09/audit.json audit.json
-git commit -m "chore(restore): put audit.json back from archive"
+# If restoring from the uncompressed archive folder (if present):
+# git mv archive/generated-2025-12-09/audit.json audit.json
+# If restoring from the zip, extract first:
+Expand-Archive -Path archive/generated-2025-12-09.zip -DestinationPath . -Force
+# Then move the file and commit:
+git mv generated-2025-12-09/audit.json audit.json
+git commit -m "chore(restore): put audit.json back from archive zip"
 ```
 
-- To restore many files interactively, you can move them with `git mv` in a loop or use the provided script as a reference.
+- To restore many files interactively, you can extract the zip and use `git mv` to reintroduce selected files into the repo.
 
 About the archive script
 - A helper script was added: `scripts/archive-generated.mjs` (dry-run by default).
@@ -47,4 +56,3 @@ Notes and recommendations
 - `.gitignore` has been updated to ignore future generated artifacts so they won't be committed again.
 
 If you want me to compress the archive and replace the folder with a single zip file, or remove it from the repo and push the zip to an external store, tell me and I'll implement that next.
-
