@@ -13,8 +13,7 @@ export function getRuntimeBotsConfig(): Array<any> {
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const bundled = require('@/config/bots.json');
-  return bundled;
+  return require('@/config/bots.json');
 }
 
 export function useBotsConfig() {
@@ -33,4 +32,3 @@ export function useBotsConfig() {
 
   return { bots, reload };
 }
-
