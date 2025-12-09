@@ -1,31 +1,55 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { InstanceSetter } from "./InstanceSetter";
 
+interface CrowdInstancedProps {
+  positions: { id: string; position: [number, number, number]; height: number }[];
+}
+
+function CrowdInstanced({ positions }: CrowdInstancedProps) {
+  const count = positions.length;
+  const instRef = useRef<THREE.InstancedMesh>(null);
+  return (
+    <instancedMesh ref={instRef} args={[undefined as any, undefined as any, count]} castShadow receiveShadow>
+      <boxGeometry args={[0.3, 1, 0.3]} />
+      <meshStandardMaterial color="#1a1a1a" />
+      <InstanceSetter positions={positions} meshRef={instRef} />
+    </instancedMesh>
+  );
+}
+
 export function Environment() {
   // Load texture with safe loader and fallback to undefined on error to avoid uncaught throws
   // Use a manual TextureLoader so we can attach an onError handler
-  const asphaltTexture = (() => {
+  const [asphaltTexture, setAsphaltTexture] = useState<THREE.Texture | undefined>(undefined);
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    let mounted = true;
     try {
-      // prefer useTexture when available, but wrap in try to catch runtime loader errors
-      // the useTexture hook can throw when the image fails to load; use a defensive approach
-      // by creating a loader and returning a texture or undefined.
-      const loader = new THREE.TextureLoader();
-      let tex: THREE.Texture | undefined = undefined;
+      // Try PNG first, then SVG as a fallback for development flexibility
       loader.load(
         '/textures/asphalt.png',
-        (t) => { tex = t; },
+        (t) => { if (mounted) setAsphaltTexture(t); },
         undefined,
-        (err) => { console.warn('[Environment] failed to load asphalt texture', err); tex = undefined; }
+        (err) => {
+          console.warn('[Environment] failed to load asphalt.png, trying asphalt.svg', err);
+          // Try svg fallback
+          loader.load(
+            '/textures/asphalt.svg',
+            (t2) => { if (mounted) setAsphaltTexture(t2); },
+            undefined,
+            (err2) => { console.warn('[Environment] failed to load asphalt.svg', err2); if (mounted) setAsphaltTexture(undefined); }
+          );
+        }
       );
-      return tex;
     } catch (e) {
       console.warn('[Environment] texture load threw', e);
-      return undefined;
+      setAsphaltTexture(undefined);
     }
-  })();
+    return () => { mounted = false; };
+  }, []);
 
   const spotlightGroupRef = useRef<THREE.Group>(null);
   
@@ -308,17 +332,7 @@ export function Environment() {
       })}
       
       {/* Crowd silhouettes on sidewalks - use instancing for performance */}
-      {(() => {
-        const count = crowdPositions.length;
-        const instRef = useRef<THREE.InstancedMesh>(null);
-        return (
-          <instancedMesh ref={instRef} args={[undefined as any, undefined as any, count]} castShadow receiveShadow>
-            <boxGeometry args={[0.3, 1, 0.3]} />
-            <meshStandardMaterial color="#1a1a1a" />
-            <InstanceSetter positions={crowdPositions} meshRef={instRef} />
-          </instancedMesh>
-        );
-      })()}
+      <CrowdInstanced positions={crowdPositions} />
     </group>
   );
 }

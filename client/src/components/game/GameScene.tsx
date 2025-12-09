@@ -50,6 +50,8 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
   const { playHit, playFireworks } = useAudio();
   const { camera, gl } = useThree();
   const isMobile = useIsMobile();
+  // Load bots config unconditionally so hooks order is stable
+  const { bots: runtimeBots } = useBotsConfig();
   const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(0, 0.5, 0));
   const [mouseTarget, setMouseTarget] = useState<THREE.Vector3 | null>(null);
   const [catchEffects, setCatchEffects] = useState<CatchEffectInstance[]>([]);
@@ -238,7 +240,7 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
           
           {/* Competitor Bots - scaled by level for casual gameplay (ages 10-80) */}
           {/* Level 1-2: 2 bots, Level 3: 3 bots, Level 4+: All 6 bots */}
-          {useBotsConfig().bots.map((b) => b.minLevel <= level && (
+          {runtimeBots.map((b) => b.minLevel <= level && (
             <CompetitorBot
               key={b.id}
               id={b.id}
