@@ -1,4 +1,7 @@
 ﻿import { useState, useEffect, useCallback } from 'react';
+// Import bundled bot config (Vite/ESM-friendly)
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+import bundledBots from '@/config/bots.json';
 
 export function getRuntimeBotsConfig(): Array<any> {
   if (typeof window !== 'undefined') {
@@ -12,8 +15,7 @@ export function getRuntimeBotsConfig(): Array<any> {
       console.warn('Failed to read bots.override from localStorage', e);
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  return require('@/config/bots.json');
+  return bundledBots as Array<any>;
 }
 
 export function useBotsConfig() {
