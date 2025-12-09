@@ -4,3 +4,21 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Ignore generated audit reports and temporary run artifacts
+npm-audit*.json
+audit*.json
+*.run-output.txt
+*run-output.txt
+dev-*.txt
+repair-*.txt
+tsc-output.txt
+backup-*.zip
+tmp_*
+tmp*
+*.log
+docs/GAME_DESIGN_summary.txt
+
+# Keep local editor/project settings out
+.vscode/
+.idea/

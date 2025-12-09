@@ -18,6 +18,7 @@
     "open:browser": "node scripts/open-browser.mjs",
     "open:site": "python -m http.server 8081 -d docs/website",
     "qr": "node scripts/generate-qr.mjs",
+    "clean:generated": "node scripts/cleanup-generated.mjs",
     "test:playwright": "npx playwright test"
   },
   "dependencies": {
