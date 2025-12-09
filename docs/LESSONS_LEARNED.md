@@ -24,7 +24,7 @@ Follow-ups
 
 This file is a living summary — update it when new patterns are discovered or when the CI process evolves.
 
-start## 2025-12-09 — Runtime/Interface defaults audit and minor fixes
+## 2025-12-09 — Runtime/Interface defaults audit and minor fixes
 
 Summary
 - Ran a repo-wide audit for function implementations that use default parameter initializers in signatures where the corresponding interface declares the method without defaults (pattern: interface contract must not rely on implementation defaults).

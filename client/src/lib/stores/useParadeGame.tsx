@@ -69,7 +69,7 @@ interface ParadeGameState {
   // Actions
   startGame: () => void;
   toggleCamera: () => void;
-  addCatch: (collectibleType?: Collectible['type'], bypassPowerUp: boolean = false) => void;
+  addCatch: (collectibleType?: Collectible['type'], bypassPowerUp?: boolean) => void;
   incrementMisses: () => void;
   addBotCatch: (botId: string) => void;
   addCollectible: (collectible: Collectible) => void;
@@ -250,7 +250,7 @@ export const useParadeGame = create<ParadeGameState>()((set, get) => {
       set({ cameraMode: newMode });
     },
     
-    addCatch: (collectibleType?: Collectible['type'], bypassPowerUp: boolean = false) => {
+    addCatch: (collectibleType?: Collectible['type'], bypassPowerUp?: boolean) => {
       const { score, targetScore, combo, maxCombo, lastCatchTime, totalCatches, hasActivePowerUp, playerColor } = get();
       const now = Date.now();
       const timeSinceLastCatch = now - lastCatchTime;
