@@ -108,7 +108,7 @@ export function GameUI() {
             exit={{ opacity: 0 }}
             className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
           >
-            <Card className="bg-purple-900/95 border-2 border-yellow-400 p-4 sm:p-8 max-w-sm sm:max-w-lg mx-4 text-white">
+            <Card className="bg-purple-900/95 border-2 border-yellow-400 p-4 sm:p-8 max-w-sm sm:max-w-2xl mx-4 text-white">
               <h1 className="text-xl sm:text-3xl font-bold text-yellow-300 mb-3 sm:mb-4 text-center">Mardi Gras Parade</h1>
 
               {/* Start menu logo (WebP preferred, PNG fallback). Place before the tutorial copy. */}
@@ -123,7 +123,7 @@ export function GameUI() {
                   <img
                     src={startLogoPng || startLogoSvg}
                     alt="Mardi Gras Parade Simulator"
-                    className="mx-auto mb-3 rounded-md shadow-lg w-full max-w-[420px] h-auto object-contain max-h-24 sm:max-h-36"
+                    className="mx-auto mb-3 rounded-md shadow-lg w-full h-36 sm:h-56 md:h-72 object-contain"
                     style={{ objectFit: 'contain' }}
                   />
                 </button>
