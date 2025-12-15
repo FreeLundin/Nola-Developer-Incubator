@@ -59,14 +59,16 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client
+  // ALWAYS serve the app on port 5000 by default
   const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 5000;
-  // On Windows some listen options (like reusePort) are not supported; bind to localhost there.
-  const host = process.platform === 'win32' ? '127.0.0.1' : '0.0.0.0';
+
+  // Allow overriding the host via an environment variable for testing on LAN/tunnels.
+  // If not provided, keep the current Windows-safe behavior (bind to loopback on Windows).
+  const defaultHost = process.platform === 'win32' ? '127.0.0.1' : '0.0.0.0';
+  const host = process.env.HOST || defaultHost;
 
   // Use the simple listen signature which is broadly supported across platforms
   server.listen(port, host, () => {
-    log(`serving on port ${port}`);
+    log(`serving on ${host}:${port}`);
   });
 })();

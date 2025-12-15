@@ -1,0 +1,59 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MardiGrasParadeSim2026</title>
+    <!-- Default fallback for non-JS clients; will redirect to localhost dev server by default -->
+    <meta http-equiv="refresh" content="0; url=http://localhost:5000" />
+    <style>
+      body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; background:#0f172a; color:#fff }
+      .card { max-width:720px; padding:2rem; border-radius:8px; background:rgba(255,255,255,0.04); box-shadow:0 10px 30px rgba(2,6,23,0.6); text-align:center }
+      a.button { display:inline-block; margin-top:1rem; padding:0.6rem 1rem; background:#ffd700; color:#111; border-radius:6px; text-decoration:none; font-weight:600 }
+      .muted { opacity:0.75; font-size:0.9rem }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>MardiGrasParadeSim2026</h1>
+      <p class="muted">You will be redirected to the current public playtest URL automatically. If the redirect does not happen, click the link below to open the game.</p>
+      <div id="link-wrap"></div>
+      <p class="muted" style="margin-top:1rem">If you manage the playtest URL you can update <code>redirect.json</code> in this folder or run the helper script in the repo to update it.</p>
+    </div>
+
+    <script>
+      // Attempt to fetch redirect.json; if present, navigate there.
+      (async function () {
+        try {
+          const res = await fetch('./redirect.json', { cache: 'no-store' });
+          if (!res.ok) throw new Error('No redirect.json');
+          const data = await res.json();
+          const target = data && data.url ? data.url : 'http://localhost:5000';
+
+          // Update UI
+          const wrap = document.getElementById('link-wrap');
+          const a = document.createElement('a');
+          a.href = target;
+          a.textContent = 'Open Playtest: ' + target.replace(/^https?:\/\//, '');
+          a.className = 'button';
+          a.target = '_blank';
+          wrap.appendChild(a);
+
+          // perform the redirect after a short delay to allow users to cancel if needed
+          setTimeout(() => { window.location.href = target; }, 600);
+        } catch (err) {
+          // show fallback link
+          const wrap = document.getElementById('link-wrap');
+          const a = document.createElement('a');
+          a.href = 'http://localhost:5000';
+          a.textContent = 'Open Local Dev (localhost:5000)';
+          a.className = 'button';
+          a.target = '_blank';
+          wrap.appendChild(a);
+          console.warn('Could not load redirect.json, using localhost fallback', err);
+        }
+      })();
+    </script>
+  </body>
+</html>
+
