@@ -42,19 +42,9 @@ export function Environment() {
           t.wrapS = THREE.RepeatWrapping;
           t.wrapT = THREE.RepeatWrapping;
           (t as any).repeat = new THREE.Vector2(3, 10);
-          // Set color space/encoding for better color when supported by this three.js version
-          try {
-            // @ts-ignore - colorSpace exists in newer three versions
-            if ((t as any).colorSpace !== undefined) {
-              // Use SRGB color space constant if available
-              (t as any).colorSpace = (THREE as any).SRGBColorSpace || 'srgb';
-            } else if ((t as any).encoding !== undefined) {
-              // Fallback to encoding constant if present
-              (t as any).encoding = (THREE as any).sRGBEncoding || (t as any).encoding;
-            }
-          } catch (e) {
-            // ignore if the API differs across three versions
-          }
+          // Avoid setting encoding/colorSpace here to maintain compatibility across three.js releases
+          // and different bundler behaviors; keep defaults which are safe for most cases.
+
           setAsphaltTexture(t);
         },
         undefined,
@@ -77,7 +67,7 @@ export function Environment() {
   }, []);
 
   const spotlightGroupRef = useRef<THREE.Group>(null);
-  
+
   // Use a low-detail mode in development to avoid WebGL context loss from too many meshes
   // Dev builds often run with HMR and smaller GPUs; reduce counts to keep the scene stable.
   // Safe access to Vite's import.meta.env.DEV; wrap in try/catch for environments
@@ -101,17 +91,17 @@ export function Environment() {
       height: Math.random() * 3 + 4,
       color: mardiGrasColors[Math.floor(Math.random() * 3)],
     }));
-    
+
     const rightBuildings = Array.from({ length: countPerSide }, (_, i) => ({
       id: `right-${i}`,
       position: [12, 3, -20 + i * 8] as [number, number, number],
       height: Math.random() * 3 + 4,
       color: mardiGrasColors[Math.floor(Math.random() * 3)],
     }));
-    
+
     return [...leftBuildings, ...rightBuildings];
   }, []);
-  
+
   // Pre-calculate street lamp positions
   const streetLamps = useMemo(() => {
     const lamps = [];
@@ -128,7 +118,7 @@ export function Environment() {
     }
     return lamps;
   }, []);
-  
+
   // Pre-calculate banner positions for Mardi Gras decorations
   const banners = useMemo(() => {
     const count = DEV_LOW_DETAIL ? 3 : 6;
@@ -142,7 +132,7 @@ export function Environment() {
       ][i % 3],
     }));
   }, []);
-  
+
   // Pre-calculate crowd silhouettes (reduced in DEV)
   const crowdPositions = useMemo(() => {
     const crowd = [];
@@ -168,14 +158,14 @@ export function Environment() {
     }
     return crowd;
   }, []);
-  
+
   // Animate spotlights sweeping across the scene
   useFrame((state) => {
     if (spotlightGroupRef.current) {
       spotlightGroupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.2;
     }
   });
-  
+
   return (
     <group>
       {/* Enhanced Lighting System */}
@@ -222,13 +212,13 @@ export function Environment() {
           <meshStandardMaterial color="#2b2b2b" />
         )}
       </mesh>
-      
+
       {/* Street yellow center line */}
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
         <planeGeometry args={[0.2, 50]} />
         <meshStandardMaterial color="#ffd700" emissive="#ffd700" emissiveIntensity={0.3} />
       </mesh>
-      
+
       {/* Sidewalks */}
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[-8.5, 0.01, 0]}>
         <planeGeometry args={[3, 50]} />
@@ -238,7 +228,7 @@ export function Environment() {
         <planeGeometry args={[3, 50]} />
         <meshStandardMaterial color="#666666" />
       </mesh>
-      
+
       {/* Curbs - visual street boundaries */}
       <mesh castShadow position={[-7, 0.15, 0]}>
         <boxGeometry args={[0.3, 0.3, 50]} />
@@ -248,34 +238,34 @@ export function Environment() {
         <boxGeometry args={[0.3, 0.3, 50]} />
         <meshStandardMaterial color="#cccccc" />
       </mesh>
-      
+
       {/* Buildings with enhanced windows */}
       {buildings.map((building) => (
         <group key={building.id} position={building.position}>
           {/* Main building */}
           <mesh castShadow>
             <boxGeometry args={[4, building.height, 6]} />
-            <meshStandardMaterial 
+            <meshStandardMaterial
               color={building.color}
               emissive={building.color}
               emissiveIntensity={0.2}
             />
           </mesh>
-          
+
           {/* Enhanced glowing building windows */}
           {Array.from({ length: 3 }, (_, i) => (
             <mesh key={i} position={[building.position[0] > 0 ? -2.01 : 2.01, -building.height / 2 + 1 + i * 1.5, 0]}>
               <boxGeometry args={[0.02, 0.8, 1]} />
-              <meshStandardMaterial 
-                color="#FFD700" 
-                emissive="#FFD700" 
+              <meshStandardMaterial
+                color="#FFD700"
+                emissive="#FFD700"
                 emissiveIntensity={2}
               />
             </mesh>
           ))}
         </group>
       ))}
-      
+
       {/* Street lamps */}
       {streetLamps.map((lamp) => (
         <group key={lamp.id} position={lamp.position}>
@@ -284,7 +274,7 @@ export function Environment() {
             <cylinderGeometry args={[0.1, 0.1, 4, 8]} />
             <meshStandardMaterial color="#2c2c2c" />
           </mesh>
-          
+
           {/* Lamp light */}
           <mesh position={[0, 2.2, 0]}>
             <sphereGeometry args={[0.3, 8, 8]} />
@@ -293,7 +283,7 @@ export function Environment() {
           <pointLight position={[0, 2.2, 0]} intensity={1} color="#ffd700" distance={8} />
         </group>
       ))}
-      
+
       {/* Vibrant gradient sky backdrop - Mardi Gras sunset */}
       <mesh position={[0, 15, -30]}>
         <planeGeometry args={[80, 50]} />
@@ -307,25 +297,25 @@ export function Environment() {
         <planeGeometry args={[80, 10]} />
         <meshBasicMaterial color="#FFD700" transparent opacity={0.4} />
       </mesh>
-      
+
       {/* Mardi Gras banners hanging across the street */}
       {banners.map((banner) => (
         <group key={banner.id} position={banner.position}>
           {/* Banner left side */}
           <mesh position={[-4, 0, 0]} rotation={[0, 0, 0.1]}>
             <boxGeometry args={[4, 1.5, 0.05]} />
-            <meshStandardMaterial 
-              color={banner.colors[0]} 
-              emissive={banner.colors[0]} 
+            <meshStandardMaterial
+              color={banner.colors[0]}
+              emissive={banner.colors[0]}
               emissiveIntensity={0.3}
             />
           </mesh>
           {/* Banner right side */}
           <mesh position={[4, 0, 0]} rotation={[0, 0, -0.1]}>
             <boxGeometry args={[4, 1.5, 0.05]} />
-            <meshStandardMaterial 
-              color={banner.colors[1]} 
-              emissive={banner.colors[1]} 
+            <meshStandardMaterial
+              color={banner.colors[1]}
+              emissive={banner.colors[1]}
               emissiveIntensity={0.3}
             />
           </mesh>
@@ -336,7 +326,7 @@ export function Environment() {
           </mesh>
         </group>
       ))}
-      
+
       {/* String lights across the street */}
       {Array.from({ length: 8 }, (_, i) => {
         const colors = ["#722F9A", "#228B22", "#FFD700"];
@@ -345,9 +335,9 @@ export function Environment() {
             {Array.from({ length: 12 }, (_, j) => (
               <mesh key={j} position={[-6 + j * 1, Math.sin(j) * 0.3, 0]}>
                 <sphereGeometry args={[0.1, 6, 6]} />
-                <meshStandardMaterial 
-                  color={colors[j % 3]} 
-                  emissive={colors[j % 3]} 
+                <meshStandardMaterial
+                  color={colors[j % 3]}
+                  emissive={colors[j % 3]}
                   emissiveIntensity={3}
                 />
               </mesh>
@@ -355,7 +345,7 @@ export function Environment() {
           </group>
         );
       })}
-      
+
       {/* Crowd silhouettes on sidewalks - use instancing for performance */}
       <CrowdInstanced positions={crowdPositions} />
     </group>
