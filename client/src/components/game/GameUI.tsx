@@ -4,7 +4,7 @@ import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useBotsConfig } from '@/lib/hooks/useBotsConfig';
 import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX, ShoppingBag, Heart, DollarSign } from "lucide-react";
+import { Volume2, VolumeX, ShoppingBag, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -13,8 +13,7 @@ import { FirstLevelTutorial } from "./FirstLevelTutorial";
 import { SettingsModal } from "./SettingsModal";
 import { BotAdmin } from "./BotAdmin";
 import { toast } from "sonner";
-import startLogoSvg from "@/assets/start-logo.svg";
-import startLogoPng from "@/assets/start-logo.png";
+// Logo PNG available at client/public/images/start-logo.png and client/src/assets/start-logo.png
 
 export function GameUI() {
   const { phase, score, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
