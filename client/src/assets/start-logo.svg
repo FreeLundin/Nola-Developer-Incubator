@@ -1,9 +1,41 @@
-﻿real<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mardi Gras Parade Logo">
-  <rect width="100%" height="100%" fill="#5B21B6" rx="32" />
-  <circle cx="256" cy="200" r="80" fill="#FDE68A" />
-  <g transform="translate(0,260)">
-    <rect x="64" y="10" width="384" height="40" rx="8" fill="#F59E0B" />
-  </g>
-  <text x="50%" y="90%" font-family="Arial, Helvetica, sans-serif" font-size="36" fill="#FFFFFF" text-anchor="middle">Mardi Gras Parade</text>
-</svg>
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200" viewBox="0 0 800 200" role="img" aria-label="Mardi Gras Parade Logo">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" x2="1">
+      <stop offset="0" stop-color="#5B21B6" />
+      <stop offset="1" stop-color="#4C1D95" />
+    </linearGradient>
+    <filter id="textShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.45" />
+    </filter>
+  </defs>
 
+  <!-- Background rounded rectangle -->
+  <rect width="100%" height="100%" rx="16" fill="url(#bgGrad)" />
+
+  <!-- Left crown -->
+  <g transform="translate(60,70) scale(0.9)">
+    <path d="M0 60 L12 20 L28 50 L44 20 L56 60 L0 60 Z" fill="#FDE68A" stroke="#D6A400" stroke-width="1" />
+    <circle cx="12" cy="20" r="3" fill="#F59E0B" />
+    <circle cx="28" cy="20" r="3" fill="#F59E0B" />
+    <circle cx="44" cy="20" r="3" fill="#F59E0B" />
+  </g>
+
+  <!-- Right crown -->
+  <g transform="translate(680,70) scale(0.9)">
+    <path d="M0 60 L12 20 L28 50 L44 20 L56 60 L0 60 Z" fill="#FDE68A" stroke="#D6A400" stroke-width="1" />
+    <circle cx="12" cy="20" r="3" fill="#F59E0B" />
+    <circle cx="28" cy="20" r="3" fill="#F59E0B" />
+    <circle cx="44" cy="20" r="3" fill="#F59E0B" />
+  </g>
+
+  <!-- Main title centered and large; drop shadow for readability -->
+  <text x="50%" y="58%" font-family="Inter, Arial, Helvetica, sans-serif" font-size="42" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle" font-weight="700" filter="url(#textShadow)">
+    Mardi Gras Parade
+  </text>
+
+  <!-- Subtitle / year with subtle gold underline -->
+  <text x="50%" y="78%" font-family="Inter, Arial, Helvetica, sans-serif" font-size="18" fill="#FDE68A" text-anchor="middle" dominant-baseline="middle">
+    2026
+  </text>
+
+</svg>
