@@ -30,10 +30,15 @@ export function GameUI() {
   const [showPersonaLabels, setShowPersonaLabels] = useState(() => {
     try { return localStorage.getItem('showBotPersonas') === 'true'; } catch { return false; }
   });
+  // Shareable public URL for playtesting (local-only)
+  const [publicUrl, setPublicUrl] = useState<string>(() => {
+    try { return localStorage.getItem('playtest.publicUrl') || ''; } catch { return ''; }
+  });
+  const qrImageUrl = publicUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(publicUrl)}` : '';
   const isMobile = useIsMobile();
   // Detect dev mode (Vite) so TEST badges are shown only during development
   const IS_DEV = (() => { try { return Boolean((import.meta as any)?.env?.DEV); } catch { return false; } })();
-  
+
   // Map player color to display info
   const colorDisplayMap = {
     beads: { name: "Purple Beads", color: "#9b59b6" },
@@ -41,7 +46,7 @@ export function GameUI() {
     cup: { name: "Red Cup", color: "#e74c3c" },
   };
   const playerColorInfo = colorDisplayMap[playerColor];
-  
+
   // Load bot config for display names and personas (runtime override respected)
   const { bots: runtimeBots } = useBotsConfig();
   const botMeta = Object.fromEntries(runtimeBots.map((b: any) => [b.id, b]));
@@ -49,7 +54,7 @@ export function GameUI() {
   const activeBotIds = runtimeBots.filter((b: any) => (typeof b.minLevel === 'number' ? b.minLevel <= level : true)).map((b: any) => b.id);
   // Sort bots by catches (descending) and filter to active ones
   const sortedBots = [...botScores].filter((bs) => activeBotIds.includes(bs.id)).sort((a, b) => b.catches - a.catches);
-  
+
   // Show combo animation when combo changes
   useEffect(() => {
     if (combo > 1) {
@@ -58,7 +63,7 @@ export function GameUI() {
       return () => clearTimeout(timer);
     }
   }, [combo]);
-  
+
   // Update combo timer
   useEffect(() => {
     if (combo > 0 && lastCatchTime > 0) {
@@ -71,7 +76,7 @@ export function GameUI() {
       return () => clearInterval(interval);
     }
   }, [combo, lastCatchTime]);
-  
+
   // Update power-up UI countdown
   useEffect(() => {
     if (activePowerUps.length > 0) {
@@ -81,7 +86,7 @@ export function GameUI() {
       return () => clearInterval(interval);
     }
   }, [activePowerUps.length]);
-  
+
   const handleStartGame = () => {
     setShowTutorial(false);
     // Show first-level tutorial on level 1
@@ -91,12 +96,12 @@ export function GameUI() {
       startGame();
     }
   };
-  
+
   const handleTutorialComplete = () => {
     setShowFirstLevelTutorial(false);
     startGame();
   };
-  
+
   return (
     <>
       {/* Tutorial Overlay */}
@@ -115,12 +120,12 @@ export function GameUI() {
               <div className="flex justify-center mb-2">
                 <div aria-hidden className="w-full max-w-2xl" />
               </div>
-              
+
                <div className="space-y-3 sm:space-y-4">
                 <p className="text-sm sm:text-lg text-center">
                   Catch throws from parade floats!
                 </p>
-                
+
                 <div className="bg-black/30 rounded-lg p-3 sm:p-4 space-y-2 sm:space-y-3">
                   {!isMobile ? (
                     <div className="space-y-1 sm:space-y-2">
@@ -136,7 +141,7 @@ export function GameUI() {
                   )}
                   <p className="text-xs sm:text-sm text-yellow-300 font-bold">• Match your color for 3x points!</p>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Button
                     onClick={() => {
@@ -166,7 +171,7 @@ export function GameUI() {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       {/* In-Game HUD */}
       {phase === "playing" && (
         <div className="absolute inset-0 pointer-events-none">
@@ -180,7 +185,7 @@ export function GameUI() {
                   <div className="text-lg md:text-2xl font-bold text-white">{score}</div>
                 </div>
               </Card>
-              
+
               {/* Player Color - Hide on small phones, show on tablets */}
               <Card className="hidden sm:flex bg-black/70 border-2 px-2 py-1 md:px-3 md:py-2" style={{ borderColor: playerColorInfo.color }}>
                 <div className="flex items-center gap-1 md:gap-2">
@@ -191,7 +196,7 @@ export function GameUI() {
                 </div>
               </Card>
             </div>
-            
+
             {/* Right side - Compact */}
             <div className="flex flex-col gap-1 md:gap-2">
               {/* Coins - Hide shop button on phones */}
@@ -207,7 +212,7 @@ export function GameUI() {
                   <ShoppingBag size={18} />
                 </Button>
               </div>
-              
+
               {/* Active Power-ups - Compact */}
               {activePowerUps.map((powerUp) => {
                 const timeLeft = Math.max(0, powerUp.endTime - Date.now());
@@ -222,7 +227,7 @@ export function GameUI() {
                   </Card>
                 );
               })}
-              
+
               <Button
                 onClick={toggleMute}
                 size="sm"
@@ -255,9 +260,51 @@ export function GameUI() {
               >
                 Reload config
               </Button>
-            </div>
-          </div>
-          
+              {/* Shareable playtest URL editor */}
+              <div className="mt-2 p-2 bg-black/60 rounded border border-yellow-400 text-white w-64">
+                <div className="text-[10px] text-yellow-300 font-bold mb-1">Playtest URL</div>
+                <input
+                  value={publicUrl}
+                  onChange={(e) => setPublicUrl(e.target.value)}
+                  placeholder="https://your-tunnel.example"
+                  className="w-full text-xs p-1 rounded bg-white/5 border border-transparent focus:border-yellow-300"
+                />
+                <div className="flex gap-1 mt-2">
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      try { localStorage.setItem('playtest.publicUrl', publicUrl); toast.success('Saved playtest URL'); } catch (e) { toast.error('Failed to save'); }
+                    }}
+                    className="bg-gray-700 hover:bg-gray-600 text-white"
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={async () => {
+                      try { await navigator.clipboard.writeText(publicUrl); toast.success('Copied to clipboard'); } catch { toast.error('Copy failed'); }
+                    }}
+                    className="bg-gray-700 hover:bg-gray-600 text-white"
+                  >
+                    Copy
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => { if (publicUrl) window.open(publicUrl, '_blank', 'noopener'); }}
+                    className="bg-blue-700 hover:bg-blue-600 text-white"
+                  >
+                    Open
+                  </Button>
+                </div>
+                {qrImageUrl && (
+                  <div className="mt-2 flex justify-center">
+                    <img src={qrImageUrl} alt="playtest-qr" className="w-28 h-28" />
+                  </div>
+                )}
+              </div>
+             </div>
+           </div>
+
           {/* Donate Buttons - Hidden on phones */}
           <div className="hidden md:flex absolute bottom-4 right-4 pointer-events-auto flex-col gap-2">
             <Button
@@ -270,7 +317,7 @@ export function GameUI() {
               Support Development
             </Button>
           </div>
-          
+
           {/* Combo Timer - Top Center - Compact on phones */}
           {combo > 0 && (
             <div className="absolute top-2 md:top-4 left-1/2 transform -translate-x-1/2">
@@ -283,7 +330,7 @@ export function GameUI() {
               </Card>
             </div>
           )}
-          
+
           {/* Combo Display - Hidden on small phones */}
           <AnimatePresence>
             {comboVisible && combo > 1 && (
@@ -304,7 +351,7 @@ export function GameUI() {
               </motion.div>
             )}
           </AnimatePresence>
-          
+
           {/* Bot Scores - Hidden on phones */}
           <div className="hidden md:block absolute bottom-4 left-4 pointer-events-auto">
             <Card className="bg-black/40 backdrop-blur-md border-2 border-gray-400 shadow-2xl px-4 py-3">
@@ -318,9 +365,9 @@ export function GameUI() {
                   return (
                     <div key={bot.id} className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <div 
-                          className="w-4 h-4 rounded-full" 
-                          style={{ 
+                        <div
+                          className="w-4 h-4 rounded-full"
+                          style={{
                             backgroundColor: bot.color,
                             boxShadow: `0 0 10px ${bot.color}, inset 0 0 6px rgba(255,255,255,0.4)`
                           }}
@@ -339,7 +386,7 @@ export function GameUI() {
               </div>
             </Card>
           </div>
-          
+
           {/* Controls Hint - Hidden on phones */}
           <div className="hidden md:block absolute bottom-4 left-1/2 transform -translate-x-1/2">
             <div className="bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2 text-white text-sm">
@@ -354,15 +401,15 @@ export function GameUI() {
           </div>
         </div>
       )}
-      
+
       {/* Cosmetic Shop Modal */}
       {showShop && <CosmeticShop onClose={() => setShowShop(false)} />}
       {/* Bot Admin Modal */}
       {showBotAdmin && <BotAdmin isOpen={showBotAdmin} onClose={() => setShowBotAdmin(false)} />}
-      
+
       {/* Settings Modal */}
       <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
-      
+
       {/* First Level Tutorial */}
       {showFirstLevelTutorial && <FirstLevelTutorial onComplete={handleTutorialComplete} />}
     </>
