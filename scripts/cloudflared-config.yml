@@ -2,7 +2,7 @@
 # Generated to ensure ingress rules exist and avoid 503 responses.
 
 tunnel: a4e543fe-25b3-4b00-ad11-9cacfb267c12
-credentials-file: C:\Users\BLund\.cloudflared\a4e543fe-25b3-4b00-ad11-9cacfb267c12.json
+credentials-file: ${HOME}/.cloudflared/a4e543fe-25b3-4b00-ad11-9cacfb267c12.json
 
 ingress:
   - hostname: mardigrasparadesim2026.busaradigitalstrategy.com
