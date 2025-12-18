@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { type Server } from "http";
 
 const app = express();
 app.use(express.json());
@@ -41,7 +42,8 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
+// Start server helper that returns the http.Server and a shutdown function so tests/pm2 can use it
+export async function startServer(): Promise<{ server: Server; shutdown: (code?: number) => Promise<void> }> {
   const server = await registerRoutes(app);
 
   // Global error handler - return JSON but don't rethrow to avoid crashing the process
@@ -66,7 +68,7 @@ app.use((req, res, next) => {
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
-    await setupVite(app, server);
+    await setupVite(app, server as Server);
   } else {
     serveStatic(app);
   }
@@ -80,35 +82,73 @@ app.use((req, res, next) => {
     log(`serving on port ${port}`);
   });
 
-  // Graceful shutdown handlers
-  const shutdown = (signal?: string) => {
-    log(`received ${signal ?? 'shutdown'} - closing server`);
+  // Track open sockets so we can destroy them on shutdown (avoid hanging connections)
+  const sockets = new Set<any>();
+  httpServer.on('connection', (socket) => {
+    sockets.add(socket);
+    socket.on('close', () => sockets.delete(socket));
+  });
+
+  let shuttingDown = false;
+
+  const shutdown = async (code = 0) => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    log(`shutdown initiated (code=${code}) - stop accepting new connections`);
+
     // stop accepting new connections
-    httpServer.close((err) => {
-      if (err) {
-        log(`error during shutdown: ${String(err)}`);
-        process.exit(1);
-      }
-      log('server closed gracefully');
-      process.exit(0);
+    await new Promise<void>((resolve) => {
+      httpServer.close((err) => {
+        if (err) {
+          log(`error closing server: ${String(err)}`);
+        }
+        resolve();
+      });
+
+      // Also destroy lingering sockets after short grace period
+      setTimeout(() => {
+        log(`destroying ${sockets.size} lingering sockets`);
+        for (const s of sockets) {
+          try { s.destroy(); } catch { /* ignore */ }
+        }
+      }, 2000).unref();
     });
 
-    // force exit after timeout
-    setTimeout(() => {
-      log('forced shutdown after timeout');
-      process.exit(1);
-    }, 10000).unref();
+    log('server closed gracefully');
+    // allow caller to decide exit
   };
 
-  process.once('SIGINT', () => shutdown('SIGINT'));
-  process.once('SIGTERM', () => shutdown('SIGTERM'));
+  // listen to signals for graceful shutdown only when run directly (not when used in tests)
+  if (require.main === module) {
+    process.once('SIGINT', () => {
+      shutdown(0).then(() => process.exit(0));
+    });
+    process.once('SIGTERM', () => {
+      shutdown(0).then(() => process.exit(0));
+    });
 
-  // catch uncaught rejections and exceptions to allow for graceful logging
-  process.on('unhandledRejection', (reason) => {
-    log(`unhandledRejection: ${String(reason)}`);
-  });
-  process.on('uncaughtException', (err) => {
-    log(`uncaughtException: ${String(err)}`);
-  });
+    // catch uncaught rejections and exceptions to allow for graceful logging
+    process.on('unhandledRejection', (reason) => {
+      log(`unhandledRejection: ${String(reason)}`);
+    });
+    process.on('uncaughtException', (err) => {
+      log(`uncaughtException: ${String(err)}`);
+    });
+  }
 
-})();
+  return { server: httpServer, shutdown };
+}
+
+// If this file is run directly, start the server and attach a shutdown that exits the process
+if (require.main === module) {
+  (async () => {
+    const { shutdown } = await startServer();
+    // force exit if shutdown takes too long
+    const forced = setTimeout(() => {
+      log('forced shutdown timeout reached, exiting');
+      process.exit(1);
+    }, 20000);
+    // clear forced timer when shutdown completes
+    shutdown().then(() => clearTimeout(forced));
+  })();
+}
