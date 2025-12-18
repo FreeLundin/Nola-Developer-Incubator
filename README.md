@@ -294,6 +294,26 @@ One-click: `powershell -ExecutionPolicy Bypass -File scripts\launch-cloudflared.
 
 ---
 
+## Quick GH Pages deploy (automatic)
+
+This repository includes a GitHub Actions workflow that builds the `client/` Vite app and deploys the static output to the `gh-pages` branch.
+
+- The workflow runs on push to `main` and builds the project using `npm run build`.
+- The generated static site is published from `dist/public` to the `gh-pages` branch.
+
+To trigger a deploy immediately:
+
+```bash
+# push your changes to main and the workflow will run automatically
+git add .
+git commit -m "chore(docs): update and deploy"
+git push origin main
+```
+
+After the workflow completes, enable Pages in your repository settings to serve the `gh-pages` branch.
+
+---
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
