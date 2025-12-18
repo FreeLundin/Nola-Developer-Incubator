@@ -14,61 +14,49 @@ param(
 
 function Log { Write-Host "[create-cloudflared-persistent]" $args }
 
-# Ensure cloudflared is available
-$cf = Get-Command cloudflared -ErrorAction SilentlyContinue
-if (-not $cf) {
-  Write-Host "cloudflared not found. Install it first: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/" -ForegroundColor Yellow
-  return
-}
-
-# Check login (best-effort)
-try {
-  $who = & $cf.Source 'tunnel' 'list' 2>&1
-  if ($LASTEXITCODE -ne 0) {
-    Write-Host "It looks like you're not authenticated with Cloudflare. Running 'cloudflared login' now..." -ForegroundColor Yellow
-    & $cf.Source 'login'
-    if ($LASTEXITCODE -ne 0) { Write-Host "Login may have failed. Please run 'cloudflared login' manually and re-run this script." -ForegroundColor Red; return }
+# Check cloudflared
+$cloudCmd = Get-Command cloudflared -ErrorAction SilentlyContinue
+if ($cloudCmd) {
+  $cloudPath = $cloudCmd.Source
+} else {
+  $bundled = Join-Path $PSScriptRoot 'cloudflared.exe'
+  if (Test-Path $bundled) {
+    Write-Host "Using bundled cloudflared at $bundled"
+    $cloudPath = $bundled
+  } else {
+    Write-Host "cloudflared not found in PATH or scripts folder. Install it first: winget install --id Cloudflare.Cloudflared -e or place cloudflared.exe in scripts/." -ForegroundColor Yellow
+    exit 2
   }
-} catch {
-  Write-Host "Failed to check cloudflared login: $_" -ForegroundColor Red
 }
 
-# Create tunnel
+Log "Using cloudflared: $cloudPath"
+
+# Ensure user has logged in
+try {
+  $who = & $cloudPath 'tunnel' 'login' 2>&1 | Out-String
+  if ($who -match 'open a browser') {
+    Write-Host "Please complete the browser-based login that was just opened, then re-run this script." -ForegroundColor Cyan
+    exit 0
+  }
+} catch { }
+
+# Create tunnel (idempotent: if exists, command returns info)
 Log "Creating tunnel named: $TunnelName"
-$tunnelCreate = & $cf.Source 'tunnel' 'create' $TunnelName 2>&1
-if ($LASTEXITCODE -ne 0) {
-  Write-Host "Tunnel create failed. Output:"; Write-Host $tunnelCreate; return
+$createOut = & $cloudPath 'tunnel' 'create' $TunnelName 2>&1 | Out-String
+Write-Host $createOut
+
+# Attempt to add DNS route for the hostname
+Log "Mapping DNS: $Hostname -> tunnel $TunnelName"
+try {
+  $routeOut = & $cloudPath 'tunnel' 'route' 'dns' $TunnelName $Hostname 2>&1 | Out-String
+  Write-Host $routeOut
+} catch {
+  Write-Host "Failed to map DNS via cloudflared tunnel route dns. You may need to run 'cloudflared login' and ensure your Cloudflare account has permission to edit DNS for the zone." -ForegroundColor Yellow
+  Write-Host "Error: $_"
 }
 
-# Parse created tunnel ID and credentials file location from output
-# The command prints something like: 'Created tunnel <NAME> with id <UUID>' and 'credentials written to /path/to/credentials.json'
-$tunnelId = ($tunnelCreate -join "`n") -match 'id\s+([0-9a-f\-]{36})' | Out-Null; $matches[1] | Out-Null
-if ($matches -and $matches.Count -ge 2) { $tid = $matches[1] } else { $tid = '' }
+Write-Host "\nDone. To run the tunnel now (on this machine):" -ForegroundColor Green
+Write-Host "  cloudflared tunnel run $TunnelName" -ForegroundColor Cyan
+Write-Host "After the tunnel starts, the hostname https://$Hostname should resolve to your local server (http://localhost:5000)." -ForegroundColor Green
 
-if ($tid) { Log "Tunnel ID: $tid" } else { Log "Could not parse tunnel ID; please inspect output above." }
-
-# Route DNS
-Log "Routing DNS $Hostname to tunnel $TunnelName"
-$routeOut = & $cf.Source 'tunnel' 'route' 'dns' $TunnelName $Hostname 2>&1
-if ($LASTEXITCODE -ne 0) { Write-Host "DNS route failed. Output:"; Write-Host $routeOut; return }
-
-Write-Host "Success. Your persistent tunnel should be available via https://$Hostname" -ForegroundColor Green
-Write-Host "Notes:"
-Write-Host " - If DNS change is required, log into Cloudflare dashboard and point the hostname to the Cloudflare tunnel as instructed."
-Write-Host " - The credentials for the tunnel are stored in the cloudflared config directory; keep them safe."
-Write-Host " - To run the tunnel locally: cloudflared tunnel run $TunnelName"
-
-# Write docs/last-public-url.txt for convenience
-$repoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Definition)
-$docsDir = Join-Path $repoRoot 'docs'
-if (-not (Test-Path $docsDir)) { New-Item -ItemType Directory -Path $docsDir | Out-Null }
-$lastFile = Join-Path $docsDir 'last-public-url.txt'
-Set-Content -Path $lastFile -Value "https://$Hostname" -Encoding UTF8
-Write-Host "Wrote $lastFile" -ForegroundColor Cyan
-
-# Print next steps
-Write-Host "Next steps:" -ForegroundColor Cyan
-Write-Host " 1) Verify DNS is published for $Hostname (may take time to propagate)."
-Write-Host " 2) Start the tunnel on your host or server with: cloudflared tunnel run $TunnelName"
-Write-Host " 3) Update README/docs to reference https://$Hostname or point GitHub Pages redirect to docs/launch.html if preferred."
-
+Write-Host "If the DNS does not appear immediately, allow a minute and then check: nslookup $Hostname" -ForegroundColor Yellow
