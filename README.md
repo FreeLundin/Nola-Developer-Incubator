@@ -1,5 +1,7 @@
 # 🎭 NDI_MardiGrasParade
 
++> Playtest (public): Try the live build: https://mardigrasparadesim2026.busaradigitalstrategy.com — or use one-click launch: [docs/launch.html](./docs/launch.html). Scan `docs/browser-qr.svg` to open on mobile.
++
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6)](https://www.typescriptlang.org/)
@@ -13,7 +15,7 @@
 
 ## 🚀 Quick Start
 
-Get the simulator running in under 2 minutes:
+Get the simulator running in under 2 minutes (developer) — or open the public playtest (tester):
 
 ```bash
 # Clone repository
@@ -23,13 +25,14 @@ cd Nola-Developer-Incubator
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server (dev):
 npm run dev
 
-# Open browser → http://localhost:5000
+# Open locally → http://localhost:5000
+# Or open public playtest → https://mardigrasparadesim2026.busaradigitalstrategy.com
 ```
 
-That's it! The simulator will open in your default browser.
+That's it! The simulator will open in your default browser (or open the public link for a hosted playtest).
 
 ---
 
@@ -153,6 +156,10 @@ NODE_ENV=development
 ### Getting Started
 - **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - How to contribute to the project
 - **[DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md)** - Detailed technical setup and development workflow
+
+### Community & Contact
+- **Project Lead** - Brian C Lundin
+- **Discord (community)** - Nola Unreal Developer Incubator: https://discord.com/channels/809846008842158161/1424089949224960031
 
 ### Code Resources
 - **Backend API** - Express.js REST API (see `server/routes.ts`)
