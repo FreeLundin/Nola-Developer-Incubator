@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import fs from 'fs';
+import path from 'path';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // put application routes here
@@ -22,10 +23,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Example API route (kept minimal) - storage can be used for real endpoints
   app.get('/api/ping', (_req, res) => res.json({ pong: true }));
 
+  // Return the last generated public URL (written by scripts/start-cloud-tunnel.ps1)
+  app.get('/api/last-public-url', async (_req, res) => {
+    try {
+      const repoRoot = path.resolve(__dirname, '..');
+      const filePath = path.join(repoRoot, 'docs', 'last-public-url.txt');
+      if (!fs.existsSync(filePath)) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        return res.json({ url: null });
+      }
+
+      const txt = await fs.promises.readFile(filePath, 'utf8');
+      const url = (txt || '').trim() || null;
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      return res.json({ url });
+    } catch (err) {
+      console.error('Failed to read last-public-url', err);
+      res.status(500).json({ error: 'Failed to read last-public-url' });
+    }
+  });
+
   // use storage to perform CRUD operations on the storage interface
   // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
 
-  const httpServer = createServer(app);
-
-  return httpServer;
+  return createServer(app);
 }

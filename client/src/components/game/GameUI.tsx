@@ -13,6 +13,7 @@ import { FirstLevelTutorial } from "./FirstLevelTutorial";
 import { SettingsModal } from "./SettingsModal";
 import { BotAdmin } from "./BotAdmin";
 import { toast } from "sonner";
+import ShareButton from '@/components/ui/ShareButton';
 // Logo PNG available at client/public/images/start-logo.png and client/src/assets/start-logo.png
 
 export function GameUI() {
@@ -241,6 +242,7 @@ export function GameUI() {
               >
                 Admin
               </Button>
+              <ShareButton className="ml-2" />
               <Button
                 onClick={() => { setShowPersonaLabels(v => { const next = !v; try { localStorage.setItem('showBotPersonas', String(next)); } catch {} return next; }); }}
                 size="sm"
