@@ -261,6 +261,13 @@ One-click: `powershell -ExecutionPolicy Bypass -File scripts\launch-cloudflared.
 
 ---
 
+## 🛡️ Server & Deployment Updates (2025-12-18)
+
+- Graceful shutdown implemented: server now tracks open sockets and destroys lingering connections on shutdown. This improves reliability when restarting under process managers (pm2) or tunnels (cloudflared).
+- Use `startServer()` export from `server/index.ts` for programmatic start/shutdown in tests/CI.
+
+---
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
