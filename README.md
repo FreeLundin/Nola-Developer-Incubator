@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 > **An immersive 3D Mardi Gras parade experience playable directly in your browser!**
-> 
+>
 > Catch beads, doubloons, and cups from parade floats while competing with AI opponents in this celebration of New Orleans culture.
 
 ---
@@ -290,3 +290,49 @@ NDI_MardiGrasParade brings the excitement of Mardi Gras parades to players every
 **Made with ❤️ in the spirit of Mardi Gras**
 
 </div>
+
+## Project status (consolidation)
+
+- Project Lead: Brian C Lundin
+- Canonical repository path: `C:\Coding_Projects\MardiGrasParadeSim`
+- Recent consolidation: files merged from a secondary copy (Unreal project) into this canonical repo. Modified files were backed up next to the originals as `*.bak.<timestamp>` and a zip archive was created under `archive/`.
+- Backups: see `archive/mardi-consolidate-backup-<timestamp>.zip` and `*.bak.<timestamp>` files across the tree.
+
+## Public playtest (quick)
+
+This repo supports an ephemeral public playtest URL using Cloudflare `cloudflared` or `localtunnel` (fallback).
+
+1. Start the dev server:
+
+```powershell
+npm install
+npm run dev
+```
+
+2. Start the tunnel (one-click helper):
+
+```powershell
+Unblock-File .\scripts\start-cloudflared-oneclick.ps1; .\scripts\start-cloudflared-oneclick.ps1
+```
+
+3. Confirm URL (helper writes `docs/last-public-url.txt` and `docs/launch.html`):
+
+```powershell
+Get-Content .\docs\last-public-url.txt
+Start-Process .\docs\launch.html
+```
+
+Note: The public URL is ephemeral. Do not expose secrets or admin endpoints while the tunnel is active.
+
+## Why do Replit files exist?
+
+- The project historically included a Replit configuration (`.replit` and related files) to support running an embedded instance on Replit for demos or quick previews.
+- We are consolidating to a single canonical location and keeping Replit files out of the active tree to avoid confusion.
+- A helper was added to archive Replit-related files safely (it moves them into `archive/replit-removed-<timestamp>/`). See `scripts/archive-replit-files.ps1`.
+
+If you want to restore Replit support, the archived files can be restored from that folder or the repository backup.
+
+## Cleanup & housekeeping
+
+- A new script `scripts/archive-replit-files.ps1` moves Replit config files out of the repo into `archive/replit-removed-<timestamp>/` for review. It is conservative and safe.
+- After review, please push the consolidation branch and open a PR. The PR body should explain the consolidation and list the backup locations.
