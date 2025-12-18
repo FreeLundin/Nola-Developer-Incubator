@@ -27,18 +27,6 @@ yarn-error.log*
 # Documentation (optional - uncomment if you want to exclude)
 # docs/
 
-# Source files (they're already built)
-client/src
-server/*.ts
-shared/*.ts
-
-# Build artifacts that shouldn't be in deployment
-vite.config.ts
-tsconfig.json
-postcss.config.js
-tailwind.config.ts
-drizzle.config.ts
-
 # Test files
 *.test.ts
 *.test.tsx
