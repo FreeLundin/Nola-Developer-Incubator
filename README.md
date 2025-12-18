@@ -36,6 +36,32 @@ That's it! The simulator will open in your default browser (or open the public l
 
 ---
 
+## 🔗 Quick Public Playtest (one-click)
+
+If you want to share the running build publicly (free, uses Cloudflare Tunnel):
+
+1. Start the dev server locally:
+
+```powershell
+npm install; npm run dev
+```
+
+2. In a separate PowerShell, run the one-click launcher (opens the public URL and saves a QR):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\launch-cloudflared.ps1
+```
+
+3. The public URL and QR are shown/created by the script; share the URL (example: `https://mardigrasparadesim2026.busaradigitalstrategy.com`).
+
+Note: You must have a configured Cloudflare tunnel/hostname or cloudflared installed and authenticated for the provided hostname to work.
+
+### Admin / Bot Overrides
+- Open the in-game Admin modal (HUD → Admin) to edit bot display names and personas locally; changes save to `bots.override.json` via `/admin/bots` and apply immediately.
+- You can also edit `bots.override.json` at the project root and reload the config in-game using the HUD `Reload config` button or run in console: `fetch('/bots.override.json').then(()=>window.dispatchEvent(new Event('bots:updated')))`.
+
+---
+
 ## 🎮 Game Features
 
 ### Core Gameplay

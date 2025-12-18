@@ -1,0 +1,90 @@
+name: Setup Cloudflare Tunnel & Run Playwright
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  setup-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      PUBLIC_HOST: ${{ secrets.PUBLIC_HOST }}
+      TUNNEL_NAME: ${{ secrets.TUNNEL_NAME }}
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Install cloudflared
+        run: |
+          curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+          chmod +x cloudflared
+          sudo mv cloudflared /usr/local/bin/cloudflared
+
+      - name: Create tunnel via API
+        run: |
+          # Create a tunnel (API calls) using CF_API_TOKEN
+          set -e
+          TUNNEL_NAME=${{ secrets.TUNNEL_NAME }}
+          PUBLIC_HOST=${{ secrets.PUBLIC_HOST }}
+          CF_API_TOKEN=${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID=${{ secrets.CF_ACCOUNT_ID }}
+          CF_ZONE_ID=${{ secrets.CF_ZONE_ID }}
+
+          # Create tunnel
+          CREATE=$(curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/tunnels" \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"'"$TUNNEL_NAME"'"}')
+          echo "$CREATE" > tunnel-create.json
+          TUNNEL_ID=$(echo "$CREATE" | jq -r '.result.id')
+          echo "Tunnel ID: $TUNNEL_ID"
+
+          # Create DNS record to route hostname to tunnel
+          # This uses the Cloudflare Tunnel service; actual route creation differs per account; here we create a CNAME as fallback
+          echo "Creating CNAME $PUBLIC_HOST -> tunnels.cloudflare.com (note: ensure Cloudflare Argo Tunnel integration enabled)"
+          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records" \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data '{"type":"CNAME","name":"'"$PUBLIC_HOST"'","content":"tunnels.cloudflare.com","ttl":120,"proxied":true}' > dns-create.json || true
+
+      - name: Start dev server
+        run: npm run dev &
+
+      - name: Start cloudflared
+        run: |
+          # Start cloudflared to forward to localhost:5000
+          cloudflared tunnel --url http://localhost:5000 --hostname $PUBLIC_HOST > cloudflared.log 2>&1 &
+          sleep 3
+
+      - name: Wait for server
+        run: |
+          for i in {1..30}; do
+            if curl -sS http://localhost:5000/health; then
+              echo 'server ready' && break;
+            fi
+            sleep 1;
+          done
+
+      - name: Run Playwright tests
+        run: npx playwright test --project=chromium --reporter=list
+
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudflared-log
+          path: cloudflared.log

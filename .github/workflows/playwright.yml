@@ -1,0 +1,30 @@
+name: Playwright Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: npm ci
+      - name: Start dev server
+        run: npm run dev &
+      - name: Wait for server
+        run: |
+          for i in {1..30}; do
+            if curl -sS http://localhost:5000/health; then
+              echo 'server ready' && break;
+            fi
+            sleep 1;
+          done
+      - name: Run Playwright
+        run: npx playwright test --project=chromium --reporter=list
+

@@ -2,6 +2,11 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { type Server } from "http";
+import { fileURLToPath } from 'url';
+
+// ESM-safe main module check
+const __filename = fileURLToPath(import.meta.url);
+const isMain = typeof process !== 'undefined' && process.argv[1] === __filename;
 
 const app = express();
 app.use(express.json());
@@ -108,9 +113,7 @@ export async function startServer(): Promise<{ server: Server; shutdown: (code?:
       // Also destroy lingering sockets after short grace period
       setTimeout(() => {
         log(`destroying ${sockets.size} lingering sockets`);
-        for (const s of sockets) {
-          try { s.destroy(); } catch { /* ignore */ }
-        }
+        sockets.forEach((s) => { try { (s as any).destroy(); } catch { /* ignore */ } });
       }, 2000).unref();
     });
 
@@ -119,7 +122,7 @@ export async function startServer(): Promise<{ server: Server; shutdown: (code?:
   };
 
   // listen to signals for graceful shutdown only when run directly (not when used in tests)
-  if (require.main === module) {
+  if (isMain) {
     process.once('SIGINT', () => {
       shutdown(0).then(() => process.exit(0));
     });
@@ -140,7 +143,7 @@ export async function startServer(): Promise<{ server: Server; shutdown: (code?:
 }
 
 // If this file is run directly, start the server and attach a shutdown that exits the process
-if (require.main === module) {
+if (isMain) {
   (async () => {
     const { shutdown } = await startServer();
     // force exit if shutdown takes too long

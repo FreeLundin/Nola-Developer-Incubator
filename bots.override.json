@@ -1,0 +1,11 @@
+{
+  "bots": [
+    { "id": "bot-1", "displayName": "King Rex", "persona": "regal" },
+    { "id": "bot-2", "displayName": "Queen Zulu", "persona": "festive" },
+    { "id": "bot-3", "displayName": "Lil Jester", "persona": "playful" },
+    { "id": "bot-4", "displayName": "Captain Float", "persona": "calm" },
+    { "id": "bot-5", "displayName": "Nola Nelly", "persona": "cheerful" },
+    { "id": "bot-6", "displayName": "Mardi Max", "persona": "aggressive" }
+  ]
+}
+
