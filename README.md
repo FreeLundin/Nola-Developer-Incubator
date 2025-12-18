@@ -309,20 +309,35 @@ npm install
 npm run dev
 ```
 
-2. Start the tunnel (one-click helper):
+2. Preferred (persistent Cloudflare hostname)
+
+- Hostname: https://mardigrasparadesim2026.busaradigitalstrategy.com
+- Start the persistent tunnel on your host (requires `cloudflared login` once):
 
 ```powershell
-Unblock-File .\scripts\start-cloudflared-oneclick.ps1; .\scripts\start-cloudflared-oneclick.ps1
+# Use the bundled cloudflared or your installed cloudflared
+# Ensure credentials file exists: C:\Users\BLund\.cloudflared\<tunnel-credentials>.json
+# Start the persistent tunnel (runs until stopped):
+.\scripts\cloudflared.exe --config scripts\cloudflared-config.yml tunnel run MardiGrasParadeSim2026
 ```
 
-3. Confirm URL (helper writes `docs/last-public-url.txt` and `docs/launch.html`):
+3. Fallback (ephemeral, quick share)
+
+```powershell
+# Ensure dev server running on localhost:5000
+npx localtunnel --port 5000 --print-url
+# Example ephemeral URL: https://hot-lizard-90.loca.lt
+```
+
+4. Confirm URL (helper writes `docs/last-public-url.txt` and `docs/launch.html`):
 
 ```powershell
 Get-Content .\docs\last-public-url.txt
 Start-Process .\docs\launch.html
 ```
 
-Note: The public URL is ephemeral. Do not expose secrets or admin endpoints while the tunnel is active.
+Note: The public URLs are intended for playtesting only. Do not expose secrets, admin paths, or internal APIs while the tunnel is active.
+
 
 ## Why do Replit files exist?
 
