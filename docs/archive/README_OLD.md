@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 > **A 3D Mardi Gras parade game where you catch beads, doubloons, and cups from parade floats!**
-> 
+>
 > Available in **two versions**: Web (React Three.js) and Native (Unreal Engine 5.7)
 
 <div align="center">
@@ -543,7 +543,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## ?? Team & Contact
 
 ### Core Team
-- **Project Lead:** Brandon Lundin
+- **Project Lead:** Brian C Lundin
 - **Repository:** [Nola-Developer-Incubator](https://github.com/FreeLundin/Nola-Developer-Incubator)
 
 ### Contact

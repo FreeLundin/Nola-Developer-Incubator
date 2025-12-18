@@ -273,6 +273,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Stay Connected
 - **GitHub** - [FreeLundin/Nola-Developer-Incubator](https://github.com/FreeLundin/Nola-Developer-Incubator)
 - **Project Lead** - Brian C Lundin
+- **Discord (community)** - Nola Unreal Developer Incubator: https://discord.com/channels/809846008842158161/1424089949224960031
 
 ---
 

@@ -521,6 +521,7 @@ Follow the existing code style in the project:
 
 ### Communication
 
+- Join our Discord: Nola Unreal Developer Incubator — https://discord.com/channels/809846008842158161/1424089949224960031
 - Be respectful and patient
 - Search for existing answers before asking
 - Provide context and details in questions
