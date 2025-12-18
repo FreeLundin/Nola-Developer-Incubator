@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="278ffe03-206f-45dd-ba97-e0376756bdce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/docs/launch.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/launch-cloudflared.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/auto-cloudflare.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/playwright/console.spec.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/playwright/basic.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/playwright/basic.spec.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,15 +77,7 @@
       <workItem from="1765766636280" duration="2677000" />
       <workItem from="1765769387550" duration="6013000" />
       <workItem from="1766052624463" duration="16123000" />
-      <workItem from="1766069327596" duration="616000" />
-    </task>
-    <task id="LOCAL-00001" summary="chore: update dependencies in package.json">
-      <option name="closed" value="true" />
-      <created>1765207214590</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1765207214590</updated>
+      <workItem from="1766069327596" duration="6643000" />
     </task>
     <task id="LOCAL-00002" summary="feat: implement CanvasGuard for WebGL context management and enhance development experience">
       <option name="closed" value="true" />
@@ -449,7 +439,39 @@
       <option name="project" value="LOCAL" />
       <updated>1766069561007</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="feat(server): enhance error handling and add graceful shutdown support">
+      <option name="closed" value="true" />
+      <created>1766070134211</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1766070134211</updated>
+    </task>
+    <task id="LOCAL-00048" summary="fix(server): use portable listen signature to avoid ENOTSUP on some platforms">
+      <option name="closed" value="true" />
+      <created>1766070781268</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1766070781268</updated>
+    </task>
+    <task id="LOCAL-00049" summary="feat(server): implement hardened graceful shutdown with socket tracking and startServer() helper">
+      <option name="closed" value="true" />
+      <created>1766071073185</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1766071073185</updated>
+    </task>
+    <task id="LOCAL-00050" summary="feat(ui): add admin modal for editing bot names and personas; integrate bot display names in competitor HUD">
+      <option name="closed" value="true" />
+      <created>1766073104734</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1766073104735</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -459,10 +481,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="docs: add shareable playtest URL functionality to GameUI" />
-    <MESSAGE value="feat(dev): add one-click public dev server helper and QR code generation" />
-    <MESSAGE value="feat(assets): update logo SVG with gradient background and enhanced design elements" />
-    <MESSAGE value="feat(assets): redesign Mardi Gras Parade logo with gradient background and enhanced elements" />
     <MESSAGE value="feat(scripts): add script to convert start-logo.svg to optimized PNG sizes" />
     <MESSAGE value="feat(ci): add Playwright CI workflow and public URL sharing functionality" />
     <MESSAGE value="feat(docs): enhance development guide with one-click cloudflared helper instructions" />
@@ -484,7 +502,11 @@
     <MESSAGE value="docs(design): enhance designer workflow with playtest-focused QA steps and asset submission checklist" />
     <MESSAGE value="docs(CONTRIBUTING): enhance contribution guidelines with communication best practices and PR expectations" />
     <MESSAGE value="feat(migration): add Ask2Agent migration state XML configuration" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(migration): add Ask2Agent migration state XML configuration" />
+    <MESSAGE value="feat(server): enhance error handling and add graceful shutdown support" />
+    <MESSAGE value="fix(server): use portable listen signature to avoid ENOTSUP on some platforms" />
+    <MESSAGE value="feat(server): implement hardened graceful shutdown with socket tracking and startServer() helper" />
+    <MESSAGE value="feat(ui): add admin modal for editing bot names and personas; integrate bot display names in competitor HUD" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(ui): add admin modal for editing bot names and personas; integrate bot display names in competitor HUD" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
