@@ -708,33 +708,24 @@ Legacy helper (still available)
 
 If you have both present, prefer `scripts/start-cloud-tunnel.ps1` for a simpler cross-platform experience and to get `docs/last-public-url.txt` written.
 
-Install cloudflared (recommended)
+One-click helper (Windows only)
+ - `scripts/start-cloudflared-oneclick.ps1` — simplified, single-file PowerShell helper that:
+   - starts the dev server (`npm run dev`),
+   - requires `cloudflared` to be installed and on your PATH,
+   - starts a `cloudflared` tunnel to your local dev server,
+   - writes `docs/last-public-url.txt` and `docs/launch.html`,
+   - generates `docs/browser-qr.svg` (if Node is available),
+   - opens the public URL in your default browser.
 
-Windows (winget):
-```powershell
-winget install Cloudflare.Cloudflared
-```
-macOS (Homebrew):
-```bash
-brew install cloudflare/cloudflare/cloudflared
-```
-Linux (deb/apt example):
-```bash
-# Debian/Ubuntu (example)
-sudo apt update && sudo apt install -y cloudflared
-# Or download the binary from Cloudflare and place it on your PATH
-```
-
-Fallback: localtunnel
-
-If you don't have or don't want to install `cloudflared` you can rely on `localtunnel` (the helper will try `npx localtunnel` automatically):
+Usage (PowerShell, run from repo root):
 
 ```powershell
-# Install localtunnel globally (optional)
-npm i -g localtunnel
-# Start a tunnel manually (if you prefer):
-lt --port 5000
+Unblock-File .\scripts\start-cloudflared-oneclick.ps1; .\scripts\start-cloudflared-oneclick.ps1
 ```
+
+Notes:
+- This helper purposely prefers `cloudflared` for stability and predictable public URLs.
+- If you need a cross-platform fallback or don't want to install `cloudflared`, keep using `scripts/start-cloud-tunnel.ps1` which can fall back to `npx localtunnel`.
 
 Files created by the helper
 
