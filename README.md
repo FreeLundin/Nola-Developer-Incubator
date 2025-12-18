@@ -8,7 +8,24 @@
   </picture>
 </div>
 
-A browser-based 3D Mardi Gras parade simulator (React + R3F + Howler) – catch throws, compete with bots, and enjoy the parade.
+About
+-----
+
+- Project Lead: Brian C Lundin
+- Project: Mardi Gras Parade Simulator (browser-based 3D experience built with React + R3F + Howler)
+
+Public playtest (for non-developers)
+-----------------------------------
+
+This project supports sharing a temporary public URL so people outside your LAN can play the build. Use the helper scripts in `scripts/` to create a public tunnel and QR for mobile.
+
+- Current public link (auto-updates when you run the share helper): <!-- PUBLIC_URL -->
+- Redirect/launch page: [docs/launch.html](./docs/launch.html)
+- Plain text latest URL: `docs/last-public-url.txt`
+- Mobile QR: `docs/browser-qr.svg`
+
+Quick start (dev)
+-----------------
 
 ## Quick links
 - Game Design Document (GDD): [docs/GAME_DESIGN.md](./docs/GAME_DESIGN.md)
