@@ -1,10 +1,10 @@
 ﻿import { test, expect } from '@playwright/test';
 
-// This test assumes the dev server is running on http://localhost:5000
-// Run with: npx playwright test tests/playwright/audio-bots.spec.ts --headed
+// Use PUBLIC_URL if set (from CI/localtunnel); otherwise default to localhost
+const BASE_URL = process.env.PUBLIC_URL || 'http://localhost:5000';
 
 test('audio unlock and bot presence', async ({ page }) => {
-  await page.goto('http://localhost:5000');
+  await page.goto(BASE_URL);
 
   // Wait for tutorial overlay and click Enable Audio
   const enable = page.getByRole('button', { name: /Enable Audio/i });
@@ -32,4 +32,3 @@ test('audio unlock and bot presence', async ({ page }) => {
   }
   expect(found).toBeTruthy();
 });
-

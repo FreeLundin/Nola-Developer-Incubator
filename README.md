@@ -50,6 +50,29 @@ The script will start `npm run dev`, open a tunnel, write `docs/browser-qr.svg`,
 
 Note: These are ephemeral. Run the one-click helper above to refresh the public link.
 
+## Public playtest (persistent)
+
+If you want a stable hostname for playtesting, create a persistent Cloudflare tunnel and map a DNS hostname to it using the provided helper script.
+
+Quick steps (PowerShell):
+
+```powershell
+# Create and map a tunnel (replace names)
+Unblock-File .\scripts\create-cloudflared-persistent.ps1
+.\scripts\create-cloudflared-persistent.ps1 -TunnelName my-mardi-tunnel -Hostname play.mardigras.example.com
+```
+
+Then start the tunnel on a host (or your machine):
+
+```powershell
+cloudflared tunnel run my-mardi-tunnel
+```
+
+After the tunnel is running (or when the helper finishes), you can test immediately by opening `docs/launch.html` (which will redirect to the current public URL) or by opening the hostname you configured (e.g. https://play.mardigras.example.com).
+
+- Ephemeral public link: test immediately after running `start-cloudflared-oneclick.ps1`.
+- Persistent hostname: test after `cloudflared tunnel run` completes and DNS (if needed) propagates.
+
 ## Logo assets
 
 - To import a local PNG logo into the docs: `node scripts/import-logo.js "C:\path\to\logo.png"`
