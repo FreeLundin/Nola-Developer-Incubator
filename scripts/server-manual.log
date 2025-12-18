@@ -1,0 +1,14 @@
+
+> ndi-mardigrasparade@1.0.0 dev
+> tsx server/index.ts
+
+6:50:51 AM [express] serving on port 5000
+[2m8:16:54 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/game/BotAdmin.tsx[22m
+[2m8:16:54 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/game/CanvasGuard.tsx[22m
+[2m8:16:54 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/game/DevPerf.tsx[22m
+[2m8:16:54 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/game/InstanceSetter.tsx[22m
+[2m8:16:54 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/ui/DevQRCode.tsx[22m
+[2m8:16:54 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/ui/ShareButton.tsx[22m
+[2m8:16:54 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/lib/bots.ts[22m
+[2m8:16:54 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/lib/hooks/useBotsConfig.ts[22m
+[2m8:16:54 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/hooks/useLastPublicUrl.ts[22m

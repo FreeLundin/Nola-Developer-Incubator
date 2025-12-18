@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="278ffe03-206f-45dd-ba97-e0376756bdce" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/PULL_REQUEST_TEMPLATE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/ci-playwright.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/gh-pages.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/playwright-ci.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/playwright.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/pr-playwright.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/smoke.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/archive/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/archive/generated-2025-12-09.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/archive/replit-removed-20251218-055620/.replit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/archive/replit-removed-20251218-055620/.replit.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/README.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/index.html.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/fonts/inter.json.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/geometries/heart.gltf.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/images/start-logo-512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/images/start-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/images/start-logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/sounds/background.mp3.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/sounds/hit.mp3.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/sounds/success.mp3.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/textures/asphalt.png.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/textures/asphalt.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/textures/grass.png.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/textures/sky.png.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/thumbnail.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/App.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/start-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/start-logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/start-logo.svg.bak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/AdRewardScreen.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/AggressiveNPC.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/AudioManager.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/BotAdmin.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/CanvasGuard.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/CatchEffect.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/ClickMarker.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/Collectible.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/CompetitorBot.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/CosmeticShop.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/DevPerf.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/Environment.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/FirstLevelTutorial.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/GameCamera.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/GameScene.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/GameUI.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/GlowingTrail.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/InstanceSetter.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/Obstacle.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/ParadeFloat.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/Player.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/SettingsModal.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/TouchControls.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/TrajectoryHint.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/game/WinScreen.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/DevQRCode.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/ShareButton.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/accordion.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/alert-dialog.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/alert.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/aspect-ratio.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/avatar.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/badge.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/breadcrumb.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/button.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/calendar.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/card.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/carousel.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/chart.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/checkbox.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/collapsible.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/command.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/context-menu.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/dialog.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/drawer.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/dropdown-menu.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/form.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/hover-card.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/input-otp.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/input.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/interface.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/label.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/menubar.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/navigation-menu.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/pagination.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/popover.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/progress.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/radio-group.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/resizable.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/scroll-area.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/select.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/separator.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/sheet.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/sidebar.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/skeleton.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/slider.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/sonner.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/switch.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/table.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/tabs.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/textarea.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/toggle-group.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/toggle.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/ui/tooltip.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/config/bots.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/hooks/use-is-mobile.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/hooks/useLastPublicUrl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/index.css.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/lib/bots.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/lib/hooks/useBotsConfig.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/lib/queryClient.ts.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/lib/stores/useAudio.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/lib/stores/useGame.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/lib/stores/useParadeGame.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/lib/utils.ts.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/not-found.tsx.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps_check.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps_check_pretty.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/AI_GOVERNANCE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/ASSET_CHECKLIST.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/ASSET_CHECKLIST.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/ASSET_CHECKLIST.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/ASSET_SUBMISSION_TEMPLATE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/CODE_OF_CONDUCT.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/CONTRIBUTING.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/DEPRECATED.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/DESIGNER_WORKFLOW.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/DEVELOPMENT_GUIDE.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Designer_Workflow.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/GAME_DESIGN.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/GAME_DESIGN.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/GAME_DESIGN_thumb_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/GAME_DESIGN_thumb_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/GOVERNANCE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Game_Design.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/LESSONS_LEARNED.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/MAINTAINERS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/MIGRATION_SUMMARY.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/MardiGrasParadeSim2026.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/MardiGrasParadeSim2026/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/MardiGrasParadeSim2026/redirect.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/NEXT_STEPS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/OPTIMIZATIONS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/PLAYTESTING.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/PRODUCT_BACKLOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/TECHNICAL_DOCUMENTATION.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/DOCUMENTATION_INDEX.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/QUICK_REFERENCE.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/QUICK_START_UNREAL.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/README.md.backup.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/README.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/README_CREATION_COMPLETE.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/README_DUAL_PLATFORM.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/README_OLD.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/RUNNING_BOTH_VERSIONS.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/START_HERE.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/TASK_TRACKER.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/UNREAL_ARCHIVE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/UNREAL_BLUEPRINT_GUIDE.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/UNREAL_CONVERSION_PLAN.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/UNREAL_SETUP_COMPLETE.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/archive/replit.md.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/browser-qr.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/icons/logo-1024.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/icons/logo-128.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/icons/logo-256.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/icons/logo-32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/icons/logo-512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/icons/logo-64.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/banner.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/logo-embedded.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/logo-from-png.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/logo-thumbnail.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/last-public-url.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/launch.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/logo-raster.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/public-qr.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/thumbnail.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/website/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/website/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/website/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/drizzle.config.ts.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outdated.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/postcss.config.js.bak.20251218-054244" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ps1/generate-qr.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ps1/start-public-dev.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/README-CONVERT-LOGO.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/accept-incoming.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/archive-generated.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/archive-replit-files.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/cleanup-generated.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/cloudflared-config.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/confirm-public-url.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/consolidate-single-location.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/convert-logo.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/convert-start-logo.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/create-cloudflared-persistent.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/embed-logo.cjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/embed-logo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/find-conditional-hooks.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/find-hooks-after-if.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/generate-design-assets.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/generate-logo-sizes.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/generate-qr.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/headless-playtest.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/headless-puppeteer.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/import-logo-path.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/import-logo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/md-to-pdf.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/open-browser.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/repair-windows.ps1" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;FreeLundin&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/FreeLundin/Nola-Developer-Incubator.git&quot;,
+    &quot;accountId&quot;: &quot;4d881737-c6a5-4d73-b6ec-47b14808c4b5&quot;
+  }
+}</component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="36Yt5EeRGWjiEgkWz3EFEEHv6xz" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;chore/public-playtest-docs&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.github.copilot.settings.mcp.McpConfigurable&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Coding_Projects\\MardiGrasParadeSim\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="278ffe03-206f-45dd-ba97-e0376756bdce" name="Changes" comment="" />
+      <created>1764296153467</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1764296153467</updated>
+      <workItem from="1765195155693" duration="315000" />
+      <workItem from="1765196351862" duration="118000" />
+      <workItem from="1765196558178" duration="19956000" />
+      <workItem from="1765271429800" duration="12631000" />
+      <workItem from="1765766235353" duration="188000" />
+      <workItem from="1765766636280" duration="2677000" />
+      <workItem from="1765769387550" duration="6013000" />
+      <workItem from="1766052624463" duration="16123000" />
+    </task>
+    <task id="LOCAL-00001" summary="chore: update dependencies in package.json">
+      <option name="closed" value="true" />
+      <created>1765207214590</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1765207214590</updated>
+    </task>
+    <task id="LOCAL-00002" summary="feat: implement CanvasGuard for WebGL context management and enhance development experience">
+      <option name="closed" value="true" />
+      <created>1765221127679</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1765221127679</updated>
+    </task>
+    <task id="LOCAL-00003" summary="chore: add various output and log files for development and testing">
+      <option name="closed" value="true" />
+      <created>1765221139540</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1765221139540</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat: add minimal static landing page for Mardi Gras Parade Simulator">
+      <option name="closed" value="true" />
+      <created>1765221313534</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1765221313534</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat: add GitHub Actions workflow to deploy docs to GitHub Pages">
+      <option name="closed" value="true" />
+      <created>1765221626980</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1765221626980</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: add &quot;Play Now&quot; button and health check logic to launch game in new tab">
+      <option name="closed" value="true" />
+      <created>1765222613118</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1765222613118</updated>
+    </task>
+    <task id="LOCAL-00007" summary="feat: add development performance overlay and improve health check handling">
+      <option name="closed" value="true" />
+      <created>1765223415420</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1765223415420</updated>
+    </task>
+    <task id="LOCAL-00008" summary="feat(ui): add dev QR code overlay for quick app access on mobile devices">
+      <option name="closed" value="true" />
+      <created>1765233100449</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1765233100449</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feat(bots): implement local bot admin interface and runtime configuration; enhance audio management with Howler">
+      <option name="closed" value="true" />
+      <created>1765273893078</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1765273893078</updated>
+    </task>
+    <task id="LOCAL-00010" summary="refactor: simplify bots configuration loading by removing unnecessary variable">
+      <option name="closed" value="true" />
+      <created>1765275513513</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1765275513513</updated>
+    </task>
+    <task id="LOCAL-00011" summary="docs: enhance design documentation with project links and asset checklist generation">
+      <option name="closed" value="true" />
+      <created>1765276751716</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1765276751716</updated>
+    </task>
+    <task id="LOCAL-00012" summary="docs: add game design document summary outlining vision, mechanics, scoring, and development checklist">
+      <option name="closed" value="true" />
+      <created>1765276786794</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1765276786794</updated>
+    </task>
+    <task id="LOCAL-00013" summary="docs: add asset submission checklist for Mardi Gras Parade Simulator">
+      <option name="closed" value="true" />
+      <created>1765277912859</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1765277912859</updated>
+    </task>
+    <task id="LOCAL-00014" summary="docs: add asphalt texture SVG and asset submission checklist">
+      <option name="closed" value="true" />
+      <created>1765278502583</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1765278502583</updated>
+    </task>
+    <task id="LOCAL-00015" summary="fix: mark bot names as TEST for identification during development">
+      <option name="closed" value="true" />
+      <created>1765279169112</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1765279169112</updated>
+    </task>
+    <task id="LOCAL-00016" summary="fix: mark bot names as TEST for identification during development">
+      <option name="closed" value="true" />
+      <created>1765288630609</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1765288630609</updated>
+    </task>
+    <task id="LOCAL-00017" summary="docs: fix formatting in LESSONS_LEARNED.md (remove stray text, normalize heading)">
+      <option name="closed" value="true" />
+      <created>1765291176957</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1765291176957</updated>
+    </task>
+    <task id="LOCAL-00018" summary="docs(README): update instructions for restoring archived files and note zip compression">
+      <option name="closed" value="true" />
+      <created>1765294729895</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1765294729895</updated>
+    </task>
+    <task id="LOCAL-00019" summary="docs: enhance Mardi Gras Parade Simulator wiki and add redirect functionality">
+      <option name="closed" value="true" />
+      <created>1765768097144</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1765768097145</updated>
+    </task>
+    <task id="LOCAL-00020" summary="docs: add AI Governance Policy and Code of Conduct documents">
+      <option name="closed" value="true" />
+      <created>1765768674866</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1765768674866</updated>
+    </task>
+    <task id="LOCAL-00021" summary="docs: add shareable playtest URL functionality to GameUI">
+      <option name="closed" value="true" />
+      <created>1765768930334</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1765768930334</updated>
+    </task>
+    <task id="LOCAL-00022" summary="feat(dev): add one-click public dev server helper and QR code generation">
+      <option name="closed" value="true" />
+      <created>1765770719008</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1765770719008</updated>
+    </task>
+    <task id="LOCAL-00023" summary="feat(assets): update logo SVG with gradient background and enhanced design elements">
+      <option name="closed" value="true" />
+      <created>1765771499691</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1765771499691</updated>
+    </task>
+    <task id="LOCAL-00024" summary="feat(assets): redesign Mardi Gras Parade logo with gradient background and enhanced elements">
+      <option name="closed" value="true" />
+      <created>1765772475801</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1765772475801</updated>
+    </task>
+    <task id="LOCAL-00025" summary="feat(assets): redesign Mardi Gras Parade logo with gradient background and enhanced elements">
+      <option name="closed" value="true" />
+      <created>1765773300165</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1765773300165</updated>
+    </task>
+    <task id="LOCAL-00026" summary="feat(scripts): add script to convert start-logo.svg to optimized PNG sizes">
+      <option name="closed" value="true" />
+      <created>1765814484661</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1765814484661</updated>
+    </task>
+    <task id="LOCAL-00027" summary="feat(ci): add Playwright CI workflow and public URL sharing functionality">
+      <option name="closed" value="true" />
+      <created>1766053876949</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1766053876949</updated>
+    </task>
+    <task id="LOCAL-00028" summary="feat(docs): enhance development guide with one-click cloudflared helper instructions">
+      <option name="closed" value="true" />
+      <created>1766054325809</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1766054325809</updated>
+    </task>
+    <task id="LOCAL-00029" summary="feat(ci): add Playwright E2E testing workflow with localtunnel fallback">
+      <option name="closed" value="true" />
+      <created>1766055655229</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1766055655229</updated>
+    </task>
+    <task id="LOCAL-00030" summary="fix(ci): update Playwright test command to include PUBLIC_URL and improve error handling">
+      <option name="closed" value="true" />
+      <created>1766055770194</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1766055770194</updated>
+    </task>
+    <task id="LOCAL-00031" summary="feat(docs): add persistent Cloudflare tunnel script and update README instructions">
+      <option name="closed" value="true" />
+      <created>1766056094518</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1766056094518</updated>
+    </task>
+    <task id="LOCAL-00032" summary="feat(scripts): add confirm-public-url helper for improved URL handling">
+      <option name="closed" value="true" />
+      <created>1766056655664</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1766056655664</updated>
+    </task>
+    <task id="LOCAL-00033" summary="feat(docs): add product backlog and update README for public playtest visibility">
+      <option name="closed" value="true" />
+      <created>1766057435196</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1766057435196</updated>
+    </task>
+    <task id="LOCAL-00034" summary="feat(scripts): add consolidate-single-location script for safe file merging">
+      <option name="closed" value="true" />
+      <created>1766058006414</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1766058006414</updated>
+    </task>
+    <task id="LOCAL-00035" summary="fix(docs): update project name references from &quot;Mardi Gras Parade&quot; to &quot;NDI_MardiGrasParade&quot;">
+      <option name="closed" value="true" />
+      <created>1766058243407</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1766058243407</updated>
+    </task>
+    <task id="LOCAL-00036" summary="feat: add initial implementation of game components and audio management">
+      <option name="closed" value="true" />
+      <created>1766058271735</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1766058271735</updated>
+    </task>
+    <task id="LOCAL-00037" summary="chore: add Replit configuration for project deployment and workflows">
+      <option name="closed" value="true" />
+      <created>1766059141075</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1766059141075</updated>
+    </task>
+    <task id="LOCAL-00038" summary="chore: add Replit configuration for project deployment and workflows">
+      <option name="closed" value="true" />
+      <created>1766061642704</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1766061642704</updated>
+    </task>
+    <task id="LOCAL-00039" summary="refactor: streamline cloudflared setup and improve error handling">
+      <option name="closed" value="true" />
+      <created>1766061878189</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1766061878189</updated>
+    </task>
+    <task id="LOCAL-00040" summary="chore: add cloudflared configuration for persistent tunnel setup">
+      <option name="closed" value="true" />
+      <created>1766063199972</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1766063199972</updated>
+    </task>
+    <task id="LOCAL-00041" summary="chore: update cloudflared credentials path to use environment variable">
+      <option name="closed" value="true" />
+      <created>1766063539540</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1766063539540</updated>
+    </task>
+    <task id="LOCAL-00042" summary="chore: update cloudflared credentials path for Windows compatibility">
+      <option name="closed" value="true" />
+      <created>1766064027891</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1766064027891</updated>
+    </task>
+    <task id="LOCAL-00043" summary="chore(docs): update README for persistent Cloudflare tunnel and add fallback sharing method">
+      <option name="closed" value="true" />
+      <created>1766064696305</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1766064696305</updated>
+    </task>
+    <task id="LOCAL-00044" summary="docs(design): enhance designer workflow with playtest-focused QA steps and asset submission checklist">
+      <option name="closed" value="true" />
+      <created>1766066669768</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1766066669768</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="docs: enhance Mardi Gras Parade Simulator wiki and add redirect functionality" />
+    <MESSAGE value="docs: add AI Governance Policy and Code of Conduct documents" />
+    <MESSAGE value="docs: add shareable playtest URL functionality to GameUI" />
+    <MESSAGE value="feat(dev): add one-click public dev server helper and QR code generation" />
+    <MESSAGE value="feat(assets): update logo SVG with gradient background and enhanced design elements" />
+    <MESSAGE value="feat(assets): redesign Mardi Gras Parade logo with gradient background and enhanced elements" />
+    <MESSAGE value="feat(scripts): add script to convert start-logo.svg to optimized PNG sizes" />
+    <MESSAGE value="feat(ci): add Playwright CI workflow and public URL sharing functionality" />
+    <MESSAGE value="feat(docs): enhance development guide with one-click cloudflared helper instructions" />
+    <MESSAGE value="feat(ci): add Playwright E2E testing workflow with localtunnel fallback" />
+    <MESSAGE value="fix(ci): update Playwright test command to include PUBLIC_URL and improve error handling" />
+    <MESSAGE value="feat(docs): add persistent Cloudflare tunnel script and update README instructions" />
+    <MESSAGE value="feat(scripts): add confirm-public-url helper for improved URL handling" />
+    <MESSAGE value="feat(docs): add product backlog and update README for public playtest visibility" />
+    <MESSAGE value="feat(scripts): add consolidate-single-location script for safe file merging" />
+    <MESSAGE value="fix(docs): update project name references from &quot;Mardi Gras Parade&quot; to &quot;NDI_MardiGrasParade&quot;" />
+    <MESSAGE value="feat: add initial implementation of game components and audio management" />
+    <MESSAGE value="fix: improve server startup handling for Windows and enhance error logging" />
+    <MESSAGE value="chore: add Replit configuration for project deployment and workflows" />
+    <MESSAGE value="refactor: streamline cloudflared setup and improve error handling" />
+    <MESSAGE value="chore: add cloudflared configuration for persistent tunnel setup" />
+    <MESSAGE value="chore: update cloudflared credentials path to use environment variable" />
+    <MESSAGE value="chore: update cloudflared credentials path for Windows compatibility" />
+    <MESSAGE value="chore(docs): update README for persistent Cloudflare tunnel and add fallback sharing method" />
+    <MESSAGE value="docs(design): enhance designer workflow with playtest-focused QA steps and asset submission checklist" />
+    <option name="LAST_COMMIT_MESSAGE" value="docs(design): enhance designer workflow with playtest-focused QA steps and asset submission checklist" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="3" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>
