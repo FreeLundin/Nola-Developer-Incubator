@@ -9,8 +9,14 @@ param(
 function Log { Write-Host "[start-cloudflared-oneclick]" $args }
 
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+# Project subdomain for localtunnel (can be overridden via env var PROJECT_SUBDOMAIN)
+$PROJECT_SUBDOMAIN = if ($env:PROJECT_SUBDOMAIN) { $env:PROJECT_SUBDOMAIN } else { 'MardiGrasParadeSim2026' }
+# sanitize to lowercase and alphanumeric/dash only (localtunnel requirements)
+try { $PROJECT_SUBDOMAIN = $PROJECT_SUBDOMAIN.ToLower() -replace '[^a-z0-9-]','-' } catch { }
 $serverLog = Join-Path $scriptRoot "server-oneclick.log"
+$serverErr = Join-Path $scriptRoot "server-oneclick.err"
 $tunnelLog = Join-Path $scriptRoot "tunnel-oneclick.log"
+$tunnelErr = Join-Path $scriptRoot "tunnel-oneclick.err"
 $logsDir = Join-Path $scriptRoot "logs"
 if (-not (Test-Path $logsDir)) { New-Item -ItemType Directory -Path $logsDir | Out-Null }
 $serverPidFile = Join-Path $logsDir "server-oneclick.pid"
@@ -41,7 +47,11 @@ try {
 
 # Start dev server
 Log "Starting dev server (npm run dev)..."
-$serverProc = Start-Process -FilePath "npm" -ArgumentList 'run','dev' -RedirectStandardOutput $serverLog -RedirectStandardError $serverLog -NoNewWindow -PassThru
+if ($IsWindows) {
+  $serverProc = Start-Process -FilePath 'cmd.exe' -ArgumentList '/c','npm run dev' -RedirectStandardOutput $serverLog -RedirectStandardError $serverErr -NoNewWindow -PassThru
+} else {
+  $serverProc = Start-Process -FilePath "npm" -ArgumentList 'run','dev' -RedirectStandardOutput $serverLog -RedirectStandardError $serverErr -NoNewWindow -PassThru
+}
 if ($serverProc) {
   $global:StartedProcs += $serverProc
   try { Set-Content -Path $serverPidFile -Value $serverProc.Id -Encoding UTF8 } catch {}
@@ -71,7 +81,7 @@ $tunnelUrl = $null
 if ($cloudflaredCmd) {
   Log "Starting cloudflared tunnel..."
   if (Test-Path $tunnelLog) { Remove-Item $tunnelLog -Force -ErrorAction SilentlyContinue }
-  $cfProc = Start-Process -FilePath $cloudflaredCmd.Source -ArgumentList 'tunnel','--url',"http://localhost:$Port" -RedirectStandardOutput $tunnelLog -RedirectStandardError $tunnelLog -NoNewWindow -PassThru
+  $cfProc = Start-Process -FilePath $cloudflaredCmd.Source -ArgumentList 'tunnel','--url',"http://localhost:$Port" -RedirectStandardOutput $tunnelLog -RedirectStandardError $tunnelErr -NoNewWindow -PassThru
   if ($cfProc) { $global:StartedProcs += $cfProc; try { Set-Content -Path $tunnelPidFile -Value $cfProc.Id -Encoding UTF8 } catch {} }
 
   # Poll for URL with robust regex
@@ -92,7 +102,10 @@ if (-not $tunnelUrl) {
     Log "cloudflared not available or failed; starting localtunnel via npx..."
     if (Test-Path $tunnelLog) { Remove-Item $tunnelLog -Force -ErrorAction SilentlyContinue }
     # localtunnel prints URL to stdout; use --print-url where available
-    $ltProc = Start-Process -FilePath $npxCmd.Source -ArgumentList 'localtunnel','--port',$Port,'--print-url' -RedirectStandardOutput $tunnelLog -RedirectStandardError $tunnelLog -NoNewWindow -PassThru
+    # Prefer a stable project subdomain when possible; localtunnel may reject if taken
+    $ltArgs = @('localtunnel','--port',$Port,'--print-url')
+    if ($PROJECT_SUBDOMAIN) { $ltArgs += @('--subdomain', $PROJECT_SUBDOMAIN) }
+    $ltProc = Start-Process -FilePath $npxCmd.Source -ArgumentList $ltArgs -RedirectStandardOutput $tunnelLog -RedirectStandardError $tunnelErr -NoNewWindow -PassThru
     if ($ltProc) { $global:StartedProcs += $ltProc; try { Set-Content -Path $tunnelPidFile -Value $ltProc.Id -Encoding UTF8 } catch {} }
     for ($i=0; $i -lt 40; $i++) {
       if (Test-Path $tunnelLog) {
