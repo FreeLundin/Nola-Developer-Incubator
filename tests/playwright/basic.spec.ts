@@ -1,14 +1,16 @@
 // @ts-nocheck
 import { test, expect } from '@playwright/test';
 
+const BASE = process.env.PLAYTEST_URL || 'http://localhost:5000';
+
 test.describe('Basic Playtest', () => {
   test('health endpoint and bot names', async ({ request, page }) => {
-    const health = await request.get('http://localhost:5000/health');
+    const health = await request.get(`${BASE}/health`);
     expect(health.ok()).toBeTruthy();
     const json = await health.json();
     expect(json.status).toBe('ok');
 
-    await page.goto('http://localhost:5000');
+    await page.goto(BASE);
     // wait for canvas to load
     await page.waitForSelector('canvas', { timeout: 15000 });
 
