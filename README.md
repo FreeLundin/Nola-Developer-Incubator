@@ -1,5 +1,7 @@
 # 🎭 NDI_MardiGrasParade
 
++> Public playtest (one-click): [Launch public playtest](./docs/launch.html) — opens the currently active public URL (uses Cloudflare tunnel or fallback). Scan `docs/browser-qr.svg` to open on mobile.
++
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6)](https://www.typescriptlang.org/)
@@ -269,7 +271,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Stay Connected
 - **GitHub** - [FreeLundin/Nola-Developer-Incubator](https://github.com/FreeLundin/Nola-Developer-Incubator)
-- **Project Lead** - Brandon Lundin
+- **Project Lead** - Brian C Lundin
 
 ---
 
