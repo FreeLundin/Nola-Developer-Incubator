@@ -2,7 +2,7 @@
 
 ## ?? Overview
 
-This guide helps **non-technical designers** customize the Mardi Gras Parade game in Unreal Engine without writing code. We use a **hybrid approach**: C++ provides the foundation, and Blueprints provide visual customization.
+This guide helps **non-technical designers** customize NDI_MardiGrasParade in Unreal Engine without writing code. We use a **hybrid approach**: C++ provides the foundation, and Blueprints provide visual customization.
 
 ---
 

@@ -44,10 +44,7 @@ app.use((req, res, next) => {
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    // NOTE: In development we should not re-throw here — re-throwing crashes the server
-    // and makes the dev experience brittle when Vite or middleware emit transform errors.
-    // Log the error for visibility but don't throw so the server stays up and can recover.
-    console.error('[express] error handler:', err && err.stack ? err.stack : err);
+    throw err;
   });
 
   // importantly only setup vite in development and after
@@ -59,16 +56,14 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000 by default
-  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 5000;
-
-  // Allow overriding the host via an environment variable for testing on LAN/tunnels.
-  // If not provided, keep the current Windows-safe behavior (bind to loopback on Windows).
-  const defaultHost = process.platform === 'win32' ? '127.0.0.1' : '0.0.0.0';
-  const host = process.env.HOST || defaultHost;
-
-  // Use the simple listen signature which is broadly supported across platforms
-  server.listen(port, host, () => {
-    log(`serving on ${host}:${port}`);
+  // ALWAYS serve the app on port 5000
+  // this serves both the API and the client
+  const port = 5000;
+  server.listen({
+    port,
+    host: "0.0.0.0",
+    reusePort: true,
+  }, () => {
+    log(`serving on port ${port}`);
   });
 })();

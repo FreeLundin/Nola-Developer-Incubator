@@ -3,7 +3,7 @@ import { useThree } from "@react-three/fiber";
 import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
-import { Player, JoystickInput } from "./Player";
+import { Player, Controls, JoystickInput } from "./Player";
 import { GameCamera } from "./GameCamera";
 import { Environment } from "./Environment";
 import { ParadeFloat } from "./ParadeFloat";
@@ -13,8 +13,8 @@ import { ClickMarker } from "./ClickMarker";
 import { CompetitorBot } from "./CompetitorBot";
 import { AggressiveNPC } from "./AggressiveNPC";
 import { Obstacle } from "./Obstacle";
+import { TouchControls, TouchInput } from "./TouchControls";
 import * as THREE from "three";
-import { useBotsConfig } from "@/lib/hooks/useBotsConfig";
 
 interface CatchEffectInstance {
   id: string;
@@ -32,14 +32,14 @@ interface GameSceneProps {
 }
 
 export function GameScene({ joystickInput: externalJoystickInput = null }: GameSceneProps) {
-  const {
-    phase,
-    collectibles,
-    addCatch,
-    combo,
-    totalFloats,
-    level,
-    getFloatSpeed,
+  const { 
+    phase, 
+    collectibles, 
+    addCatch, 
+    combo, 
+    totalFloats, 
+    level, 
+    getFloatSpeed, 
     eliminatePlayer,
     aggressiveNPCs,
     hitAggressiveNPC,
@@ -50,36 +50,34 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
   const { playHit, playFireworks } = useAudio();
   const { camera, gl } = useThree();
   const isMobile = useIsMobile();
-  // Load bots config unconditionally so hooks order is stable
-  const { bots: runtimeBots } = useBotsConfig();
   const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(0, 0.5, 0));
   const [mouseTarget, setMouseTarget] = useState<THREE.Vector3 | null>(null);
   const [catchEffects, setCatchEffects] = useState<CatchEffectInstance[]>([]);
   const [clickMarkers, setClickMarkers] = useState<ClickMarkerInstance[]>([]);
   const floatStartTime = useState(() => Date.now())[0];
-
+  
   // Check for float-player collision
   useEffect(() => {
     if (phase !== "playing") return;
-
+    
     const checkCollision = () => {
       const floatSpeed = getFloatSpeed();
       const elapsedTime = (Date.now() - floatStartTime) / 1000; // seconds
       const floatX = 5; // Floats are on lane 1 (x = 5)
       const floatWidth = 2.5; // Float collision width
       const floatLength = 3; // Float collision length
-
+      
       // Check each float position
       for (let i = 0; i < totalFloats; i++) {
         const startZ = -30 - (i * 10);
         const currentZ = startZ + (floatSpeed * elapsedTime);
-
+        
         // Only check floats that are near the player area
         if (currentZ > -20 && currentZ < 20) {
           // Check if player is too close to this float
           const distanceX = Math.abs(playerPosition.x - floatX);
           const distanceZ = Math.abs(playerPosition.z - currentZ);
-
+          
           if (distanceX < floatWidth && distanceZ < floatLength) {
             console.log(`💥 Player hit by float at position (${floatX}, ${currentZ})!`);
             eliminatePlayer();
@@ -88,47 +86,47 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
         }
       }
     };
-
+    
     const interval = setInterval(checkCollision, 100); // Check every 100ms
     return () => clearInterval(interval);
   }, [phase, playerPosition, totalFloats, floatStartTime, getFloatSpeed, eliminatePlayer]);
-
+  
   // Play fireworks sound on high combos
   useEffect(() => {
     if (combo >= 3) {
       playFireworks();
     }
   }, [combo, playFireworks]);
-
+  
   // Handle click/tap for movement on all devices (only when joystick is disabled)
   useEffect(() => {
     if (phase !== "playing" || (isMobile && joystickEnabled)) return;
-
+    
     const handleClick = (event: MouseEvent) => {
       // Calculate mouse position in normalized device coordinates
       const rect = gl.domElement.getBoundingClientRect();
       const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
+      
       // Create raycaster
       const raycaster = new THREE.Raycaster();
       raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
-
+      
       // Create a ground plane to raycast against
       const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
       const target = new THREE.Vector3();
-
+      
       // Get intersection point - check if it succeeded
       const intersected = raycaster.ray.intersectPlane(groundPlane, target);
-
+      
       if (intersected) {
         // Constrain to street bounds
         target.x = THREE.MathUtils.clamp(target.x, -6.5, 6.5);
         target.z = THREE.MathUtils.clamp(target.z, -15, 15);
         target.y = 0.5; // Player height
-
+        
         setMouseTarget(target.clone());
-
+        
         // Add click marker
         const markerId = `click-${Date.now()}`;
         setClickMarkers((prev) => [
@@ -138,20 +136,20 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
             position: target.clone(),
           },
         ]);
-
+        
         console.log("Mouse click target:", target);
       }
     };
-
+    
     gl.domElement.addEventListener("click", handleClick);
     return () => gl.domElement.removeEventListener("click", handleClick);
   }, [phase, camera, gl, isMobile, joystickEnabled]);
-
+  
   // Handle clearing mouse target
   const handleClearMouseTarget = useCallback(() => {
     setMouseTarget(null);
   }, []);
-
+  
   // Handle obstacle collision
   const handleObstacleCollision = useCallback(() => {
     // Break combo on obstacle hit
@@ -161,15 +159,15 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
       console.log("Obstacle hit! Combo broken.");
     }
   }, []);
-
+  
   // Handle player catch
   const handleCatch = useCallback((type: "beads" | "doubloon" | "cup" | "king_cake" | "speed_boost" | "double_points") => {
     console.log("Catch successful!", type);
     playHit();
-
+    
     const isPowerUp = type === "speed_boost" || type === "double_points";
     const isSpecial = type === "king_cake";
-
+    
     if (isPowerUp) {
       // Activate power-up
       useParadeGame.getState().activatePowerUp(type as "speed_boost" | "double_points");
@@ -182,7 +180,7 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
       // Regular collectible - pass type for color matching
       addCatch(type);
     }
-
+    
     // Add catch effect
     const effectId = `catch-${Date.now()}`;
     const effectColor = isPowerUp ? "#00ffff" : isSpecial ? "#ff6b35" : "#ffd700";
@@ -194,30 +192,30 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
         color: effectColor,
       },
     ]);
-
+    
     // Remove effect after duration
     setTimeout(() => {
       setCatchEffects((prev) => prev.filter((e) => e.id !== effectId));
     }, 1100);
   }, [playHit, addCatch, playerPosition]);
-
+  
   return (
     <group>
       {/* Environment - always visible */}
       <Environment />
-
+      
       {/* Player - starts behind center line */}
-      <Player
-        position={[0, 0.5, -8]}
-        onPositionChange={setPlayerPosition}
+      <Player 
+        position={[0, 0.5, -8]} 
+        onPositionChange={setPlayerPosition} 
         mouseTarget={mouseTarget}
         onClearMouseTarget={handleClearMouseTarget}
         joystickInput={externalJoystickInput}
       />
-
+      
       {/* Camera */}
       <GameCamera playerPosition={playerPosition} />
-
+      
       {/* Gameplay elements only during playing phase */}
       {phase === "playing" && (
         <>
@@ -227,7 +225,7 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
             const color = colors[i % colors.length];
             const startZ = -30 - (i * 10); // Space floats 10 units apart
             return (
-              <ParadeFloat
+              <ParadeFloat 
                 key={`float-${level}-${i}`}
                 id={`float-${level}-${i}`}
                 startZ={startZ}
@@ -237,23 +235,16 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
               />
             );
           })}
-
+          
           {/* Competitor Bots - scaled by level for casual gameplay (ages 10-80) */}
           {/* Level 1-2: 2 bots, Level 3: 3 bots, Level 4+: All 6 bots */}
-          {Array.isArray(runtimeBots) && runtimeBots
-            .filter((b) => b.minLevel <= level)
-            .map((b) => (
-              <CompetitorBot
-                key={b.id}
-                id={b.id}
-                name={b.name}
-                persona={b.persona}
-                startX={b.startX}
-                startZ={b.startZ}
-                color={b.color}
-              />
-            ))}
-
+          {level >= 1 && <CompetitorBot id="King Rex" startX={-5.5} startZ={-13} color="#ff4444" />}
+          {level >= 1 && <CompetitorBot id="Queen Zulu" startX={5} startZ={-10} color="#44ff44" />}
+          {level >= 3 && <CompetitorBot id="Jester Jazz" startX={-2} startZ={-7} color="#4444ff" />}
+          {level >= 4 && <CompetitorBot id="Bead Baron" startX={3} startZ={-12} color="#ffff44" />}
+          {level >= 5 && <CompetitorBot id="Doubloon Duke" startX={-4} startZ={-9} color="#ff44ff" />}
+          {level >= 6 && <CompetitorBot id="Mardi Gal" startX={1} startZ={-8} color="#44ffff" />}
+          
           {/* Aggressive NPCs - black/white squares that chase player when hit */}
           {aggressiveNPCs.map((npc) => (
             <AggressiveNPC
@@ -268,13 +259,13 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
               onChaseEnd={() => endNPCChase(npc.id)}
             />
           ))}
-
+          
           {/* Moving Obstacles - gentle in early levels, increases after level 3 */}
           {Array.from({ length: useParadeGame.getState().getObstacleCount(level) }, (_, i) => {
             const startX = (Math.random() * 13 - 6.5);
             const startZ = (Math.random() * 30 - 15);
             return (
-              <Obstacle
+              <Obstacle 
                 key={`obstacle-${level}-${i}`}
                 id={`obstacle-${level}-${i}`}
                 startPosition={[startX, 0.5, startZ]}
@@ -283,7 +274,7 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
               />
             );
           })}
-
+          
           {/* Collectibles */}
           {collectibles.map((collectible) => (
             <Collectible
@@ -293,7 +284,7 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
               onCatch={handleCatch}
             />
           ))}
-
+          
           {/* Catch Effects */}
           {catchEffects.map((effect) => (
             <CatchEffect
@@ -305,7 +296,7 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
               }}
             />
           ))}
-
+          
           {/* Click Markers */}
           {clickMarkers.map((marker) => (
             <ClickMarker

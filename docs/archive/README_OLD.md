@@ -4,14 +4,14 @@
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 > **A 3D Mardi Gras parade game where you catch beads, doubloons, and cups from parade floats!**
 > 
 > Available in **two versions**: Web (React Three.js) and Native (Unreal Engine 5.7)
 
-<div style="text-align:center">
-  <img src="../images/banner.png" alt="Mardi Gras Parade Game" width="800" />
+<div align="center">
+  <img src="docs/images/banner.png" alt="Mardi Gras Parade Game" width="800" />
 </div>
 
 ---
@@ -536,14 +536,14 @@ curl http://localhost:5000/api/profile/123
 
 ## ?? License
 
-This project is licensed under the MIT License - see the [LICENSE](../../LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 ## ?? Team & Contact
 
 ### Core Team
-- **Project Lead:** Brian Christopher Lundin
+- **Project Lead:** Brandon Lundin
 - **Repository:** [Nola-Developer-Incubator](https://github.com/FreeLundin/Nola-Developer-Incubator)
 
 ### Contact
@@ -641,7 +641,7 @@ This project combines the accessibility of web games with the power of native ga
 
 ---
 
-<div style="text-align:center">
+<div align="center">
 
 ### ?? Laissez les bons temps rouler! ??
 

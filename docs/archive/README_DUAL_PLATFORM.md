@@ -1,8 +1,8 @@
-# Mardi Gras Parade Game - Dual Platform Project
+# NDI_MardiGrasParade - Dual Platform Project
 
 ## ?? Overview
 
-This repository contains **two versions** of the Mardi Gras Parade game:
+This repository contains **two versions** of NDI_MardiGrasParade:
 
 1. **Web Version** (React Three.js) - Browser-based, casual gameplay
 2. **Unreal Engine Version** - Native desktop and mobile, enhanced graphics
@@ -14,7 +14,7 @@ Both versions share the same backend API and game design, allowing players to ex
 ## ?? Project Structure
 
 ```
-Nola-Developer-Incubator/
+NDI_MardiGrasParade/
 ??? client/   # React Three.js frontend (WEB VERSION)
 ?   ??? src/
 ?   ?   ??? components/game/  # Game components

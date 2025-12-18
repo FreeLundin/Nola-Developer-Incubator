@@ -1,8 +1,8 @@
-# Mardi Gras Parade Game - Unreal Engine Conversion Plan
+# NDI_MardiGrasParade - Unreal Engine Conversion Plan
 
 ## ?? Executive Summary
 
-This document provides a complete roadmap for converting the React Three.js Mardi Gras Parade game to Unreal Engine 5, while maintaining the web version for broader accessibility.
+This document provides a complete roadmap for converting the React Three.js NDI_MardiGrasParade to Unreal Engine 5, while maintaining the web version for broader accessibility.
 
 **Project Goals:**
 - ? Convert all gameplay features to Unreal Engine
@@ -17,7 +17,7 @@ This document provides a complete roadmap for converting the React Three.js Mard
 
 ### Current React Three.js Structure
 ```
-Nola-Developer-Incubator/
+NDI_MardiGrasParade/
 ??? client/       # React frontend
 ?   ??? src/
 ?       ??? components/game/  # Game components
@@ -29,7 +29,7 @@ Nola-Developer-Incubator/
 
 ### New Unreal Engine Structure (Side-by-Side)
 ```
-Nola-Developer-Incubator/
+NDI_MardiGrasParade/
 ??? client/         # React frontend (EXISTING)
 ??? server/       # Express backend (SHARED)
 ??? shared/        # Database schema (SHARED)

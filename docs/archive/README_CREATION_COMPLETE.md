@@ -453,7 +453,7 @@ https://github.com/FreeLundin/Nola-Developer-Incubator
 
 ## ?? Laissez les bons temps rouler! ??
 
-Your Mardi Gras Parade game project is now professionally documented, automated, and ready for the world to see!
+Your NDI_MardiGrasParade project is now professionally documented, automated, and ready for the world to see!
 
 **GO BUILD AND SHARE!** ??????
 

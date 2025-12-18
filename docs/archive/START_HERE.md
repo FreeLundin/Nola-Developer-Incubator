@@ -2,7 +2,7 @@
 
 ## ? What We Just Built Together
 
-I've successfully created a **complete Unreal Engine 5.7 project** for your Mardi Gras Parade game with:
+I've successfully created a **complete Unreal Engine 5.7 project** for NDI_MardiGrasParade with:
 
 ### ??? Full Project Structure
 - ? Unreal Engine 5.7 project files (.uproject)
@@ -505,7 +505,7 @@ Before you continue, verify:
 
 ## ?? Let's Build Something Amazing!
 
-Your Mardi Gras Parade game is about to come to life in stunning 3D!
+NDI_MardiGrasParade is about to come to life in stunning 3D!
 
 **Next action:** Generate Visual Studio project files (see Step 1 above)
 

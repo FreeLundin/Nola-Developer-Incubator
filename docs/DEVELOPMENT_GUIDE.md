@@ -166,12 +166,12 @@ src/
 
 The game uses React Three Fiber's `useFrame` hook for the main game loop:
 
-```text
+```typescript
 // In a game component
 useFrame((state, delta) => {
   // Update game state each frame
   // delta = time since last frame (in seconds)
-
+  
   updatePlayerPosition(delta);
   updateFloats(delta);
   checkCollisions();
@@ -183,14 +183,14 @@ useFrame((state, delta) => {
 
 The game state is managed with Zustand:
 
-```text
+```typescript
 // stores/gameStore.ts
 interface GameStore {
   // State
   score: number;
   level: number;
   combo: number;
-
+  
   // Actions
   addScore: (points: number) => void;
   incrementCombo: () => void;
@@ -204,11 +204,11 @@ export const useGameStore = create<GameStore>((set) => ({
 
 Usage in components:
 
-```text
+```typescript
 function GameUI() {
   const score = useGameStore((state) => state.score);
   const addScore = useGameStore((state) => state.addScore);
-
+  
   return <div>Score: {score}</div>;
 }
 ```
@@ -217,17 +217,17 @@ function GameUI() {
 
 Game objects are React components:
 
-```text
+```typescript
 function ParadeFloat({ position, speed }) {
   const meshRef = useRef();
-
+  
   useFrame((state, delta) => {
     // Animate the float
     if (meshRef.current) {
       meshRef.current.position.z += speed * delta;
     }
   });
-
+  
   return (
     <mesh ref={meshRef} position={position}>
       <boxGeometry args={[2, 1, 3]} />
@@ -241,7 +241,7 @@ function ParadeFloat({ position, speed }) {
 
 The game uses custom physics and distance-based collision detection:
 
-```text
+```typescript
 // Check if player is within catch radius of collectible
 function checkCollision(player, collectible) {
   const distance = player.position.distanceTo(collectible.position);
@@ -259,7 +259,7 @@ function applyGravity(collectible, delta) {
 
 The backend provides REST endpoints for persistence:
 
-```text
+```typescript
 // server/routes.ts
 app.get('/api/profile/:id', async (req, res) => {
   const profile = await storage.getProfile(req.params.id);
@@ -274,7 +274,7 @@ app.post('/api/save', async (req, res) => {
 
 Frontend usage:
 
-```text
+```typescript
 // In a component
 async function saveProgress() {
   const response = await fetch('/api/save', {
@@ -282,7 +282,7 @@ async function saveProgress() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(gameState)
   });
-
+  
   if (response.ok) {
     console.log('Game saved!');
   }
@@ -302,7 +302,7 @@ async function saveProgress() {
 
 Example:
 
-```text
+```typescript
 // Good
 interface Player {
   position: Vector3;
@@ -330,7 +330,7 @@ function updatePlayer(player: any, delta: any) {
 
 Example:
 
-```text
+```typescript
 interface FloatProps {
   position: [number, number, number];
   speed: number;
@@ -360,11 +360,11 @@ export function ParadeFloat({ position, speed, onPass }: FloatProps) {
 
 Example:
 
-```text
+```typescript
 /**
  * Calculates the trajectory for throwing collectibles from floats.
  * Uses a parabolic arc to simulate realistic throwing physics.
- *
+ * 
  * @param startPos - Starting position of the throw
  * @param targetPos - Approximate target position
  * @param throwForce - Force of the throw (0-1)
@@ -422,7 +422,7 @@ Fix any type errors before committing.
 
 Use the built-in performance monitor:
 
-```text
+```typescript
 // In game scene
 import { Perf } from 'r3f-perf';
 
@@ -525,7 +525,7 @@ npm install --save-dev @types/three @types/react @types/node
 **Issue**: No lighting in scene
 
 **Solution**: Add lights to the scene:
-```text
+```typescript
 <Canvas>
   <ambientLight intensity={0.5} />
   <directionalLight position={[10, 10, 5]} intensity={1} />
@@ -590,7 +590,7 @@ Install [React Developer Tools](https://react.dev/learn/react-developer-tools) e
 
 #### Three.js Debugging
 
-```text
+```typescript
 // Log Three.js objects
 console.log(scene.children); // View all objects in scene
 
@@ -679,62 +679,3 @@ Now that you understand the development environment:
 **Questions?** Open an issue on GitHub or check existing discussions.
 
 **Happy coding!** 🎉
-
----
-
-## Local public sharing (cloudflared)
-
-You can quickly share your local dev server with external testers using an ephemeral tunnel. Two helper scripts exist in the repo; the recommended one is the newer, cross-platform helper in `scripts/`.
-
-Preferred helper (recommended)
-
-- `scripts/start-cloud-tunnel.ps1` — PowerShell helper that:
-  - starts the dev server (`npm run dev`),
-  - attempts to open a public tunnel (prefers `cloudflared`, falls back to `localtunnel` via `npx`),
-  - generates `docs/browser-qr.svg` using the project's QR generator,
-  - writes `docs/last-public-url.txt` (plain text) and `docs/launch.html` (simple redirect page) when a public URL is found,
-  - opens the public URL in your default browser.
-
-Run from the repository root (PowerShell):
-
-```powershell
-# Unblock and run the helper (PowerShell)
-Unblock-File .\scripts\start-cloud-tunnel.ps1; .\scripts\start-cloud-tunnel.ps1
-```
-
-Legacy helper (still available)
-
-- `ps1/start-public-dev.ps1` — older helper located in the `ps1/` directory. This script is similar: it starts the dev server and cloudflared, writes a `docs/launch.html` file, and logs to `ps1/logs/`.
-
-If you have both present, prefer `scripts/start-cloud-tunnel.ps1` for a simpler cross-platform experience and to get `docs/last-public-url.txt` written.
-
-One-click helper (Windows only)
- - `scripts/start-cloudflared-oneclick.ps1` — simplified, single-file PowerShell helper that:
-   - starts the dev server (`npm run dev`),
-   - requires `cloudflared` to be installed and on your PATH,
-   - starts a `cloudflared` tunnel to your local dev server,
-   - writes `docs/last-public-url.txt` and `docs/launch.html`,
-   - generates `docs/browser-qr.svg` (if Node is available),
-   - opens the public URL in your default browser.
-
-Usage (PowerShell, run from repo root):
-
-```powershell
-Unblock-File .\scripts\start-cloudflared-oneclick.ps1; .\scripts\start-cloudflared-oneclick.ps1
-```
-
-Notes:
-- This helper purposely prefers `cloudflared` for stability and predictable public URLs.
-- If you need a cross-platform fallback or don't want to install `cloudflared`, keep using `scripts/start-cloud-tunnel.ps1` which can fall back to `npx localtunnel`.
-
-Files created by the helper
-
-- `docs/last-public-url.txt` — plain text file containing the most recent public URL (useful for programmatic reads).
-- `docs/launch.html` — a small redirect page that points to the public URL (can be opened from the repo or published as a quick landing page).
-- `docs/browser-qr.svg` — generated QR code (SVG) for easy mobile scanning.
-
-Troubleshooting
-
-- If the helper can't find `cloudflared`, it will try `npx localtunnel` as a fallback. Inspect `scripts/tunnel.log` (or `ps1/logs/cloudflared.log` for the legacy helper) for tunnel output.
-- If a public URL isn't written, check the tunnel log for the URL line and the dev server log (server errors may prevent a working site).
-- The generated public URL is publicly accessible. Do NOT expose private credentials or services through the tunnel. Use the tunnel only for short-lived playtests.

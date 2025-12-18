@@ -2,22 +2,18 @@ import { useState, useEffect } from "react";
 import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
-import { useBotsConfig } from '@/lib/hooks/useBotsConfig';
 import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX, ShoppingBag, Heart } from "lucide-react";
+import { X, Volume2, VolumeX, ShoppingBag, Heart, DollarSign, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CosmeticShop } from "./CosmeticShop";
 import { FirstLevelTutorial } from "./FirstLevelTutorial";
 import { SettingsModal } from "./SettingsModal";
-import { BotAdmin } from "./BotAdmin";
 import { toast } from "sonner";
-import ShareButton from '@/components/ui/ShareButton';
-// Logo PNG available at client/public/images/start-logo.png and client/src/assets/start-logo.png
 
 export function GameUI() {
-  const { phase, score, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
+  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins, joystickEnabled } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [showFirstLevelTutorial, setShowFirstLevelTutorial] = useState(false);
@@ -26,19 +22,8 @@ export function GameUI() {
   const [, forceUpdate] = useState(0); // For power-up countdown updates
   const [showShop, setShowShop] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showBotAdmin, setShowBotAdmin] = useState(false);
-  const [showPersonaLabels, setShowPersonaLabels] = useState(() => {
-    try { return localStorage.getItem('showBotPersonas') === 'true'; } catch { return false; }
-  });
-  // Shareable public URL for playtesting (local-only)
-  const [publicUrl, setPublicUrl] = useState<string>(() => {
-    try { return localStorage.getItem('playtest.publicUrl') || ''; } catch { return ''; }
-  });
-  const qrImageUrl = publicUrl ? `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(publicUrl)}` : '';
   const isMobile = useIsMobile();
-  // Detect dev mode (Vite) so TEST badges are shown only during development
-  const IS_DEV = (() => { try { return Boolean((import.meta as any)?.env?.DEV); } catch { return false; } })();
-
+  
   // Map player color to display info
   const colorDisplayMap = {
     beads: { name: "Purple Beads", color: "#9b59b6" },
@@ -46,15 +31,10 @@ export function GameUI() {
     cup: { name: "Red Cup", color: "#e74c3c" },
   };
   const playerColorInfo = colorDisplayMap[playerColor];
-
-  // Load bot config for display names and personas (runtime override respected)
-  const { bots: runtimeBots } = useBotsConfig();
-  const botMeta = Object.fromEntries(runtimeBots.map((b: any) => [b.id, b]));
-  // Only show active bots in the HUD (those with minLevel <= current level)
-  const activeBotIds = runtimeBots.filter((b: any) => (typeof b.minLevel === 'number' ? b.minLevel <= level : true)).map((b: any) => b.id);
-  // Sort bots by catches (descending) and filter to active ones
-  const sortedBots = [...botScores].filter((bs) => activeBotIds.includes(bs.id)).sort((a, b) => b.catches - a.catches);
-
+  
+  // Sort bots by catches (descending)
+  const sortedBots = [...botScores].sort((a, b) => b.catches - a.catches);
+  
   // Show combo animation when combo changes
   useEffect(() => {
     if (combo > 1) {
@@ -63,7 +43,7 @@ export function GameUI() {
       return () => clearTimeout(timer);
     }
   }, [combo]);
-
+  
   // Update combo timer
   useEffect(() => {
     if (combo > 0 && lastCatchTime > 0) {
@@ -76,7 +56,7 @@ export function GameUI() {
       return () => clearInterval(interval);
     }
   }, [combo, lastCatchTime]);
-
+  
   // Update power-up UI countdown
   useEffect(() => {
     if (activePowerUps.length > 0) {
@@ -86,7 +66,7 @@ export function GameUI() {
       return () => clearInterval(interval);
     }
   }, [activePowerUps.length]);
-
+  
   const handleStartGame = () => {
     setShowTutorial(false);
     // Show first-level tutorial on level 1
@@ -96,12 +76,29 @@ export function GameUI() {
       startGame();
     }
   };
-
+  
   const handleTutorialComplete = () => {
     setShowFirstLevelTutorial(false);
     startGame();
   };
-
+  
+  const handleChimeDonation = () => {
+    const chimeSign = "$nolaDevelopmentIncubator";
+    navigator.clipboard.writeText(chimeSign).then(() => {
+      toast.success("Copied to clipboard!", {
+        description: `Send via Chime Pay Anyone to ${chimeSign}`,
+        duration: 5000,
+      });
+    }).catch(() => {
+      toast.info("Chime Donation", {
+        description: `Send via Chime Pay Anyone to ${chimeSign}`,
+        duration: 5000,
+      });
+    });
+  };
+  
+  const progressPercentage = (score / targetScore) * 100;
+  
   return (
     <>
       {/* Tutorial Overlay */}
@@ -113,19 +110,14 @@ export function GameUI() {
             exit={{ opacity: 0 }}
             className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
           >
-            <Card className="bg-purple-900/95 border-2 border-yellow-400 p-4 sm:p-8 max-w-sm sm:max-w-2xl mx-4 text-white">
-              <h1 className="text-xl sm:text-3xl font-bold text-yellow-300 mb-3 sm:mb-4 text-center">Mardi Gras Parade</h1>
-
-              {/* Title and quick actions (logo removed per request) */}
-              <div className="flex justify-center mb-2">
-                <div aria-hidden className="w-full max-w-2xl" />
-              </div>
-
-               <div className="space-y-3 sm:space-y-4">
+            <Card className="bg-purple-900/95 border-2 border-yellow-400 p-4 sm:p-8 max-w-sm sm:max-w-lg mx-4 text-white">
+              <h1 className="text-xl sm:text-3xl font-bold text-yellow-300 mb-3 sm:mb-4 text-center">NDI_MardiGrasParade</h1>
+              
+              <div className="space-y-3 sm:space-y-4">
                 <p className="text-sm sm:text-lg text-center">
                   Catch throws from parade floats!
                 </p>
-
+                
                 <div className="bg-black/30 rounded-lg p-3 sm:p-4 space-y-2 sm:space-y-3">
                   {!isMobile ? (
                     <div className="space-y-1 sm:space-y-2">
@@ -141,37 +133,20 @@ export function GameUI() {
                   )}
                   <p className="text-xs sm:text-sm text-yellow-300 font-bold">• Match your color for 3x points!</p>
                 </div>
-
-                <div className="space-y-2">
-                  <Button
-                    onClick={() => {
-                      // Ensure audio is unlocked on explicit user action
-                      const { unlockAudio } = useAudio.getState();
-                      unlockAudio();
-                      // If currently muted, unmute for testers
-                      const { isMuted, toggleMute } = useAudio.getState();
-                      if (isMuted) toggleMute();
-                    }}
-                    size="sm"
-                    className="w-full text-sm sm:text-base py-3 bg-purple-700 hover:bg-purple-600 text-white font-bold"
-                  >
-                    Enable Audio
-                  </Button>
-
-                  <Button
-                    onClick={handleStartGame}
-                    size="lg"
-                    className="w-full text-base sm:text-xl py-4 sm:py-6 bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold"
-                  >
-                    Start Game
-                  </Button>
-                </div>
+                
+                <Button
+                  onClick={handleStartGame}
+                  size="lg"
+                  className="w-full text-base sm:text-xl py-4 sm:py-6 bg-yellow-500 hover:bg-yellow-400 text-purple-900 font-bold"
+                >
+                  Start Game
+                </Button>
               </div>
             </Card>
           </motion.div>
         )}
       </AnimatePresence>
-
+      
       {/* In-Game HUD */}
       {phase === "playing" && (
         <div className="absolute inset-0 pointer-events-none">
@@ -185,7 +160,7 @@ export function GameUI() {
                   <div className="text-lg md:text-2xl font-bold text-white">{score}</div>
                 </div>
               </Card>
-
+              
               {/* Player Color - Hide on small phones, show on tablets */}
               <Card className="hidden sm:flex bg-black/70 border-2 px-2 py-1 md:px-3 md:py-2" style={{ borderColor: playerColorInfo.color }}>
                 <div className="flex items-center gap-1 md:gap-2">
@@ -196,7 +171,7 @@ export function GameUI() {
                 </div>
               </Card>
             </div>
-
+            
             {/* Right side - Compact */}
             <div className="flex flex-col gap-1 md:gap-2">
               {/* Coins - Hide shop button on phones */}
@@ -212,7 +187,7 @@ export function GameUI() {
                   <ShoppingBag size={18} />
                 </Button>
               </div>
-
+              
               {/* Active Power-ups - Compact */}
               {activePowerUps.map((powerUp) => {
                 const timeLeft = Math.max(0, powerUp.endTime - Date.now());
@@ -227,7 +202,7 @@ export function GameUI() {
                   </Card>
                 );
               })}
-
+              
               <Button
                 onClick={toggleMute}
                 size="sm"
@@ -235,90 +210,39 @@ export function GameUI() {
               >
                 {isMuted ? <VolumeX size={14} className="md:w-[18px] md:h-[18px]" /> : <Volume2 size={14} className="md:w-[18px] md:h-[18px]" />}
               </Button>
-              <Button
-                onClick={() => setShowBotAdmin(true)}
-                size="sm"
-                className="bg-gray-700 hover:bg-gray-600 border-2 border-yellow-400 text-white p-1 md:p-2 ml-2"
-              >
-                Admin
-              </Button>
-              <ShareButton className="ml-2" />
-              <Button
-                onClick={() => { setShowPersonaLabels(v => { const next = !v; try { localStorage.setItem('showBotPersonas', String(next)); } catch {} return next; }); }}
-                size="sm"
-                className="bg-gray-700 hover:bg-gray-600 border-2 border-yellow-400 text-white p-1 md:p-2 ml-2"
-              >
-                {showPersonaLabels ? 'Hide Personas' : 'Show Personas'}
-              </Button>
-              <Button
-                onClick={() => {
-                  // Hot reload config: update store and dispatch update event
-                  try { (useParadeGame as any).getState().setBotScoresFromConfig(); } catch (e) { console.warn('Failed to call setBotScoresFromConfig', e); }
-                  try { window.dispatchEvent(new Event('bots:updated')); } catch (e) {}
-                }}
-                size="sm"
-                className="bg-blue-700 hover:bg-blue-600 border-2 border-yellow-400 text-white p-1 md:p-2 ml-2"
-              >
-                Reload config
-              </Button>
-              {/* Shareable playtest URL editor */}
-              <div className="mt-2 p-2 bg-black/60 rounded border border-yellow-400 text-white w-64">
-                <div className="text-[10px] text-yellow-300 font-bold mb-1">Playtest URL</div>
-                <input
-                  value={publicUrl}
-                  onChange={(e) => setPublicUrl(e.target.value)}
-                  placeholder="https://your-tunnel.example"
-                  className="w-full text-xs p-1 rounded bg-white/5 border border-transparent focus:border-yellow-300"
-                />
-                <div className="flex gap-1 mt-2">
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      try { localStorage.setItem('playtest.publicUrl', publicUrl); toast.success('Saved playtest URL'); } catch (e) { toast.error('Failed to save'); }
-                    }}
-                    className="bg-gray-700 hover:bg-gray-600 text-white"
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    size="sm"
-                    onClick={async () => {
-                      try { await navigator.clipboard.writeText(publicUrl); toast.success('Copied to clipboard'); } catch { toast.error('Copy failed'); }
-                    }}
-                    className="bg-gray-700 hover:bg-gray-600 text-white"
-                  >
-                    Copy
-                  </Button>
-                  <Button
-                    size="sm"
-                    onClick={() => { if (publicUrl) window.open(publicUrl, '_blank', 'noopener'); }}
-                    className="bg-blue-700 hover:bg-blue-600 text-white"
-                  >
-                    Open
-                  </Button>
-                </div>
-                {qrImageUrl && (
-                  <div className="mt-2 flex justify-center">
-                    <img src={qrImageUrl} alt="playtest-qr" className="w-28 h-28" />
-                  </div>
-                )}
-              </div>
-             </div>
-           </div>
-
+              
+              {isMobile && (
+                <Button
+                  onClick={() => setShowSettings(true)}
+                  size="sm"
+                  className="bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white p-1 md:p-2"
+                >
+                  <Settings size={14} className="md:w-[18px] md:h-[18px]" />
+                </Button>
+              )}
+            </div>
+          </div>
+          
           {/* Donate Buttons - Hidden on phones */}
           <div className="hidden md:flex absolute bottom-4 right-4 pointer-events-auto flex-col gap-2">
             <Button
-              onClick={() => window.open('https://www.patreon.com/c/NolaDeveloperIncubator', '_blank', 'noopener,noreferrer')}
-              aria-label="Support development (Patreon)"
+              onClick={() => window.open('https://replit.com/refer/blundin', '_blank')}
               size="lg"
               className="bg-gradient-to-r from-pink-600 to-red-600 hover:from-pink-700 hover:to-red-700 border-2 border-yellow-400 text-white font-bold shadow-lg"
             >
               <Heart size={20} className="mr-2" fill="currentColor" />
               Support Development
             </Button>
+            <Button
+              onClick={handleChimeDonation}
+              size="lg"
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 border-2 border-yellow-400 text-white font-bold shadow-lg"
+            >
+              <DollarSign size={20} className="mr-2" />
+              Donate via Chime
+            </Button>
           </div>
-
+          
           {/* Combo Timer - Top Center - Compact on phones */}
           {combo > 0 && (
             <div className="absolute top-2 md:top-4 left-1/2 transform -translate-x-1/2">
@@ -331,7 +255,7 @@ export function GameUI() {
               </Card>
             </div>
           )}
-
+          
           {/* Combo Display - Hidden on small phones */}
           <AnimatePresence>
             {comboVisible && combo > 1 && (
@@ -352,42 +276,31 @@ export function GameUI() {
               </motion.div>
             )}
           </AnimatePresence>
-
+          
           {/* Bot Scores - Hidden on phones */}
           <div className="hidden md:block absolute bottom-4 left-4 pointer-events-auto">
             <Card className="bg-black/40 backdrop-blur-md border-2 border-gray-400 shadow-2xl px-4 py-3">
               <div className="text-sm text-gray-200 font-black mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">🤖 COMPETITOR CATCHES</div>
               <div className="space-y-1.5 max-h-48 overflow-y-auto">
-                {sortedBots.map((bot) => {
-                  const meta = botMeta[bot.id];
-                  const nameText = meta ? meta.name : bot.id;
-                  const personaText = meta && showPersonaLabels ? ` (${meta.persona})` : '';
-                  const isTest = typeof nameText === 'string' && nameText.includes('(TEST)');
-                  return (
-                    <div key={bot.id} className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-4 h-4 rounded-full"
-                          style={{
-                            backgroundColor: bot.color,
-                            boxShadow: `0 0 10px ${bot.color}, inset 0 0 6px rgba(255,255,255,0.4)`
-                          }}
-                        />
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-white font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{nameText}{personaText}</span>
-                          {isTest && IS_DEV && (
-                            <span className="ml-2 text-[10px] font-bold bg-yellow-300 text-black px-1 rounded">TEST</span>
-                          )}
-                        </div>
-                      </div>
-                      <span className="text-base font-black text-yellow-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{bot.catches}</span>
+                {sortedBots.map((bot) => (
+                  <div key={bot.id} className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-4 h-4 rounded-full" 
+                        style={{ 
+                          backgroundColor: bot.color,
+                          boxShadow: `0 0 10px ${bot.color}, inset 0 0 6px rgba(255,255,255,0.4)`
+                        }}
+                      />
+                      <span className="text-xs text-white font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{bot.id}</span>
                     </div>
-                  );
-                })}
+                    <span className="text-base font-black text-yellow-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{bot.catches}</span>
+                  </div>
+                ))}
               </div>
             </Card>
           </div>
-
+          
           {/* Controls Hint - Hidden on phones */}
           <div className="hidden md:block absolute bottom-4 left-1/2 transform -translate-x-1/2">
             <div className="bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2 text-white text-sm">
@@ -402,15 +315,13 @@ export function GameUI() {
           </div>
         </div>
       )}
-
+      
       {/* Cosmetic Shop Modal */}
       {showShop && <CosmeticShop onClose={() => setShowShop(false)} />}
-      {/* Bot Admin Modal */}
-      {showBotAdmin && <BotAdmin isOpen={showBotAdmin} onClose={() => setShowBotAdmin(false)} />}
-
+      
       {/* Settings Modal */}
       <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
-
+      
       {/* First Level Tutorial */}
       {showFirstLevelTutorial && <FirstLevelTutorial onComplete={handleTutorialComplete} />}
     </>

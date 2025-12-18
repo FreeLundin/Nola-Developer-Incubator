@@ -1,13 +1,10 @@
 import { useRef, useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useParadeGame } from "@/lib/stores/useParadeGame";
-import { useBotsConfig } from "@/lib/hooks/useBotsConfig";
 import * as THREE from "three";
 
 interface CompetitorBotProps {
   id: string;
-  name?: string; // Human-friendly display name
-  persona?: 'aggressive' | 'focused' | 'playful' | 'sneaky' | 'lucky' | 'steady';
   startX: number;
   startZ: number;
   color: string;
@@ -24,7 +21,7 @@ function hashBotCollectible(botId: string, collectibleId: string): number {
   return Math.abs(hash % 100) / 10; // Return value between 0-10
 }
 
-export function CompetitorBot({ id, name, persona = 'steady', startX, startZ, color }: CompetitorBotProps) {
+export function CompetitorBot({ id, startX, startZ, color }: CompetitorBotProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const headRef = useRef<THREE.Mesh>(null);
   const shadowRef = useRef<THREE.Mesh>(null);
@@ -40,35 +37,12 @@ export function CompetitorBot({ id, name, persona = 'steady', startX, startZ, co
     getCollectibleClaim,
   } = useParadeGame();
   
-  // Persona-driven behavior modifiers
-  const personaSettings = useMemo(() => {
-    switch (persona) {
-      case 'aggressive':
-        return { speedBase: 4.0, risk: 0.9, preferenceBoost: 1.5, danceChance: 0.01 };
-      case 'focused':
-        return { speedBase: 3.2, risk: 0.6, preferenceBoost: 1.8, danceChance: 0.005 };
-      case 'playful':
-        return { speedBase: 3.0, risk: 0.5, preferenceBoost: 1.2, danceChance: 0.08 };
-      case 'sneaky':
-        return { speedBase: 3.6, risk: 0.7, preferenceBoost: 1.3, danceChance: 0.02 };
-      case 'lucky':
-        return { speedBase: 3.1, risk: 0.4, preferenceBoost: 2.0, danceChance: 0.06 };
-      default:
-        return { speedBase: 2.8, risk: 0.5, preferenceBoost: 1.0, danceChance: 0.02 };
-    }
-  }, [persona]);
-  
-  const moveSpeed = useMemo(() => personaSettings.speedBase + (Math.random() * 0.8 - 0.4), [personaSettings]);
+  const moveSpeed = useMemo(() => Math.random() * 1.5 + 2.5, []); // Varying speeds (2.5-4)
   const currentTarget = useRef<string | null>(null); // Currently targeting collectible ID
   
-  // Reactive display name: prefer runtime config override, then prop name, then id
-  const { bots: runtimeBots } = useBotsConfig();
-  const runtimeMeta = runtimeBots.find((b: any) => b.id === id);
-  const displayName = runtimeMeta?.name || name || id;
-  
   useEffect(() => {
-    console.log(`Competitor ${displayName} (${persona}) spawned at (${startX.toFixed(1)}, ${startZ.toFixed(1)})`);
-  }, [displayName, persona, startX, startZ]);
+    console.log(`Competitor bot ${id} spawned at (${startX.toFixed(1)}, ${startZ.toFixed(1)})`);
+  }, [id, startX, startZ]);
   
   useFrame((state, delta) => {
     if (!meshRef.current || !headRef.current || !shadowRef.current || phase !== "playing") return;
@@ -118,18 +92,13 @@ export function CompetitorBot({ id, name, persona = 'steady', startX, startZ, co
           
           const distance = position.current.distanceTo(collectible.position);
           
-          // Score based on distance, persona preference and unique bot-collectible preference
+          // Score based on distance and unique bot-collectible preference
           const distanceScore = 20 - distance; // Closer = higher score
-          // Persona increases desire for certain items
-          const personaMultiplier = personaSettings.preferenceBoost || 1.0;
           
           // Use hash of (botId + collectibleId) for unique per-pair preference
-          const preferenceBonus = hashBotCollectible(id, collectible.id) * (personaMultiplier);
+          const preferenceBonus = hashBotCollectible(id, collectible.id);
           
-          // Slight bias toward lower-y items for "lucky" and "playful" bots
-          const heightBonus = (collectible.position.y < 0.8) ? (persona === 'lucky' ? 3 : (persona === 'playful' ? 1.5 : 0)) : 0;
-          
-          const totalScore = distanceScore + preferenceBonus + heightBonus;
+          const totalScore = distanceScore + preferenceBonus;
           
           if (totalScore > bestScore) {
             bestScore = totalScore;
@@ -155,9 +124,7 @@ export function CompetitorBot({ id, name, persona = 'steady', startX, startZ, co
         .subVectors(targetCollectible.position, position.current)
         .normalize();
       
-      // Risky/aggressive bots take faster/smaller-turn approaches
-      const speedFactor = moveSpeed * (personaSettings.risk || 0.6);
-      velocity.current.copy(direction).multiplyScalar(speedFactor * delta);
+      velocity.current.copy(direction).multiplyScalar(moveSpeed * delta);
       position.current.add(velocity.current);
       
       // Rotate to face target
@@ -173,25 +140,17 @@ export function CompetitorBot({ id, name, persona = 'steady', startX, startZ, co
         removeCollectible(targetCollectible.id);
         addBotCatch(id);
         currentTarget.current = null; // Release target after catching
-        console.log(`${displayName} (${persona}) caught ${targetCollectible.type}!`);
+        console.log(`Bot ${id} caught ${targetCollectible.type}!`);
       }
     } else {
-      // Idle/dance behavior based on persona when no target
-      if (Math.random() < personaSettings.danceChance) {
-        const wiggle = new THREE.Vector3(
-          (Math.random() * 2 - 1) * 0.2,
-          0,
-          (Math.random() * 2 - 1) * 0.2
-        );
-        velocity.current.copy(wiggle).multiplyScalar(delta * 0.5);
-        position.current.add(velocity.current);
-      } else if (Math.random() < 0.01) {
+      // Wander randomly if no target
+      if (Math.random() < 0.01) {
         const randomDirection = new THREE.Vector3(
           Math.random() * 2 - 1,
           0,
           Math.random() * 2 - 1
         ).normalize();
-        velocity.current.copy(randomDirection).multiplyScalar(moveSpeed * delta * 0.2);
+        velocity.current.copy(randomDirection).multiplyScalar(moveSpeed * delta * 0.3);
         position.current.add(velocity.current);
       }
     }

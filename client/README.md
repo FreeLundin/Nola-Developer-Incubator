@@ -1,6 +1,6 @@
-# Client Setup - Mardi Gras Parade Game (Web Version)
+# Client Setup - NDI_MardiGrasParade (Web Version)
 
-This directory contains the React/Three.js frontend for the Mardi Gras Parade Game.
+This directory contains the React/Three.js frontend for NDI_MardiGrasParade.
 
 ## 🚀 Quick Start
 
@@ -192,18 +192,10 @@ export default defineConfig({
 - [Three.js Documentation](https://threejs.org/docs)
 - [TailwindCSS Documentation](https://tailwindcss.com/docs)
 
-## Game Design & Quick Start
+## 🤝 Contributing
 
-See the Game Design Document for the vision, mechanics, and a quick-start guide (including QR instructions for mobile testing):
+See the main [README.md](../README.md) for contribution guidelines.
 
-[docs/GAME_DESIGN.md](../docs/GAME_DESIGN.md)
+## 📄 License
 
-Quick start (development):
-
-1. From project root, install and run:
-```powershell
-npm install
-npm run dev
-```
-2. Open http://localhost:5000
-3. To test on mobile in the same LAN, run `npm run qr` and scan the generated `docs/browser-qr.svg`.
+MIT License - See [LICENSE](../LICENSE) file for details.

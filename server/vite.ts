@@ -35,24 +35,13 @@ export async function setupVite(app: Express, server: Server) {
     customLogger: {
       ...viteLogger,
       error: (msg, options) => {
-        // Do not exit the process on Vite logger errors during development.
-        // Instead log the error and allow the server to continue. This prevents
-        // transient tooling errors from bringing down the dev server.
         viteLogger.error(msg, options);
-        // Avoid process.exit(1) which makes debugging and iterative development painful.
-        // Optionally we could set a flag or notify the developer via UI, but logging is sufficient.
+        process.exit(1);
       },
     },
     server: serverOptions,
     appType: "custom",
   });
-
-  // Serve static assets from client/public in development so requests to
-  // paths like /textures/asphalt.png resolve correctly and don't 404.
-  const publicDir = path.resolve(__dirname, '..', 'client', 'public');
-  if (fs.existsSync(publicDir)) {
-    app.use(express.static(publicDir));
-  }
 
   app.use(vite.middlewares);
   app.use("*", async (req, res, next) => {
@@ -75,11 +64,8 @@ export async function setupVite(app: Express, server: Server) {
       const page = await vite.transformIndexHtml(url, template);
       res.status(200).set({ "Content-Type": "text/html" }).end(page);
     } catch (e) {
-      // Don't crash the process on transform errors. Vite can provide useful stack traces.
       vite.ssrFixStacktrace(e as Error);
-      // Log the error and send a 500 response with the error message so the browser shows it.
-      console.error('[vite] transformIndexHtml error:', e);
-      res.status(500).set({ "Content-Type": "text/plain" }).end(`Dev middleware error: ${((e as Error).message || String(e))}`);
+      next(e);
     }
   });
 }

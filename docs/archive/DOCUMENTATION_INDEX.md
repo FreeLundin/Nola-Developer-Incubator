@@ -1,6 +1,6 @@
 # ?? Documentation Index - Unreal Engine Conversion
 
-Welcome! This guide helps you navigate all documentation for converting the Mardi Gras Parade game to Unreal Engine.
+Welcome! This guide helps you navigate all documentation for converting NDI_MardiGrasParade to Unreal Engine.
 
 ---
 
@@ -361,7 +361,7 @@ Legend:
 
 ## ?? You're Ready!
 
-You now have a complete guide to converting the Mardi Gras Parade game to Unreal Engine!
+You now have a complete guide to converting NDI_MardiGrasParade to Unreal Engine!
 
 ### Next Steps:
 1. **Choose your role**: Developer or Designer
