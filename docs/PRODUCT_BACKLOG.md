@@ -6,6 +6,7 @@ This file lists prioritized work items related to public playtests, CI, and docu
    - Add prominent Public Playtest section to README with Project Lead (Done)
    - Add confirm helper to show/copy/open the public URL (Done)
    - Automate README insertion of current public URL (script added)
+   - Ensure `docs/launch.html` is the canonical quick link for testers (Done)
 
 2. CI and testing
    - Add GitHub Actions workflow to run Playwright on PRs using localtunnel (Done)
@@ -22,8 +23,8 @@ This file lists prioritized work items related to public playtests, CI, and docu
    - HUD persona labels toggle for debugging
 
 5. Docs & Governance
-   - Update DESIGNER_WORKFLOW.md and TECHNICAL_DOCUMENTATION.md to include playtest instructions
-   - Add release notes and single date-stamped summary of changes
+   - Update DESIGNER_WORKFLOW.md and TECHNICAL_DOCUMENTATION.md to include playtest instructions (Updated)
+   - Add release notes and single date-stamped summary of changes (TODO)
 
 6. Clean up & polish
    - Remove unused assets and fix texture errors
@@ -34,4 +35,3 @@ This file lists prioritized work items related to public playtests, CI, and docu
 Notes:
 - This backlog file is intended as a short, actionable list for the current sprint.
 - Move completed items to a changelog or release notes entry when merged.
-

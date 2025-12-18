@@ -1,72 +1,61 @@
 ﻿# Quick Playtesting (shareable link)
 
-Date: 2025-12-14
+Date: 2025-12-18
 
-Goal: Give a public, shareable URL so someone not on your LAN can play the game quickly and for free.
+Goal: Provide an easy, reliable public URL for playtesting so people off your LAN can play immediately.
 
-Summary (simple, free options):
-- Fast (recommended): Cloudflare Tunnel (cloudflared) — stable, free, HTTPS, no account required for basic use.
-- Alternative: ngrok (free tier, ephemeral URL) — quick and widely known.
-- If you want a permanent landing page, add a GitHub Pages redirect (see `docs/MardiGrasParadeSim2026.html`) and update its URL when you run a tunnel.
+Recommended (fast, free): Cloudflare Tunnel (`cloudflared`)
+- Stable HTTPS URL, low friction, works well for dev playtests.
+- We use a small helper so the current public URL is recorded in `docs/last-public-url.txt` and `docs/launch.html` redirects to it.
 
-Minimal steps (recommended: Cloudflare Tunnel)
+Minimal workflow (developer)
+
 1. Start the dev server locally (Vite + Express):
 
 ```powershell
+npm install
 npm run dev
 ```
 
-2. Install cloudflared (one-time). See https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation
-   - Windows: download installer or use Scoop/Chocolatey.
-
-3. Run cloudflared to expose your local server (port 5000):
+2. Expose the server (Cloudflare Tunnel) — one-time install then run:
 
 ```powershell
+# install cloudflared per Cloudflare docs (Windows: installer or scoop/choco)
+# run tunnel (this will use the config in scripts/cloudflared-config.yml if present):
+.
+# foreground (shows logs):
+.
+.\scripts\cloudflared.exe --config scripts\cloudflared-config.yml tunnel run MardiGrasParadeSim2026 --loglevel debug
+
+# or quick mapping (ephemeral) if you don't need named tunnel:
 cloudflared tunnel --url http://localhost:5000
 ```
 
-cloudflared prints a public URL like `https://abcd-1234.trycloudflare.com`. Copy that URL and share it.
-
-Alternative (ngrok):
-1. Start dev server.
-2. Download ngrok and run:
+3. Confirm the public URL (helper writes it):
 
 ```powershell
-ngrok http 5000
+Get-Content .\docs\last-public-url.txt
+Start-Process .\docs\launch.html
 ```
 
-ngrok prints a public HTTPS URL you can share.
-
-Generate a QR (quick):
-- Use the included PowerShell helper to download a PNG QR (uses a free QR API):
+One-click helper (PowerShell) — generate QR and write launch file
 
 ```powershell
-# Replace <PUBLIC_URL> with the tunnel URL you got from cloudflared/ngrok
-.
-ps1\generate-qr.ps1 -Url "https://abcd-1234.trycloudflare.com"
-# This writes docs/browser-qr.png
+# Run after you start your tunnel and have the public URL in LAST_URL (or update last-public-url.txt manually)
+node scripts/update-public-url.mjs
+# This writes docs/launch.html (redirect page) and docs/browser-qr.svg
 ```
 
-Make a GitHub Pages landing redirect (optional)
-- Edit `docs/MardiGrasParadeSim2026.html` and replace the placeholder `REPLACE_WITH_PUBLIC_URL` with your tunnel URL. Commit and push to the repo's `main` (or enable GitHub Pages on `docs/` folder) to publish a stable project page that redirects to your current tunnel URL.
-
-Commands to update redirect (example):
+Ephemeral fallback: localtunnel
 
 ```powershell
-# Edit file manually then commit & push
-git add docs/MardiGrasParadeSim2026.html
-git commit -m "chore(playtest): update Pages redirect to current tunnel URL"
-git push
+npx localtunnel --port 5000 --print-url
+# Example returned URL: https://hot-lizard-90.loca.lt
 ```
 
-Notes / tips
-- Cloudflare Tunnel gives an HTTPS URL without account friction and is the recommended free option.
-- ngrok is convenient but the free URLs are ephemeral.
-- For a public long-term demo, consider deploying the client to GitHub Pages or Vercel. That is free for static content.
-- If your backend is required, you can tunnel the whole app (Cloudflare supports TCP/HTTP). Otherwise, build and serve a static client.
+Quick tips
+- Use `docs/launch.html` as the canonical quick link for testers (it always redirects to the current public URL recorded in `docs/last-public-url.txt`).
+- Don’t expose admin paths or secrets while the tunnel is active.
+- For repeated public demos, consider deploying the client (static) to GitHub Pages or Vercel.
 
-If you want, I can:
-- Add a small GitHub Actions workflow to automatically update `docs/MardiGrasParadeSim2026.html` on demand (requires a PAT).
-- Create a tiny UI button in the app that shows the current public URL (after you paste it into localStorage), and a QR generation button.
-
-Which next: give me which tunnel you prefer (cloudflared or ngrok) and I will provide a one-click PowerShell script to run it and generate the QR.
+If you want, I can add a GitHub Action to automatically update `docs/last-public-url.txt` when you post a new URL (requires a PAT with repo permissions).

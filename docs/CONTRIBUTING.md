@@ -14,6 +14,7 @@ Thank you for your interest in contributing! This guide will help you get starte
 - [For Documentation Writers](#for-documentation-writers)
 - [Pull Request Process](#pull-request-process)
 - [Style Guidelines](#style-guidelines)
+- [Playtesting & QA](#playtesting--qa)
 
 ---
 
@@ -300,7 +301,7 @@ You don't need coding experience to contribute! Here's how you can help:
 **Requirements:**
 - **Format**: MP3 or OGG
 - **Quality**: 128-192 kbps (balance quality and file size)
-- **Length**: 
+- **Length**:
   - SFX: <2 seconds
   - Loops: 30-60 seconds
   - Music: 2-3 minutes
@@ -503,7 +504,7 @@ Follow the existing code style in the project:
 - **Quotes**: Single quotes for strings (when possible)
 - **Semicolons**: Use them
 - **Line length**: ~80-100 characters (not strict)
-- **Naming**: 
+- **Naming**:
   - PascalCase for components and classes
   - camelCase for functions and variables
   - UPPER_SNAKE_CASE for constants
@@ -554,3 +555,17 @@ Every contribution, no matter how small, helps make this project better. Whether
 **Questions?** Don't hesitate to ask! Open an issue or discussion on GitHub.
 
 **Ready to contribute?** Check out the [good first issues](https://github.com/FreeLundin/Nola-Developer-Incubator/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) to get started!
+
+## Playtesting & QA
+
+The project's priority is rapid playtesting and feature validation. Use the public playtest link for external testers and follow these quick steps:
+
+- Public playtest (canonical): https://mardigrasparadesim2026.busaradigitalstrategy.com
+- Quick launch page (redirect to current URL): `docs/launch.html`
+- Update the current public URL via `docs/last-public-url.txt` and run `node scripts/update-public-url.mjs` to regenerate `docs/launch.html` and the QR code.
+
+Testing steps for PR reviewers:
+1. Start local dev server if you need to test changes locally: `npm run dev`.
+2. Open `docs/launch.html` (or visit the public URL) to do a quick external playtest.
+3. Run through the feature acceptance checklist (see `docs/PLAYTESTING.md`).
+4. Add test notes to the PR and include the public URL used for testing.
