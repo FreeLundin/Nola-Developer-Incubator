@@ -22,3 +22,5 @@ docs/GAME_DESIGN_summary.txt
 # Keep local editor/project settings out
 .vscode/
 .idea/
+
+scripts/cloudflared.exe
