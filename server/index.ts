@@ -75,11 +75,8 @@ app.use((req, res, next) => {
   // this serves both the API and the client
   const port = Number(process.env.PORT || 5000);
 
-  const httpServer = server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  // use a portable listen signature to avoid ENOTSUP on some platforms
+  const httpServer = server.listen(port, '0.0.0.0', () => {
     log(`serving on port ${port}`);
   });
 
