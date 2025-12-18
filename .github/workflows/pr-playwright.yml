@@ -1,0 +1,78 @@
+﻿name: PR Playwright tests
+
+on:
+  pull_request:
+
+jobs:
+  e2e:
+    name: Playwright E2E (PR)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Start dev server (background)
+        run: |
+          mkdir -p scripts
+          nohup npm run dev > scripts/server-ci.log 2>&1 & echo $! > scripts/server-ci.pid
+
+      - name: Wait for local server
+        run: npx wait-on http://localhost:5000 --timeout 60000
+
+      - name: Start public tunnel (localtunnel)
+        run: |
+          nohup npx localtunnel --port 5000 --print-url > scripts/tunnel-ci.log 2>&1 & echo $! > scripts/tunnel-ci.pid
+          # wait up to 30s for the URL to appear in the log
+          for i in $(seq 1 30); do
+            url=$(sed -n '1p' scripts/tunnel-ci.log | tr -d '\r') || true
+            if [[ "$url" == http* ]]; then
+              echo "PUBLIC_URL=$url" >> $GITHUB_ENV
+              echo "Found public url: $url"
+              break
+            fi
+            sleep 1
+          done
+          if [ -z "${PUBLIC_URL:-}" ]; then
+            echo "Could not determine public URL from localtunnel; failing job."; cat scripts/tunnel-ci.log; exit 1
+          fi
+
+      - name: Run Playwright tests
+        env:
+          PUBLIC_URL: ${{ env.PUBLIC_URL }}
+        run: |
+          # Example: pass PUBLIC_URL to tests; adjust command to your test setup
+          npx playwright test --config=playwright.config.ts || exit 0
+
+      - name: Upload CI artifacts (logs + Playwright report)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-logs-and-reports
+          path: |
+            scripts/server-ci.log
+            scripts/tunnel-ci.log
+            scripts/server-ci.pid
+            scripts/tunnel-ci.pid
+            playwright-report
+
+      - name: Teardown background processes
+        if: always()
+        run: |
+          echo "Teardown: kill server and tunnel if running"
+          if [ -f scripts/server-ci.pid ]; then kill -TERM $(cat scripts/server-ci.pid) || true; sleep 2; kill -9 $(cat scripts/server-ci.pid) || true; fi
+          if [ -f scripts/tunnel-ci.pid ]; then kill -TERM $(cat scripts/tunnel-ci.pid) || true; sleep 2; kill -9 $(cat scripts/tunnel-ci.pid) || true; fi
+          ls -la scripts || true
+

@@ -11,10 +11,41 @@ function Log { Write-Host "[start-cloudflared-oneclick]" $args }
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $serverLog = Join-Path $scriptRoot "server-oneclick.log"
 $tunnelLog = Join-Path $scriptRoot "tunnel-oneclick.log"
+$logsDir = Join-Path $scriptRoot "logs"
+if (-not (Test-Path $logsDir)) { New-Item -ItemType Directory -Path $logsDir | Out-Null }
+$serverPidFile = Join-Path $logsDir "server-oneclick.pid"
+$tunnelPidFile = Join-Path $logsDir "tunnel-oneclick.pid"
+
+# Track started processes for cleanup
+$global:StartedProcs = @()
+function Stop-StartedProcs {
+  foreach ($p in $global:StartedProcs) {
+    try {
+      if ($p -and $p.Id) {
+        Write-Host "Stopping PID $($p.Id)";
+        Stop-Process -Id $p.Id -ErrorAction SilentlyContinue;
+      }
+    } catch {}
+  }
+  # Remove pid files if present
+  foreach ($f in @($serverPidFile,$tunnelPidFile)) { if (Test-Path $f) { Remove-Item $f -Force -ErrorAction SilentlyContinue } }
+}
+
+# Ensure cleanup on script exit or Ctrl+C
+try {
+  $null = Register-EngineEvent PowerShell.Exiting -Action { Stop-StartedProcs } | Out-Null
+  $null = Register-EngineEvent Console_CancelKeyPress -Action { Stop-StartedProcs } | Out-Null
+} catch {
+  # best-effort; continue if registration not available
+}
 
 # Start dev server
 Log "Starting dev server (npm run dev)..."
 $serverProc = Start-Process -FilePath "npm" -ArgumentList 'run','dev' -RedirectStandardOutput $serverLog -RedirectStandardError $serverLog -NoNewWindow -PassThru
+if ($serverProc) {
+  $global:StartedProcs += $serverProc
+  try { Set-Content -Path $serverPidFile -Value $serverProc.Id -Encoding UTF8 } catch {}
+}
 Start-Sleep -Milliseconds 500
 
 # Wait for server to be ready
@@ -29,36 +60,58 @@ while ( ((Get-Date) - $start).TotalSeconds -lt $TimeoutSeconds ) {
 
 if (-not $up) {
   Log "Server did not become available within $TimeoutSeconds seconds. See $serverLog"
-  return
+  Stop-StartedProcs; return
 }
 
-# Ensure cloudflared is available
-$cloudflared = Get-Command cloudflared -ErrorAction SilentlyContinue
-if (-not $cloudflared) {
-  Write-Host "cloudflared not found in PATH. Install Cloudflare Cloudflared and try again:" -ForegroundColor Yellow
-  Write-Host "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/" -ForegroundColor Yellow
-  return
-}
-
-Log "Starting cloudflared tunnel..."
-# Start cloudflared and capture output
-if (Test-Path $tunnelLog) { Remove-Item $tunnelLog -Force -ErrorAction SilentlyContinue }
-$cfProc = Start-Process -FilePath $cloudflared.Source -ArgumentList 'tunnel','--url',"http://localhost:$Port" -RedirectStandardOutput $tunnelLog -RedirectStandardError $tunnelLog -NoNewWindow -PassThru
-
-# Poll tunnel log for public url
+# Try cloudflared first, then fallback to npx localtunnel
+$cloudflaredCmd = Get-Command cloudflared -ErrorAction SilentlyContinue
+$npxCmd = Get-Command npx -ErrorAction SilentlyContinue
 $tunnelUrl = $null
-for ($i=0; $i -lt 60; $i++) {
-  if (Test-Path $tunnelLog) {
-    $txt = Get-Content $tunnelLog -Raw -ErrorAction SilentlyContinue
-    if ($txt -match 'https?://[\w\-\.]+trycloudflare\.com') { $tunnelUrl = $matches[0]; break }
-    if ($txt -match 'https?://[\w\-\.:/]+') { $tunnelUrl = $matches[0]; break }
+
+if ($cloudflaredCmd) {
+  Log "Starting cloudflared tunnel..."
+  if (Test-Path $tunnelLog) { Remove-Item $tunnelLog -Force -ErrorAction SilentlyContinue }
+  $cfProc = Start-Process -FilePath $cloudflaredCmd.Source -ArgumentList 'tunnel','--url',"http://localhost:$Port" -RedirectStandardOutput $tunnelLog -RedirectStandardError $tunnelLog -NoNewWindow -PassThru
+  if ($cfProc) { $global:StartedProcs += $cfProc; try { Set-Content -Path $tunnelPidFile -Value $cfProc.Id -Encoding UTF8 } catch {} }
+
+  # Poll for URL with robust regex
+  for ($i=0; $i -lt 60; $i++) {
+    if (Test-Path $tunnelLog) {
+      $txt = Get-Content $tunnelLog -Raw -ErrorAction SilentlyContinue
+      if ($txt -match '(https?://[\w\-\.]+trycloudflare\.com)') { $tunnelUrl = $matches[1]; break }
+      if ($txt -match '(https?://[\w\-\.:/]+)') { $tunnelUrl = $matches[1]; break }
+    }
+    Start-Sleep -Milliseconds 500
   }
-  Start-Sleep -Milliseconds 500
+  if (-not $tunnelUrl) { Log "Could not parse cloudflared output; check $tunnelLog" }
+}
+
+# Fallback to localtunnel if cloudflared not started or failed
+if (-not $tunnelUrl) {
+  if ($npxCmd) {
+    Log "cloudflared not available or failed; starting localtunnel via npx..."
+    if (Test-Path $tunnelLog) { Remove-Item $tunnelLog -Force -ErrorAction SilentlyContinue }
+    # localtunnel prints URL to stdout; use --print-url where available
+    $ltProc = Start-Process -FilePath $npxCmd.Source -ArgumentList 'localtunnel','--port',$Port,'--print-url' -RedirectStandardOutput $tunnelLog -RedirectStandardError $tunnelLog -NoNewWindow -PassThru
+    if ($ltProc) { $global:StartedProcs += $ltProc; try { Set-Content -Path $tunnelPidFile -Value $ltProc.Id -Encoding UTF8 } catch {} }
+    for ($i=0; $i -lt 40; $i++) {
+      if (Test-Path $tunnelLog) {
+        $first = Get-Content $tunnelLog -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($first -and $first -match 'https?://') { $tunnelUrl = $first.Trim(); break }
+      }
+      Start-Sleep -Milliseconds 500
+    }
+    if (-not $tunnelUrl) { Log "Could not parse localtunnel output; check $tunnelLog" }
+  } else {
+    Write-Host "Neither cloudflared nor npx found. Install cloudflared or npx/localtunnel." -ForegroundColor Yellow
+    Write-Host "cloudflared install: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/" -ForegroundColor Yellow
+    Log "No tunnel provider available; exiting."; Stop-StartedProcs; return
+  }
 }
 
 if (-not $tunnelUrl) {
-  Log "Unable to parse public URL from cloudflared output. See $tunnelLog"
-  return
+  Log "Unable to determine public URL. See logs: $tunnelLog"
+  Stop-StartedProcs; return
 }
 
 Log "Public URL: $tunnelUrl"
@@ -117,3 +170,11 @@ Start-Process $tunnelUrl
 Log "Done. Server log: $serverLog ; Tunnel log: $tunnelLog ; QR: docs/browser-qr.svg"
 Write-Host "Scan docs/browser-qr.svg or open $tunnelUrl" -ForegroundColor Green
 
+# Keep script alive while background processes run so logs remain available
+# Wait for cloudflared/localtunnel process to exit (or user Ctrl+C)
+try {
+  while ($true) { Start-Sleep -Seconds 1 }
+} finally {
+  Log "Cleaning up started processes..."
+  Stop-StartedProcs
+}
