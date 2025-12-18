@@ -1,6 +1,6 @@
 # 🎭 NDI_MardiGrasParade
 
-+> Public playtest (one-click): [Launch public playtest](./docs/launch.html) — opens the currently active public URL (uses Cloudflare tunnel or fallback). Scan `docs/browser-qr.svg` to open on mobile.
++> Playtest (public): Try the live build directly: https://mardigrasparadesim2026.busaradigitalstrategy.com — or use one-click launch: [Launch public playtest](./docs/launch.html). Scan `docs/browser-qr.svg` to open on mobile.
 +
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
@@ -15,7 +15,7 @@
 
 ## 🚀 Quick Start
 
-Get the simulator running in under 2 minutes:
+Get the simulator running in under 2 minutes (developer) — or open the public playtest (tester):
 
 ```bash
 # Clone repository
@@ -25,13 +25,14 @@ cd Nola-Developer-Incubator
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server (dev):
 npm run dev
 
-# Open browser → http://localhost:5000
+# Open locally → http://localhost:5000
+# Or open public playtest → https://mardigrasparadesim2026.busaradigitalstrategy.com
 ```
 
-That's it! The simulator will open in your default browser.
+That's it! The simulator will open in your default browser (or open the public link for a hosted playtest).
 
 ---
 
