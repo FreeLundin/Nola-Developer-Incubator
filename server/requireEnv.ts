@@ -22,7 +22,8 @@ export function requireEnv(keys: string[]): void {
 
   for (const key of keys) {
     const value = process.env[key];
-    if (!value || !value.trim()) {
+    // Check if value is undefined/null or empty/whitespace-only
+    if (value === undefined || value === null || value.trim() === '') {
       missing.push(key);
     }
   }

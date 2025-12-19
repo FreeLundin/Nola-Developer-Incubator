@@ -135,7 +135,8 @@ export function createErrorMiddleware() {
     
     // Type guard to safely access error properties
     const isErrorLike = (e: unknown): e is { status?: number; statusCode?: number; message?: string; stack?: string } => {
-      return typeof e === 'object' && e !== null;
+      return typeof e === 'object' && e !== null && 
+        ('message' in e || 'status' in e || 'statusCode' in e);
     };
     
     const errorObj = isErrorLike(err) ? err : {};
