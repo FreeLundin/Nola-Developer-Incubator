@@ -1,83 +1,42 @@
-# 🚀 Vercel Deployment Guide for NDI Mardi Gras Parade
+# Vercel Deployment Guide
 
-This guide walks you through deploying the Mardi Gras Parade game to Vercel, making it **publicly accessible to anyone worldwide** with just a URL.
+This guide provides step-by-step instructions for deploying the Mardi Gras Parade Game to Vercel.
 
-## ✅ Is the Vercel Link Publicly Testable?
+## Prerequisites
 
-**YES! The Vercel deployment is 100% public and testable by anyone.**
-
-### What "Public" Means:
-- 🌍 **Anyone worldwide** can access your deployed game
-- 🔓 **No login required** - Players don't need Vercel accounts or authentication
-- 📱 **All devices supported** - Works on desktop, mobile, tablets
-- 🔗 **Simple URL sharing** - Just send the link: `https://your-project-name.vercel.app`
-- 🆓 **Free hosting** - Vercel's free tier supports unlimited public access
-- ⚡ **Production-ready** - Automatic HTTPS, CDN, and optimizations
-
-### How to Test Public Access:
-1. Deploy to Vercel (see instructions below)
-2. Get your deployment URL: `https://your-project-name.vercel.app`
-3. Open the URL in **any browser** (Chrome, Firefox, Safari, Edge)
-4. Share the URL with friends, testers, or on social media
-5. Anyone can play immediately - no setup required!
-
-### Example Public URLs:
-After deployment, your URLs will look like:
-```
-Main Game:  https://mardigras-parade.vercel.app
-API Health: https://mardigras-parade.vercel.app/api/health
-```
-
-**Note:** You control the project name when deploying. Vercel provides both:
-- **Production URL** - `https://your-project-name.vercel.app` (stable)
-- **Preview URLs** - Unique URLs for each branch/PR (testing)
-
----
-
-## 📋 Prerequisites
-
-Before deploying, ensure you have:
-
-- A [Vercel account](https://vercel.com/signup) (free tier is sufficient)
-- A [GitHub account](https://github.com) with this repository forked or accessible
+- A [Vercel account](https://vercel.com/signup) (free tier works)
+- A [GitHub account](https://github.com) with access to this repository
 - A PostgreSQL database (we recommend [Neon](https://neon.tech) for free serverless PostgreSQL)
-- Node.js 18+ installed locally for testing
 
-## 🎯 Quick Deploy
+## Quick Deploy
 
-### Option 1: Deploy via Vercel Dashboard (Recommended)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame)
 
-1. **Connect Your Repository**
-   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
-   - Click "Add New..." → "Project"
-   - Import your GitHub repository (`FreeLundin/MardiGrasParadeGame`)
-   - Vercel will automatically detect the configuration
+## Step-by-Step Deployment
 
-2. **Configure Environment Variables**
-   
-   Add these environment variables in the Vercel project settings:
-   
-   ```env
-   DATABASE_URL=postgresql://username:password@host/database?sslmode=require
-   NODE_ENV=production
-   ```
-   
-   > **Note:** Get your `DATABASE_URL` from your Neon database dashboard (see Database Setup section below)
+### 1. Prepare Your Database
 
-3. **Deploy**
-   - Click "Deploy"
-   - Vercel will automatically:
-     - Install dependencies
-     - Run `npm run vercel-build` (which runs `npm run build`)
-     - Deploy to a production URL
+1. Create a free PostgreSQL database on [Neon](https://neon.tech)
+2. Copy your database connection string (it should look like: `postgresql://user:password@host/database?sslmode=require`)
+3. Keep this connection string handy for the next steps
 
-4. **Access Your Deployment**
-   - Once deployed, Vercel provides a URL like: `https://your-project-name.vercel.app`
-   - **The game is now publicly accessible!** Share this URL with anyone
-   - No login, account, or authentication required for players
-   - Works immediately in any modern web browser
+### 2. Connect Your GitHub Repository to Vercel
 
-### Option 2: Deploy via Vercel CLI
+#### Option A: Using Vercel Dashboard (Recommended)
+
+1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
+2. Click **"Add New..."** → **"Project"**
+3. Import your GitHub repository:
+   - Click **"Import Git Repository"**
+   - Select **Nola-Developer-Incubator/MardiGrasParadeGame**
+   - If not visible, click **"Adjust GitHub App Permissions"** to grant access
+4. Configure your project:
+   - **Framework Preset:** Other (Vercel will auto-detect settings)
+   - **Root Directory:** `./` (leave as default)
+   - **Build Command:** `npm run vercel-build` (should be auto-detected)
+   - **Output Directory:** `dist/public` (should be auto-detected from vercel.json)
+
+#### Option B: Using Vercel CLI
 
 ```bash
 # Install Vercel CLI globally
@@ -86,293 +45,235 @@ npm install -g vercel
 # Login to Vercel
 vercel login
 
-# Deploy to production
-vercel --prod
+# Deploy from the project root
+vercel
+
+# Follow the prompts to link your project
 ```
 
-The CLI will guide you through:
-- Linking to your Vercel account
-- Setting up the project
-- Configuring environment variables
-- Deploying the application
+### 3. Configure Environment Variables
 
-## 🗄️ Database Setup
+Before deploying, you must set up the required environment variables in Vercel:
 
-### Using Neon (Recommended)
+1. In your Vercel project dashboard, go to **Settings** → **Environment Variables**
+2. Add the following variables:
 
-1. **Create a Neon Account**
-   - Go to [neon.tech](https://neon.tech)
-   - Sign up for a free account
+| Variable Name | Value | Environment |
+|--------------|-------|-------------|
+| `DATABASE_URL` | Your PostgreSQL connection string from Neon | Production, Preview, Development |
+| `NODE_ENV` | `production` | Production |
+| `SESSION_SECRET` | A random secure string (use a password generator) | Production, Preview, Development |
 
-2. **Create a Database**
-   - Click "Create Project"
-   - Name your project (e.g., "mardigras-parade")
-   - Select your preferred region
-   - Create the project
+**Important Notes:**
+- `DATABASE_URL` should include `?sslmode=require` at the end
+- Generate a strong `SESSION_SECRET` using: `openssl rand -base64 32`
+- Make sure to add these variables to all environments (Production, Preview, Development)
 
-3. **Get Connection String**
-   - In your Neon dashboard, go to "Connection Details"
-   - Copy the connection string (it looks like):
-     ```
-     postgresql://username:password@ep-xyz.region.aws.neon.tech/neondb?sslmode=require
-     ```
+### 4. Initialize Database Schema
 
-4. **Add to Vercel**
-   - Go to your Vercel project settings
-   - Navigate to "Environment Variables"
-   - Add `DATABASE_URL` with your Neon connection string
-   - Click "Save"
+After your first deployment:
 
-5. **Initialize Database Schema**
+1. Install dependencies locally: `npm install`
+2. Set your `DATABASE_URL` environment variable locally:
    ```bash
-   # Clone the repository locally
-   git clone https://github.com/FreeLundin/MardiGrasParadeGame.git
-   cd MardiGrasParadeGame
-   
-   # Install dependencies
-   npm install
-   
-   # Set your DATABASE_URL in .env file
-   echo "DATABASE_URL=your_neon_connection_string" > .env
-   
-   # Push the database schema
+   export DATABASE_URL="your_connection_string_here"
+   ```
+3. Push the database schema:
+   ```bash
    npm run db:push
    ```
 
-## ⚙️ Configuration Details
+Alternatively, you can run this from the Vercel dashboard:
+1. Go to your project → **Settings** → **Functions**
+2. Use the built-in terminal or deploy a function that runs the migration
 
-### vercel.json
+### 5. Deploy
 
-The `vercel.json` file configures how Vercel builds and serves your application:
+#### Automatic Deployment (Recommended)
+Vercel will automatically deploy your application when you:
+- Push to the `main` branch (production deployment)
+- Create or update a pull request (preview deployment)
 
-```json
-{
-  "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/public",
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/(.*\\..+)",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
-}
+#### Manual Deployment
+To manually trigger a deployment:
+
+1. **From Vercel Dashboard:**
+   - Go to your project → **Deployments**
+   - Click **"Redeploy"** on any previous deployment
+
+2. **From CLI:**
+   ```bash
+   vercel --prod
+   ```
+
+### 6. Verify Deployment
+
+Once deployed, Vercel will provide you with a URL like: `https://your-project.vercel.app`
+
+Test the following:
+1. ✅ **Home page loads** - Visit the root URL
+2. ✅ **3D game renders** - Check that the Three.js game environment loads
+3. ✅ **API endpoints work** - Check browser console for any API errors
+4. ✅ **Static assets load** - Textures, sounds, and models should load
+5. ✅ **Database connectivity** - Any features requiring database should work
+
+### 7. Custom Domain (Optional)
+
+To use a custom domain:
+
+1. Go to your project → **Settings** → **Domains**
+2. Click **"Add"**
+3. Enter your domain name
+4. Follow Vercel's instructions to configure DNS
+
+## Project Structure for Vercel
+
+```
+MardiGrasParadeGame/
+├── api/
+│   └── index.js          # Vercel serverless function entry point
+├── client/               # React frontend source
+├── server/               # Express backend source
+│   ├── app.ts           # Exportable app factory
+│   └── index.ts         # Development server
+├── dist/                 # Build output (generated)
+│   ├── public/          # Static frontend assets
+│   ├── index.js         # Built server code
+│   └── app.js           # Built app factory
+├── vercel.json          # Vercel configuration
+├── .vercelignore        # Files to exclude from deployment
+└── package.json         # Contains vercel-build script
 ```
 
-**Key Points:**
-- **buildCommand**: Runs the production build
-- **outputDirectory**: Points to built static assets
-- **routes**: 
-  - API calls go to serverless function
-  - Static assets are served directly
-  - All other routes serve the SPA index.html
+## Configuration Files
 
-### Environment Variables
+### vercel.json
+Defines the Vercel deployment configuration:
+- **Builds:** Specifies Node.js runtime for serverless API
+- **Routes:** Configures routing for API and static assets
+- **Output Directory:** Points to `dist/public` for static files
 
-| Variable | Description | Required | Example |
-|----------|-------------|----------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | Yes | `postgresql://user:pass@host/db` |
-| `NODE_ENV` | Environment mode | Yes | `production` |
+### .vercelignore
+Excludes unnecessary files from deployment to reduce bundle size:
+- `node_modules/` (rebuilt by Vercel)
+- Development files and documentation
+- Unreal Engine files
+- Build artifacts (rebuilt during deployment)
 
-## 🔍 Verifying Your Deployment
+## Troubleshooting
 
-After deployment, test these endpoints:
+### Build Failures
 
-1. **Main Application**
-   ```
-   https://your-project-name.vercel.app/
-   ```
-   Should load the game interface
+**Issue:** Build fails with "Cannot find module" errors
+- **Solution:** Ensure all dependencies are in `dependencies`, not `devDependencies`
+- Check that TypeScript compiles without errors: `npm run check`
 
-2. **Health Check**
-   ```
-   https://your-project-name.vercel.app/api/health
-   ```
-   Should return:
-   ```json
-   {
-     "status": "ok",
-     "timestamp": "2024-12-18T22:00:00.000Z",
-     "env": "production"
-   }
-   ```
+**Issue:** Build timeout
+- **Solution:** Vercel's free tier has build time limits. Optimize your build:
+  - Remove unused dependencies
+  - Consider code splitting for large bundles
 
-3. **Static Assets**
-   ```
-   https://your-project-name.vercel.app/assets/[asset-name]
-   ```
-   Should load fonts, textures, and other game assets
+### Runtime Errors
 
-## 🐛 Troubleshooting
+**Issue:** "Internal Server Error" or blank page
+- **Solution:** Check Vercel function logs:
+  1. Go to your project → **Deployments**
+  2. Click on the deployment → **Functions**
+  3. Check the logs for errors
 
-### Build Fails
+**Issue:** Database connection errors
+- **Solution:** 
+  - Verify `DATABASE_URL` is set correctly in environment variables
+  - Ensure your connection string includes `?sslmode=require`
+  - Check that your database allows connections from Vercel's IP ranges
 
-**Problem:** Build fails during deployment
+**Issue:** Assets (textures, sounds) not loading
+- **Solution:** 
+  - Verify assets are in `client/public/` directory
+  - Check that build includes all asset files
+  - Review browser console for 404 errors
 
-**Solutions:**
-1. Check the build logs in Vercel dashboard
-2. Ensure all dependencies are in `package.json` (not just `devDependencies`)
-3. Verify Node.js version compatibility (18+)
-4. Try building locally first: `npm run build`
+### Performance Issues
 
-### Database Connection Errors
+**Issue:** Slow initial load
+- **Solution:**
+  - Vercel serverless functions cold start can add latency
+  - Consider upgrading to Vercel Pro for better performance
+  - Optimize bundle size (see build warnings)
 
-**Problem:** Application can't connect to database
+**Issue:** 3D rendering slow or choppy
+- **Solution:** This is client-side performance, not related to deployment:
+  - Optimize 3D models and textures
+  - Reduce polygon counts
+  - Use level-of-detail (LOD) techniques
 
-**Solutions:**
-1. Verify `DATABASE_URL` is correctly set in Vercel environment variables
-2. Ensure connection string includes `?sslmode=require` for Neon
-3. Check that database schema is pushed: `npm run db:push`
-4. Verify database is accessible (not behind firewall)
+## Environment-Specific Behavior
 
-### 404 Errors on Routes
+- **Development (`npm run dev`)**: 
+  - Uses Vite middleware for HMR
+  - Serves from `client/` directory
+  - Runs on `localhost:5000`
 
-**Problem:** Navigation within the app returns 404
+- **Production (`vercel`)**: 
+  - Serves pre-built static files from `dist/public`
+  - API routes handled by serverless functions
+  - No HMR or live reload
 
-**Solutions:**
-1. Check that `vercel.json` routes configuration is correct
-2. Ensure the catch-all route `"dest": "/index.html"` is present
-3. Verify build output contains `index.html` in `dist/public/`
+## Useful Commands
 
-### Static Assets Not Loading
+```bash
+# Run development server locally
+npm run dev
 
-**Problem:** Textures, sounds, or fonts don't load
+# Type check
+npm run check
 
-**Solutions:**
-1. Check browser console for 404 errors
-2. Verify assets are in `client/public/` before build
-3. Ensure asset paths are relative (start with `/`)
-4. Check Vercel logs for asset serving issues
+# Build for production (same as Vercel)
+npm run build
 
-### Environment Variables Not Applied
+# Start production server locally
+npm start
 
-**Problem:** Environment variables don't seem to work
+# Deploy to Vercel (production)
+vercel --prod
 
-**Solutions:**
-1. After adding variables, trigger a new deployment
-2. Check variable names exactly match (case-sensitive)
-3. Verify variables are not marked as "development only"
-4. Try redeploying: `vercel --prod --force`
+# Deploy to Vercel (preview)
+vercel
 
-### Serverless Function Timeout
+# View deployment logs
+vercel logs
 
-**Problem:** API requests timeout after 10 seconds
+# Open Vercel dashboard for project
+vercel open
+```
 
-**Solutions:**
-1. Optimize database queries
-2. Consider upgrading to Vercel Pro for 60s timeout
-3. Use async operations efficiently
-4. Implement caching where possible
+## Additional Resources
 
-## 🔄 Continuous Deployment
+- [Vercel Documentation](https://vercel.com/docs)
+- [Vercel CLI Reference](https://vercel.com/docs/cli)
+- [Node.js Serverless Functions](https://vercel.com/docs/concepts/functions/serverless-functions)
+- [Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables)
+- [Neon PostgreSQL](https://neon.tech/docs)
 
-Vercel automatically deploys:
+## Getting Help
 
-- **Production**: Every push to `main` branch
-- **Preview**: Every push to other branches and PRs
+If you encounter issues:
 
-To disable auto-deploy for a branch:
-1. Go to Project Settings → Git
-2. Configure branch deploy settings
+1. Check the [Issues](https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame/issues) page
+2. Review Vercel function logs for detailed error messages
+3. Verify all environment variables are set correctly
+4. Ensure database schema is up-to-date: `npm run db:push`
+5. Create a new issue with:
+   - Deployment logs
+   - Error messages
+   - Steps to reproduce
 
-## 📊 Monitoring & Analytics
+## Deployment URL
 
-### Vercel Analytics
-
-Enable analytics in your Vercel dashboard:
-1. Go to your project
-2. Click "Analytics" tab
-3. Enable Web Analytics
-4. Add the analytics script (already configured in the build)
-
-### Vercel Logs
-
-View real-time logs:
-1. Go to project dashboard
-2. Click "Deployments"
-3. Select a deployment
-4. View "Functions" logs for API calls
-5. View "Build" logs for build errors
-
-## 🚀 Performance Optimization
-
-### Recommendations
-
-1. **Enable Caching**
-   - Static assets are automatically cached by Vercel CDN
-   - Configure cache headers for API responses
-
-2. **Optimize Bundle Size**
-   - The build already uses code splitting
-   - Consider dynamic imports for large components
-
-3. **Use Edge Functions** (Optional)
-   - For ultra-low latency, consider migrating API routes to Edge Functions
-   - See [Vercel Edge Functions docs](https://vercel.com/docs/functions/edge-functions)
-
-4. **Database Connection Pooling**
-   - Neon automatically provides connection pooling
-   - Use the pooled connection string for better performance
-
-## 🔗 Useful Links
-
-- **Vercel Documentation**: https://vercel.com/docs
-- **Neon Documentation**: https://neon.tech/docs
-- **Project Repository**: https://github.com/FreeLundin/MardiGrasParadeGame
-- **Vercel CLI**: https://vercel.com/docs/cli
-
-## 📝 Post-Deployment Checklist
-
-- [ ] Application loads successfully
-- [ ] 3D game environment renders correctly
-- [ ] API health check returns status "ok"
-- [ ] Static assets (textures, sounds) load properly
-- [ ] Database connectivity works
-- [ ] Mobile responsiveness verified
-- [ ] Performance is acceptable (45+ FPS)
-- [ ] No console errors in browser
-- [ ] Environment variables are set correctly
-- [ ] Custom domain configured (optional)
-
-## 🎮 Share Your Deployment
-
-Once deployed, share your game with:
-- Direct link: `https://your-project-name.vercel.app`
-- Custom domain (configure in Vercel dashboard)
-- Social media with screenshots/videos
-
-## 🆘 Need Help?
-
-- **GitHub Issues**: [Create an issue](https://github.com/FreeLundin/MardiGrasParadeGame/issues)
-- **Vercel Support**: [Vercel Help](https://vercel.com/help)
-- **Community**: Check GitHub Discussions
+Once deployed successfully, your game will be accessible at:
+- **Production:** `https://your-project.vercel.app`
+- **Preview (PR):** `https://your-project-git-branch.vercel.app`
 
 ---
 
-## 🎉 Success!
-
-Your Mardi Gras Parade game is now live on Vercel! Anyone with the URL can play the game in their browser.
-
-**Laissez les bons temps rouler!** 🎭
-
----
-
-*Last updated: December 2024*
+**Note:** The first deployment may take 2-3 minutes to complete. Subsequent deployments are typically faster due to caching.
