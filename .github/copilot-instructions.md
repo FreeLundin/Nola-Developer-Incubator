@@ -1,8 +1,26 @@
 # GitHub Copilot Instructions for NDI_MardiGrasParade
 
+> **Purpose**: These instructions help GitHub Copilot understand this repository's structure, conventions, and best practices to provide better code suggestions and assistance.
+
 ## Repository Overview
 
 This is NDI_MardiGrasParade, a 3D Mardi Gras parade experience built with React, Three.js, and Express.js. Players catch collectibles (beads, doubloons, cups) from parade floats in an immersive browser-based experience that celebrates New Orleans culture.
+
+## Task Suitability
+
+GitHub Copilot works best on:
+- ✅ **Bug fixes** - Fixing specific, well-defined issues
+- ✅ **Feature additions** - Adding new game mechanics, collectibles, or UI components
+- ✅ **Test coverage** - Writing Playwright tests for game functionality
+- ✅ **Documentation** - Updating guides, code comments, and README files
+- ✅ **Refactoring** - Improving code structure while maintaining behavior
+- ✅ **Performance optimization** - Improving frame rates and load times
+
+Tasks requiring human review:
+- ⚠️ **Architecture changes** - Major structural modifications
+- ⚠️ **Security updates** - Authentication, data validation, API security
+- ⚠️ **Production deployments** - Vercel configuration, database migrations
+- ⚠️ **Breaking changes** - API modifications affecting existing code
 
 ## Tech Stack
 
@@ -283,7 +301,7 @@ const texture = useTexture('/textures/my-texture.png');
 
 ## Git Commit Message Format
 
-Follow <a href="https://www.conventionalcommits.org/">Conventional Commits</a>:
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 type(scope): description
@@ -367,6 +385,16 @@ NODE_ENV=development
 SESSION_SECRET=your_random_secret_here
 ```
 
+## Security Guidelines
+
+- **Never commit secrets** - Use environment variables for API keys, database URLs, and tokens
+- **Validate user input** - Sanitize all data from users, especially in API endpoints
+- **Avoid SQL injection** - Use Drizzle ORM's parameterized queries, never string concatenation
+- **Check dependencies** - Review security advisories for npm packages before adding
+- **HTTPS only** - Ensure all external API calls use HTTPS
+- **Content Security Policy** - Be mindful of XSS risks when rendering user content
+- **Authentication** - Follow existing session/auth patterns when touching user data
+
 ## Important Notes
 
 - **Always run `npm run check`** before committing to catch TypeScript errors
@@ -375,11 +403,13 @@ SESSION_SECRET=your_random_secret_here
 - **Document complex logic** - Add comments for non-obvious code
 - **Follow existing patterns** - Match the coding style of surrounding code
 - **Update documentation** if you change public APIs or add new features
+- **Security first** - Consider security implications of all code changes
 
 ## Resources
 
-- <a>CONTRIBUTING.md</a> - Full contribution guidelines
-- <a>DEVELOPMENT_GUIDE.md</a> - Detailed technical documentation
-- <a href="https://docs.pmnd.rs/react-three-fiber">React Three Fiber Docs</a>
-- <a href="https://threejs.org/docs">Three.js Documentation</a>
-- <a href="https://orm.drizzle.team">Drizzle ORM Docs</a>
+- [CONTRIBUTING.md](docs/CONTRIBUTING.md) - Full contribution guidelines
+- [DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md) - Detailed technical documentation
+- [React Three Fiber Docs](https://docs.pmnd.rs/react-three-fiber) - R3F documentation
+- [Three.js Documentation](https://threejs.org/docs) - Three.js API reference
+- [Drizzle ORM Docs](https://orm.drizzle.team) - Database ORM documentation
+- [GitHub Copilot Best Practices](https://docs.github.com/en/copilot/tutorials/coding-agent/get-the-best-results) - How to work effectively with Copilot
