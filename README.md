@@ -11,7 +11,27 @@
 
 ---
 
-## 🚀 Quick Start
+## 🌐 Live Demo
+
+**Ready to deploy to Vercel!** This application is configured for one-click deployment to Vercel, making it publicly accessible to anyone with the deployment URL.
+
+📖 **[View Complete Deployment Guide →](README_VERCEL.md)**
+
+### Deploy Your Own Instance
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame)
+
+Or manually:
+1. Fork this repository
+2. Connect to [Vercel](https://vercel.com)
+3. Add `DATABASE_URL` environment variable (see [Deployment Guide](README_VERCEL.md))
+4. Deploy! Your game will be live at `https://your-project-name.vercel.app`
+
+The deployed application is **fully public** - anyone with the URL can play the game directly in their browser, no installation required!
+
+---
+
+## 🚀 Quick Start (Local Development)
 
 Get the simulator running in under 2 minutes:
 
@@ -104,6 +124,37 @@ NDI_MardiGrasParade/
 - **Drizzle ORM** - Lightweight SQL ORM
 - **PostgreSQL** - Robust relational database (Neon)
 - **WebSocket** - Real-time communication (optional)
+
+---
+
+## 🌐 Deployment
+
+### Vercel (Recommended)
+
+This application is **production-ready for Vercel deployment**:
+
+✅ **Public Access** - Deployed instances are publicly accessible to anyone with the URL  
+✅ **One-Click Deploy** - Use the "Deploy with Vercel" button above  
+✅ **Auto-Deploy** - Push to main branch automatically deploys  
+✅ **Preview URLs** - Every PR gets its own preview deployment  
+
+**Complete deployment instructions:** See [README_VERCEL.md](README_VERCEL.md)
+
+**Key Features When Deployed:**
+- Game accessible at `https://your-project-name.vercel.app`
+- Share the link with anyone - no login or setup required for players
+- Automatic HTTPS and global CDN
+- API routes work as serverless functions
+- Database persists user data and high scores
+
+### Testing Your Deployment
+
+Once deployed, anyone can test by visiting:
+```
+https://your-project-name.vercel.app
+```
+
+No authentication needed - the game loads and plays immediately in the browser!
 
 ---
 
