@@ -130,7 +130,7 @@ export async function parseRequestBody(req: Request): Promise<any> {
  * ```
  */
 export function createErrorMiddleware() {
-  return (err: any, req: Request, res: Response, next: NextFunction) => {
+  return (err: any, req: Request, res: Response, _next: NextFunction) => {
     logError(err, req);
     
     const status = err.status || err.statusCode || 500;

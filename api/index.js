@@ -21,16 +21,10 @@ const __dirname = dirname(__filename);
 // Create Express app
 const app = express();
 
-// Parse JSON bodies with error handling
+// Parse JSON bodies with size limit
+// Express will handle JSON parsing errors automatically
 app.use(express.json({
-  limit: '10mb',
-  verify: (req, res, buf, encoding) => {
-    try {
-      JSON.parse(buf.toString());
-    } catch (e) {
-      throw new Error('Invalid JSON');
-    }
-  }
+  limit: '10mb'
 }));
 
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));

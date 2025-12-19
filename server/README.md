@@ -12,7 +12,7 @@ Environment variable validation utility that fails fast with clear error message
 
 **Usage:**
 ```typescript
-import { requireEnv } from './requireEnv.js';
+import { requireEnv } from './requireEnv';
 
 // In an API route or at application startup
 app.get('/api/data', (req, res) => {
@@ -51,7 +51,7 @@ Wraps async Express route handlers to catch errors automatically.
 
 **Usage:**
 ```typescript
-import { asyncHandler } from './http.js';
+import { asyncHandler } from './http';
 
 app.get('/api/users', asyncHandler(async (req, res) => {
   const users = await storage.getUsers();
@@ -73,7 +73,7 @@ Middleware to enforce allowed HTTP methods and return 405 for unsupported method
 
 **Usage:**
 ```typescript
-import { methodGuard } from './http.js';
+import { methodGuard } from './http';
 
 // Only allow GET and POST
 app.all('/api/users', methodGuard(['GET', 'POST']));
@@ -94,7 +94,7 @@ Structured error logging for debugging and monitoring.
 
 **Usage:**
 ```typescript
-import { logError } from './http.js';
+import { logError } from './http';
 
 try {
   await someOperation();
@@ -126,7 +126,7 @@ Safe request body parsing based on Content-Type header.
 
 **Usage:**
 ```typescript
-import { parseRequestBody } from './http.js';
+import { parseRequestBody } from './http';
 
 app.post('/api/data', asyncHandler(async (req, res) => {
   const data = await parseRequestBody(req);
@@ -147,7 +147,7 @@ Creates standardized error handling middleware for Express.
 
 **Usage:**
 ```typescript
-import { createErrorMiddleware } from './http.js';
+import { createErrorMiddleware } from './http';
 
 // Add as the last middleware in your app
 app.use(createErrorMiddleware());

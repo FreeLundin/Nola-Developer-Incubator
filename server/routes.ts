@@ -28,7 +28,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Uncomment and modify as needed:
   /*
   import { requireEnv } from './requireEnv';
-  
   app.post('/api/data', methodGuard(['POST']), asyncHandler(async (req, res) => {
     // Validate required environment variables at the start of the handler
     // This will throw an error with a clear message if any are missing
