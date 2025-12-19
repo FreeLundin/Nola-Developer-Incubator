@@ -95,22 +95,22 @@ Server runs on port 5000 by default (configurable via `PORT` env variable).
 
 ## 🔗 Example Deployment URLs
 
-Once deployed, your game will be accessible at URLs like these:
+Once deployed, your game will be accessible at URLs like these (replace `your-project-name` with the actual Vercel project name you choose):
 
 ### Production URLs
 ```
-Main Application:  https://mardigras-parade.vercel.app/
-API Health Check:  https://mardigras-parade.vercel.app/api/health
-Static Assets:     https://mardigras-parade.vercel.app/assets/[filename]
+Main Application:  https://your-project-name.vercel.app/
+API Health Check:  https://your-project-name.vercel.app/health
+Static Assets:     https://your-project-name.vercel.app/assets/[filename]
 ```
 
 ### Preview URLs (for testing branches/PRs)
 ```
-Feature Branch:    https://mardigras-parade-git-feature-user.vercel.app/
-Pull Request:      https://mardigras-parade-pr-123.vercel.app/
+Feature Branch:    https://your-project-name-git-feature-branch.vercel.app/
+Pull Request:      https://your-project-name-pr-123.vercel.app/
 ```
 
-**Note:** Replace `mardigras-parade` with your actual project name chosen during deployment.
+Note: If you depend on a public demo for automated tests, set the `PLAYTEST_URL` repo secret or the environment variable in your CI with the real deployed URL.
 
 ---
 
