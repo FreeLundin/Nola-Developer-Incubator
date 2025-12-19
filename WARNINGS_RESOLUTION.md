@@ -58,7 +58,7 @@ This document summarizes the warnings that existed in the codebase and the resol
 
 **Why Not Fixed:**
 - Requires upgrading to `react-syntax-highlighter@16.1.0` which is a breaking change
-- Current version: `react-syntax-highlighter@15.5.0`
+- Current version: `react-syntax-highlighter@15.6.6` (updated from 15.5.0 by npm audit fix)
 
 **Recommendation:**
 - Plan upgrade to react-syntax-highlighter@16.x in a separate update cycle
