@@ -1,0 +1,55 @@
+name: Playwright Playtest (Vercel)
+
+on:
+  pull_request:
+    paths:
+      - 'tests/**'
+      - 'client/**'
+      - 'README.md'
+  workflow_dispatch: {}
+
+jobs:
+  playwright-test:
+    name: Playwright tests against Vercel playtest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Set PLAYTEST_URL from a repository secret if present; otherwise fall back to the Vercel domain
+      - name: Set PLAYTEST_URL (secret or fallback)
+        run: |
+          if [ -z "${{ secrets.PLAYTEST_URL }}" ]; then
+            echo "PLAYTEST_URL=https://mardi-gras-parade-game.vercel.app" >> $GITHUB_ENV
+          else
+            echo "PLAYTEST_URL=${{ secrets.PLAYTEST_URL }}" >> $GITHUB_ENV
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test --project=chromium --reporter=list
+        timeout-minutes: 20
+
+      - name: Upload Playwright report artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots
+          path: test-results || playwright-report/screenshots || ''

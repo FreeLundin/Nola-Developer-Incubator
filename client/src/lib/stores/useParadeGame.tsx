@@ -23,6 +23,8 @@ interface BotScore {
   id: string;
   catches: number;
   color: string;
+  displayName?: string; // optional human-friendly name
+  persona?: string; // optional persona label
 }
 
 interface BotClaim {
@@ -111,6 +113,9 @@ interface ParadeGameState {
   
   // Settings actions
   toggleJoystick: () => void;
+
+  // Runtime config reload (optional)
+  reloadBotOverrides?: () => Promise<void>;
 }
 
 // Combo timing window (milliseconds)
@@ -164,15 +169,24 @@ export const useParadeGame = create<ParadeGameState>()(
       const colors: Array<"beads" | "doubloon" | "cup"> = ["beads", "doubloon", "cup"];
       const randomColor = colors[Math.floor(Math.random() * colors.length)];
       console.log(`Player color assigned: ${randomColor}`);
-      
-      // Initialize bot scores
+
+      // Initialize bot scores with unique default displayNames
       const botColors = ["#ff4444", "#44ff44", "#4444ff", "#ffff44", "#ff44ff", "#44ffff"];
+      const defaultNames = [
+        'King Rex',
+        'Queen Zulu',
+        'Lil Jester',
+        'Captain Float',
+        'Nola Nelly',
+        'Mardi Max'
+      ];
       const initialBotScores = Array.from({ length: 6 }, (_, i) => ({
         id: `bot-${i + 1}`,
         catches: 0,
         color: botColors[i],
+        displayName: defaultNames[i] || `bot-${i + 1}`,
       }));
-      
+
       // Initialize aggressive NPCs using casual difficulty scaling
       const currentLevel = get().level;
       const npcCount = get().getNPCCount(currentLevel); // Level 1: 0, Levels 2-3: 1, then scales up
@@ -195,6 +209,18 @@ export const useParadeGame = create<ParadeGameState>()(
         floatsPassed: 0,
         aggressiveNPCs: initialAggressiveNPCs,
       });
+
+      // Try to load runtime overrides (if present)
+      try {
+        // call reloadBotOverrides if available
+        // @ts-ignore
+        if (typeof window !== 'undefined') {
+          // dispatch event in case other parts rely on it
+          window.dispatchEvent(new Event('bots:reload'));
+        }
+      } catch {
+        // ignore in non-browser contexts
+      }
     },
     
     addBotCatch: (botId: string) => {
@@ -340,7 +366,7 @@ export const useParadeGame = create<ParadeGameState>()(
     },
     
     nextLevel: () => {
-      const { level, totalCatches } = get();
+      const { level } = get();
       const newLevel = level + 1;
       const newTotalFloats = newLevel * 10; // 10 floats per level
       const newTargetScore = 5 + (newLevel - 1) * 2; // Increase target each level: 5, 7, 9, 11...
@@ -630,3 +656,15 @@ export const useParadeGame = create<ParadeGameState>()(
     },
   }))
 );
+
+// Attach global listeners in browser to respond to override events
+if (typeof window !== 'undefined') {
+  window.addEventListener('bots:updated', () => {
+    // @ts-ignore
+    useParadeGame.getState().reloadBotOverrides?.();
+  });
+  window.addEventListener('bots:reload', () => {
+    // @ts-ignore
+    useParadeGame.getState().reloadBotOverrides?.();
+  });
+}

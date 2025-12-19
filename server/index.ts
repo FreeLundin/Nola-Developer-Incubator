@@ -15,12 +15,76 @@ import { setupVite, log } from "./vite";
 
   // ALWAYS serve the app on port 5000
   // this serves both the API and the client
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  const port = Number(process.env.PORT || 5000);
+
+  // use a portable listen signature to avoid ENOTSUP on some platforms
+  const httpServer = server.listen(port, '0.0.0.0', () => {
     log(`serving on port ${port}`);
   });
-})();
+
+  // Track open sockets so we can destroy them on shutdown (avoid hanging connections)
+  const sockets = new Set<any>();
+  httpServer.on('connection', (socket) => {
+    sockets.add(socket);
+    socket.on('close', () => sockets.delete(socket));
+  });
+
+  let shuttingDown = false;
+
+  const shutdown = async (code = 0) => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    log(`shutdown initiated (code=${code}) - stop accepting new connections`);
+
+    // stop accepting new connections
+    await new Promise<void>((resolve) => {
+      httpServer.close((err) => {
+        if (err) {
+          log(`error closing server: ${String(err)}`);
+        }
+        resolve();
+      });
+
+      // Also destroy lingering sockets after short grace period
+      setTimeout(() => {
+        log(`destroying ${sockets.size} lingering sockets`);
+        sockets.forEach((s) => { try { (s as any).destroy(); } catch { /* ignore */ } });
+      }, 2000).unref();
+    });
+
+    log('server closed gracefully');
+    // allow caller to decide exit
+  };
+
+  // listen to signals for graceful shutdown only when run directly (not when used in tests)
+  if (isMain) {
+    process.once('SIGINT', () => {
+      shutdown(0).then(() => process.exit(0));
+    });
+    process.once('SIGTERM', () => {
+      shutdown(0).then(() => process.exit(0));
+    });
+
+    // catch uncaught rejections and exceptions to allow for graceful logging
+    process.on('unhandledRejection', (reason) => {
+      log(`unhandledRejection: ${String(reason)}`);
+    });
+    process.on('uncaughtException', (err) => {
+      log(`uncaughtException: ${String(err)}`);
+    });
+  }
+
+  return { server: httpServer, shutdown };
+}
+
+// If this file is run directly, start the server and attach a shutdown that exits the process
+if (isMain) {
+  (async () => {
+    const { shutdown } = await startServer();
+    // Do not call shutdown() immediately — keep the server running and rely on signal handlers
+    // that were registered inside startServer() when running as main.
+
+    // Keep process alive. If a forced shutdown is needed, it will be handled by the installed signal handlers.
+    // If you want an explicit programmatic shutdown from this block, call shutdown() on signal handlers only.
+  })();
+}
