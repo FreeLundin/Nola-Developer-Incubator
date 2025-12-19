@@ -1,7 +1,8 @@
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useParadeGame } from "@/lib/stores/useParadeGame";
 import * as THREE from "three";
+import { Html } from '@react-three/drei';
 
 interface CompetitorBotProps {
   id: string;
@@ -39,6 +40,22 @@ export function CompetitorBot({ id, startX, startZ, color }: CompetitorBotProps)
   
   const moveSpeed = useMemo(() => Math.random() * 1.5 + 2.5, []); // Varying speeds (2.5-4)
   const currentTarget = useRef<string | null>(null); // Currently targeting collectible ID
+  const [displayName, setDisplayName] = useState<string | undefined>(() => {
+    try {
+      return useParadeGame.getState().botScores.find(b => b.id === id)?.displayName;
+    } catch { return undefined; }
+  });
+
+  // subscribe to bot name changes for this bot id
+  useEffect(() => {
+    const unsub = useParadeGame.subscribe(
+      (s) => s.botScores.find(b => b.id === id),
+      (bot) => {
+        if (bot) setDisplayName(bot.displayName);
+      }
+    );
+    return () => unsub();
+  }, [id]);
   
   useEffect(() => {
     console.log(`Competitor bot ${id} spawned at (${startX.toFixed(1)}, ${startZ.toFixed(1)})`);
@@ -201,6 +218,11 @@ export function CompetitorBot({ id, startX, startZ, color }: CompetitorBotProps)
         <circleGeometry args={[0.4, 8]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.3} />
       </mesh>
+
+      {/* 2D HTML label above bot - updates reactively via state */}
+      <Html position={[0, 1.4, 0]} center style={{ pointerEvents: 'none' }}>
+        <div className="text-xs text-white font-bold drop-shadow-lg bg-black/60 px-2 py-1 rounded">{displayName ?? id}</div>
+      </Html>
     </group>
   );
 }

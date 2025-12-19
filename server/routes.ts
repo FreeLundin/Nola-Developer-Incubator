@@ -1,15 +1,43 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import path from "path";
+import fs from "fs";
+
+export function attachRoutes(app: Express) {
+  // health check
+  app.get('/health', (_req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
+
+  // serve runtime bot override if present at project root (bots.override.json)
+  app.get('/bots.override.json', (_req, res) => {
+    const file = path.resolve(process.cwd(), 'bots.override.json');
+    if (!fs.existsSync(file)) return res.status(404).json({ error: 'no override' });
+    try {
+      const content = fs.readFileSync(file, 'utf-8');
+      return res.status(200).type('application/json').send(content);
+    } catch (e) {
+      return res.status(500).json({ error: 'failed to read override' });
+    }
+  });
+
+  // simple admin-only route to save overrides (local development only)
+  app.post('/admin/bots', (req, res) => {
+    // Prevent writes in production / serverless environments (e.g., Vercel)
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+      return res.status(403).json({ error: 'writing overrides is disabled in production' });
+    }
+
+    try {
+      const file = path.resolve(process.cwd(), 'bots.override.json');
+      fs.writeFileSync(file, JSON.stringify(req.body, null, 2), 'utf-8');
+      return res.status(200).json({ status: 'saved' });
+    } catch (e) {
+      return res.status(500).json({ error: 'failed to save' });
+    }
+  });
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // put application routes here
-  // prefix all routes with /api
-
-  // use storage to perform CRUD operations on the storage interface
-  // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
-
-  const httpServer = createServer(app);
-
-  return httpServer;
+  // attach routes to the provided app then return an http.Server
+  attachRoutes(app);
+  return createServer(app);
 }

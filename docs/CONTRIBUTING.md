@@ -510,6 +510,32 @@ Follow the existing code style in the project:
 
 ---
 
+## Communication & Best Practices
+
+To reduce friction and speed up review/merge cycles, follow these simple rules when contributing or requesting merges:
+
+- Small PRs get merged faster: prefer PRs that change one feature or fix one bug and are <= 200 lines when possible.
+- Provide a short PR summary at the top of the description, followed by: What, Why, How to test, and Public playtest URL used.
+- Use the Asset Submission Template for design PRs: `docs/ASSET_SUBMISSION_TEMPLATE.md`.
+- Label PRs correctly: `bug`, `feat`, `docs`, `design`, `urgent`, `needs-review`.
+- Expected turnaround times (guideline):
+  - Small PRs (<200 lines): 24-48 hours
+  - Medium PRs: 48-96 hours
+  - Large/Complex PRs: allow 1-2 weeks for full review
+- Mark urgent PRs by adding the `urgent` label and mentioning `@BLund` in the PR body (short justification required).
+- Include the canonical playtest link or `docs/launch.html` snapshot for external QA.
+- When possible, add a short recording or screenshot for visual changes.
+
+Automated merges / bot help
+- If you want me to programmatically create and merge PRs on your behalf, provide a short-lived GitHub Personal Access Token (PAT) with `repo` scope. I will use it only to create and merge the PR you approve, then remove any local traces of the token.
+- If you prefer not to share a token, use the PR page I opened earlier to create and merge manually: https://github.com/FreeLundin/MardiGrasParadeGame/pull/new/chore/public-playtest-docs
+
+Why this helps
+- Clear, consistent PRs reduce back-and-forth and speed merges.
+- Using the canonical playtest URL ensures reviewers test the same build.
+
+---
+
 ## Getting Help
 
 ### Resources

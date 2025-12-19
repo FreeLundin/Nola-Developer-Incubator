@@ -3,17 +3,18 @@ import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { useAudio } from "@/lib/stores/useAudio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Volume2, VolumeX, ShoppingBag, Heart, DollarSign, Settings } from "lucide-react";
+import { Volume2, VolumeX, ShoppingBag, Heart, DollarSign, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CosmeticShop } from "./CosmeticShop";
+import { AdminModal } from '@/components/ui/AdminModal';
 import { FirstLevelTutorial } from "./FirstLevelTutorial";
 import { SettingsModal } from "./SettingsModal";
 import { toast } from "sonner";
 
 export function GameUI() {
-  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins, joystickEnabled } = useParadeGame();
+  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [showFirstLevelTutorial, setShowFirstLevelTutorial] = useState(false);
@@ -22,6 +23,10 @@ export function GameUI() {
   const [, forceUpdate] = useState(0); // For power-up countdown updates
   const [showShop, setShowShop] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showPersonas, setShowPersonas] = useState<boolean>(() => {
+    try { return typeof window !== 'undefined' && localStorage.getItem('showPersonas') === 'true'; } catch { return false; }
+  });
+  const [showAdmin, setShowAdmin] = useState(false);
   const isMobile = useIsMobile();
   
   // Map player color to display info
@@ -67,6 +72,11 @@ export function GameUI() {
     }
   }, [activePowerUps.length]);
   
+  // Update showPersonas in localStorage
+  useEffect(() => {
+    try { if (typeof window !== 'undefined') localStorage.setItem('showPersonas', String(showPersonas)); } catch { }
+  }, [showPersonas]);
+  
   const handleStartGame = () => {
     setShowTutorial(false);
     // Show first-level tutorial on level 1
@@ -81,23 +91,6 @@ export function GameUI() {
     setShowFirstLevelTutorial(false);
     startGame();
   };
-  
-  const handleChimeDonation = () => {
-    const chimeSign = "$nolaDevelopmentIncubator";
-    navigator.clipboard.writeText(chimeSign).then(() => {
-      toast.success("Copied to clipboard!", {
-        description: `Send via Chime Pay Anyone to ${chimeSign}`,
-        duration: 5000,
-      });
-    }).catch(() => {
-      toast.info("Chime Donation", {
-        description: `Send via Chime Pay Anyone to ${chimeSign}`,
-        duration: 5000,
-      });
-    });
-  };
-  
-  const progressPercentage = (score / targetScore) * 100;
   
   return (
     <>
@@ -223,24 +216,10 @@ export function GameUI() {
             </div>
           </div>
           
-          {/* Donate Buttons - Hidden on phones */}
+          {/* Admin & Controls - Hidden on phones */}
           <div className="hidden md:flex absolute bottom-4 right-4 pointer-events-auto flex-col gap-2">
-            <Button
-              onClick={() => window.open('https://replit.com/refer/blundin', '_blank')}
-              size="lg"
-              className="bg-gradient-to-r from-pink-600 to-red-600 hover:from-pink-700 hover:to-red-700 border-2 border-yellow-400 text-white font-bold shadow-lg"
-            >
-              <Heart size={20} className="mr-2" fill="currentColor" />
-              Support Development
-            </Button>
-            <Button
-              onClick={handleChimeDonation}
-              size="lg"
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 border-2 border-yellow-400 text-white font-bold shadow-lg"
-            >
-              <DollarSign size={20} className="mr-2" />
-              Donate via Chime
-            </Button>
+            <Button onClick={() => setShowAdmin(true)} size="lg" className="bg-gray-800 text-white border-2 border-yellow-400">Admin</Button>
+            <Button onClick={() => { fetch('/bots.override.json').then(()=>window.dispatchEvent(new Event('bots:updated'))); }} size="lg" className="bg-purple-700 text-white border-2 border-yellow-400">Reload config</Button>
           </div>
           
           {/* Combo Timer - Top Center - Compact on phones */}
@@ -292,13 +271,23 @@ export function GameUI() {
                           boxShadow: `0 0 10px ${bot.color}, inset 0 0 6px rgba(255,255,255,0.4)`
                         }}
                       />
-                      <span className="text-xs text-white font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{bot.id}</span>
+                      <span className="text-xs text-white font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{bot.displayName ?? bot.id}{showPersonas && bot.persona ? ` — ${bot.persona}` : ''}</span>
                     </div>
                     <span className="text-base font-black text-yellow-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{bot.catches}</span>
                   </div>
                 ))}
               </div>
             </Card>
+          </div>
+          
+          {/* Small HUD toggles - top-right compact */}
+          <div className="absolute top-4 right-4">
+            <div className="bg-black/60 p-2 rounded-md pointer-events-auto">
+              <label className="flex items-center gap-2 text-white text-xs">
+                <input type="checkbox" checked={showPersonas} onChange={(e) => setShowPersonas(e.target.checked)} />
+                <span>Show Personas (debug)</span>
+              </label>
+            </div>
           </div>
           
           {/* Controls Hint - Hidden on phones */}
@@ -324,6 +313,9 @@ export function GameUI() {
       
       {/* First Level Tutorial */}
       {showFirstLevelTutorial && <FirstLevelTutorial onComplete={handleTutorialComplete} />}
+      
+      {/* Admin Modal */}
+      {showAdmin && <AdminModal isOpen={showAdmin} onClose={() => setShowAdmin(false)} />}
     </>
   );
 }

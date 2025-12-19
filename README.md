@@ -1,5 +1,8 @@
 # 🎭 NDI_MardiGrasParade
 
++> Playtest (public): Try the live build: https://mardi-gras-parade-game.vercel.app/
++> Developer (local): Run the dev server and open http://localhost:5000
++
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6)](https://www.typescriptlang.org/)
@@ -33,23 +36,68 @@ The deployed application is **fully public** - anyone with the URL can play the 
 
 ## 🚀 Quick Start (Local Development)
 
-Get the simulator running in under 2 minutes:
+Get the simulator running in under 2 minutes (developer) — or open the public playtest (tester):
 
 ```bash
 # Clone repository
-git clone https://github.com/FreeLundin/Nola-Developer-Incubator.git
-cd Nola-Developer-Incubator
+git clone https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame.git
+cd MardiGrasParadeGame
 
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server (dev):
 npm run dev
 
-# Open browser → http://localhost:5000
+# Open locally → http://localhost:5000
+# Public playtest (tester) → https://mardi-gras-parade-game.vercel.app/
 ```
 
-That's it! The simulator will open in your default browser.
+**Which link should I use?**
+- Testers / non-devs: use the Public playtest → https://mardi-gras-parade-game.vercel.app/
+- Developers: run `npm run dev` and open the local URL → http://localhost:5000
+
+**Playwright / CI**: To run Playwright against the public deploy, set `PLAYTEST_URL` to the Vercel URL in GitHub Secrets or locally before running tests.
+
+PowerShell (local test):
+
+```powershell
+$env:PLAYTEST_URL = 'https://mardi-gras-parade-game.vercel.app'; npx playwright test
+```
+
+Or on macOS / Linux:
+
+```bash
+export PLAYTEST_URL='https://mardi-gras-parade-game.vercel.app' && npx playwright test
+```
+
+That's it! The simulator will open in your default browser (or open the public link for a hosted playtest).
+
+---
+
+## 🔗 Quick Public Playtest (one-click)
+
+If you want to share the running build publicly (free, uses Cloudflare Tunnel):
+
+1. Start the dev server locally:
+
+```powershell
+npm install; npm run dev
+```
+
+2. In a separate PowerShell, run the one-click launcher (opens the public URL and saves a QR):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\launch-cloudflared.ps1
+```
+
+3. The public URL and QR are shown/created by the script; share the URL (example: `https://mardi-gras-parade-game.vercel.app`).
+
+Note: You must have a configured Cloudflare tunnel/hostname or cloudflared installed and authenticated for the provided hostname to work.
+
+### Admin / Bot Overrides
+- Open the in-game Admin modal (HUD → Admin) to edit bot display names and personas locally; changes save to `bots.override.json` via `/admin/bots` and apply immediately.
+- You can also edit `bots.override.json` at the project root and reload the config in-game using the HUD `Reload config` button or run in console: `fetch('/bots.override.json').then(()=>window.dispatchEvent(new Event('bots:updated')))`.
 
 ---
 
@@ -205,6 +253,10 @@ NODE_ENV=development
 - **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - How to contribute to the project
 - **[DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md)** - Detailed technical setup and development workflow
 
+### Community & Contact
+- **Project Lead** - Brian C Lundin
+- **Discord (community)** - Nola Unreal Developer Incubator: https://discord.com/channels/809846008842158161/1424089949224960031
+
 ### Code Resources
 - **Backend API** - Express.js REST API (see `server/routes.ts`)
 - **Database Schema** - Drizzle ORM schema (see `shared/schema.ts`)
@@ -291,53 +343,21 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for specific guidelines.
 
 ---
 
-## 📝 License
+## 🚨 Troubleshooting & Public Playtest
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+If the public playtest URL returns an error (503 or similar):
 
----
+- Confirm the server is running locally: `npm run dev` (serves on http://localhost:5000)
+- Start the tunnel (if you control Cloudflare/hostname): run the one-click PowerShell script in `scripts/launch-cloudflared.ps1` or run cloudflared manually.
+- Check the health endpoint: `curl http://localhost:5000/health` should return `{ status: 'ok' }`.
+- If the hostname is managed via Cloudflare, ensure DNS is pointed to the tunnel and the hostname is active.
 
-## 🙏 Acknowledgments
+One-click: `powershell -ExecutionPolicy Bypass -File scripts\launch-cloudflared.ps1`
 
-### Technology
-- **React Three Fiber** by Poimandres - Amazing React renderer for Three.js
-- **Three.js** by Mr.doob - Powerful 3D graphics library
-- **TailwindCSS** by Tailwind Labs - Excellent utility-first CSS
-- **Drizzle ORM** by Drizzle Team - Lightweight TypeScript ORM
-
-### Inspiration
-- **Mardi Gras** - Celebrating the rich culture and traditions of New Orleans
-- **Parade Culture** - The joy and community spirit of festival celebrations
 
 ---
 
-## 🌟 Community & Support
+## 🛡️ Server & Deployment Updates (2025-12-18)
 
-### Getting Help
-- **📖 Documentation** - Check [DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md) first
-- **🐛 Issues** - [Create an issue](https://github.com/FreeLundin/Nola-Developer-Incubator/issues) for bugs or feature requests
-- **💬 Discussions** - [GitHub Discussions](https://github.com/FreeLundin/Nola-Developer-Incubator/discussions) for questions and ideas
-
-### Stay Connected
-- **GitHub** - [FreeLundin/Nola-Developer-Incubator](https://github.com/FreeLundin/Nola-Developer-Incubator)
-- **Project Lead** - Brandon Lundin
-
----
-
-## 🎉 Let's Celebrate Mardi Gras!
-
-NDI_MardiGrasParade brings the excitement of Mardi Gras parades to players everywhere. Whether you're familiar with the tradition or experiencing it for the first time, we hope you enjoy catching beads and celebrating!
-
-**Laissez les bons temps rouler!** (Let the good times roll!)
-
----
-
-<div align="center">
-
-**⭐ Star this repo if you like the project! ⭐**
-
-[![GitHub stars](https://img.shields.io/github/stars/FreeLundin/Nola-Developer-Incubator?style=social)](https://github.com/FreeLundin/Nola-Developer-Incubator/stargazers)
-
-**Made with ❤️ in the spirit of Mardi Gras**
-
-</div>
+- Graceful shutdown implemented: server now tracks open sockets and destroys lingering connections on shutdown. This improves reliability when restarting under process managers (pm2) or tunnels (cloudflared).
+- Use `startServer()` export from `server/index.ts` for programmatic start/shutdown in tests/CI.
