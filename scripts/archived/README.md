@@ -19,3 +19,11 @@ If you need to restore tunnel support:
 Commit message suggestion when deleting these files:
 `chore(deploy): remove archived cloudflared binary and logs`
 
+---
+
+Archived on: 2025-12-19
+Archive commit: 5563321
+
+Files moved to: `scripts/archived/binbackup/`
+
+If this archive needs to be reverted, restore files from git history or from `scripts/archived/binbackup/` and update the scripts accordingly.
