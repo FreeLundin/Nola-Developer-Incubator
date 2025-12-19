@@ -32,6 +32,20 @@ npm run dev
 # Or open public playtest → https://mardigrasparadesim2026.busaradigitalstrategy.com
 ```
 
+**Playtest (Vercel)**: You created a Vercel domain — to point Playwright tests and CI at it, set the environment variable `PLAYTEST_URL` to your Vercel URL (example: `https://mardigrasparadesim2026.vercel.app`) in your GitHub Actions workflow or locally before running tests:
+
+PowerShell (local test):
+
+```powershell
+$env:PLAYTEST_URL = 'https://mardigrasparadesim2026.vercel.app'; npx playwright test
+```
+
+Or on macOS / Linux:
+
+```bash
+export PLAYTEST_URL='https://mardigrasparadesim2026.vercel.app' && npx playwright test
+```
+
 That's it! The simulator will open in your default browser (or open the public link for a hosted playtest).
 
 ---
@@ -293,74 +307,3 @@ One-click: `powershell -ExecutionPolicy Bypass -File scripts\launch-cloudflared.
 - Use `startServer()` export from `server/index.ts` for programmatic start/shutdown in tests/CI.
 
 ---
-
-## Quick GH Pages deploy (automatic)
-
-This repository includes a GitHub Actions workflow that builds the `client/` Vite app and deploys the static output to the `gh-pages` branch.
-
-- The workflow runs on push to `main` and builds the project using `npm run build`.
-- The generated static site is published from `dist/public` to the `gh-pages` branch.
-
-To trigger a deploy immediately:
-
-```bash
-# push your changes to main and the workflow will run automatically
-git add .
-git commit -m "chore(docs): update and deploy"
-git push origin main
-```
-
-After the workflow completes, enable Pages in your repository settings to serve the `gh-pages` branch.
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-### Technology
-- **React Three Fiber** by Poimandres - Amazing React renderer for Three.js
-- **Three.js** by Mr.doob - Powerful 3D graphics library
-- **TailwindCSS** by Tailwind Labs - Excellent utility-first CSS
-- **Drizzle ORM** by Drizzle Team - Lightweight TypeScript ORM
-
-### Inspiration
-- **Mardi Gras** - Celebrating the rich culture and traditions of New Orleans
-- **Parade Culture** - The joy and community spirit of festival celebrations
-
----
-
-## 🌟 Community & Support
-
-### Getting Help
-- **📖 Documentation** - Check [DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md) first
-- **🐛 Issues** - [Create an issue](https://github.com/FreeLundin/Nola-Developer-Incubator/issues) for bugs or feature requests
-- **💬 Discussions** - [GitHub Discussions](https://github.com/FreeLundin/Nola-Developer-Incubator/discussions) for questions and ideas
-
-### Stay Connected
-- **GitHub** - [FreeLundin/Nola-Developer-Incubator](https://github.com/FreeLundin/Nola-Developer-Incubator)
-- **Project Lead** - Brian C Lundin
-
----
-
-## 🎉 Let's Celebrate Mardi Gras!
-
-NDI_MardiGrasParade brings the excitement of Mardi Gras parades to players everywhere. Whether you're familiar with the tradition or experiencing it for the first time, we hope you enjoy catching beads and celebrating!
-
-**Laissez les bons temps rouler!** (Let the good times roll!)
-
----
-
-<div align="center">
-
-**⭐ Star this repo if you like the project! ⭐**
-
-[![GitHub stars](https://img.shields.io/github/stars/FreeLundin/Nola-Developer-Incubator?style=social)](https://github.com/FreeLundin/Nola-Developer-Incubator/stargazers)
-
-**Made with ❤️ in the spirit of Mardi Gras**
-
-</div>

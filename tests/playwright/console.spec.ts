@@ -1,6 +1,9 @@
 // @ts-nocheck
 import { test, expect } from '@playwright/test';
 
+// Use PLAYTEST_URL so tests can run against a public host (Vercel) or localhost fallback
+const BASE = process.env.PLAYTEST_URL || 'http://localhost:5000';
+
 // This test opens the app, captures console messages, starts the game, and fails if there are console.error messages.
 test('app loads with no console.error', async ({ page }) => {
   const errors = [];
@@ -32,7 +35,8 @@ test('app loads with no console.error', async ({ page }) => {
   await page.route('**/performance.radar.cloudflare.com/**', route => route.abort());
   await page.route('**/beacon.js', route => route.abort());
 
-  await page.goto('http://localhost:5000');
+  // Use configurable base so CI can point at Vercel domain via PLAYTEST_URL
+  await page.goto(BASE);
   await page.waitForSelector('canvas', { timeout: 15000 });
 
   // Start the game
