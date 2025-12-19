@@ -1,78 +1,22 @@
-import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
-import { type Server } from "http";
+import { createApp } from './express-app';
+import { registerRoutes } from './routes';
+import { setupVite, serveStatic, log } from './vite';
+import { type Server } from 'http';
 import { fileURLToPath } from 'url';
 
 // ESM-safe main module check
 const __filename = fileURLToPath(import.meta.url);
 const isMain = typeof process !== 'undefined' && process.argv[1] === __filename;
 
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    // @ts-ignore - preserve original res.json signature
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
-
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api") || path === "/health") {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        try {
-          logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-        } catch {
-          // ignore stringify errors
-        }
-      }
-
-      if (logLine.length > 200) {
-        logLine = logLine.slice(0, 199) + "…";
-      }
-
-      log(logLine);
-    }
-  });
-
-  next();
-});
-
 // Start server helper that returns the http.Server and a shutdown function so tests/pm2 can use it
 export async function startServer(): Promise<{ server: Server; shutdown: (code?: number) => Promise<void> }> {
+  const app = createApp();
   const server = await registerRoutes(app);
-
-  // Global error handler - return JSON but don't rethrow to avoid crashing the process
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    try {
-      res.status(status).json({ message });
-    } catch (e) {
-      // If sending JSON fails, fallback to plain text
-      try {
-        res.status(status).type('text/plain').send(message);
-      } catch {
-        // nothing else we can do
-      }
-    }
-    // do not throw after responding
-  });
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
+  if (app.get('env') === 'development') {
     await setupVite(app, server as Server);
   } else {
     serveStatic(app);
