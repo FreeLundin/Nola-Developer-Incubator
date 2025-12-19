@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import { type Server } from "http";
-import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
 
 // Lightweight logger that doesn't depend on Vite. This avoids pulling Vite into
@@ -26,6 +25,10 @@ export async function setupVite(app: Express, server: Server) {
   // This keeps the serverless bundle small and avoids runtime failures when
   // Vite is not available in production environments.
   const { createServer: createViteServer, createLogger } = await import("vite");
+
+  // Dynamically load the vite config only when we actually need it (development)
+  const viteConfigModule = await import("../vite.config");
+  const viteConfig = (viteConfigModule && (viteConfigModule.default || viteConfigModule)) as any;
 
   const viteLogger = createLogger();
 
