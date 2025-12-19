@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useState, useCallback, useEffect } from "react";
 import { KeyboardControls } from "@react-three/drei";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import "@fontsource/inter";
 import { GameScene } from "./components/game/GameScene";
 import { GameUI } from "./components/game/GameUI";
@@ -69,6 +70,7 @@ function App() {
           <TouchControls onInput={handleJoystickInput} />
         )}
       </KeyboardControls>
+      <SpeedInsights />
     </div>
   );
 }
