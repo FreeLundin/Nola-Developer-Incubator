@@ -1,7 +1,8 @@
 # 🎭 NDI_MardiGrasParade
 
-+> Playtest (public): Try the live build: https://mardi-gras-parade-game.vercel.app/
++> Playtest (public): If deployed, try the live build at your Vercel URL (e.g., https://your-project-name.vercel.app/)
 +> Developer (local): Run the dev server and open http://localhost:5000
++> **Note:** The public demo may not be currently deployed. Set `PLAYTEST_URL` locally or as a repository secret to run tests against your own deployment.
 +
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
@@ -50,25 +51,25 @@ npm install
 npm run dev
 
 # Open locally → http://localhost:5000
-# Public playtest (tester) → https://mardi-gras-parade-game.vercel.app/
+# Public playtest (tester) → https://your-project-name.vercel.app/ (if deployed)
 ```
 
 **Which link should I use?**
-- Testers / non-devs: use the Public playtest → https://mardi-gras-parade-game.vercel.app/
+- Testers / non-devs: use the Public playtest → https://your-project-name.vercel.app/ (if you have deployed your own instance)
 - Developers: run `npm run dev` and open the local URL → http://localhost:5000
 
-**Playwright / CI**: To run Playwright against the public deploy, set `PLAYTEST_URL` to the Vercel URL in GitHub Secrets or locally before running tests.
+**Playwright / CI**: To run Playwright against a public deploy, set `PLAYTEST_URL` to your Vercel URL in GitHub Secrets or locally before running tests.
 
 PowerShell (local test):
 
 ```powershell
-$env:PLAYTEST_URL = 'https://mardi-gras-parade-game.vercel.app'; npx playwright test
+$env:PLAYTEST_URL = 'https://your-project-name.vercel.app'; npx playwright test
 ```
 
 Or on macOS / Linux:
 
 ```bash
-export PLAYTEST_URL='https://mardi-gras-parade-game.vercel.app' && npx playwright test
+export PLAYTEST_URL='https://your-project-name.vercel.app' && npx playwright test
 ```
 
 That's it! The simulator will open in your default browser (or open the public link for a hosted playtest).

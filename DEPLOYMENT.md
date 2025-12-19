@@ -99,18 +99,20 @@ Once deployed, your game will be accessible at URLs like these:
 
 ### Production URLs
 ```
-Main Application:  https://mardigras-parade.vercel.app/
-API Health Check:  https://mardigras-parade.vercel.app/api/health
-Static Assets:     https://mardigras-parade.vercel.app/assets/[filename]
+Main Application:  https://your-project-name.vercel.app/
+API Health Check:  https://your-project-name.vercel.app/health
+Static Assets:     https://your-project-name.vercel.app/assets/[filename]
 ```
 
 ### Preview URLs (for testing branches/PRs)
 ```
-Feature Branch:    https://mardigras-parade-git-feature-user.vercel.app/
-Pull Request:      https://mardigras-parade-pr-123.vercel.app/
+Feature Branch:    https://your-project-name-git-feature-branch.vercel.app/
+Pull Request:      https://your-project-name-pr-123.vercel.app/
 ```
 
-**Note:** Replace `mardigras-parade` with your actual project name chosen during deployment.
+**Note:** Replace `your-project-name` with your actual project name chosen during deployment. If your deployment mounts the API under `/api`, use `/api/health` instead of `/health` for the health check endpoint.
+
+**Testing Note:** If Playwright tests depend on a public demo, set `PLAYTEST_URL` as a repository secret or environment variable to point to your deployed instance.
 
 ---
 
@@ -126,7 +128,7 @@ Pull Request:      https://mardigras-parade-pr-123.vercel.app/
 
 2. **Test API**
    ```
-   https://your-project-name.vercel.app/api/health
+   https://your-project-name.vercel.app/health
    ```
    Should return:
    ```json
@@ -136,6 +138,8 @@ Pull Request:      https://mardigras-parade-pr-123.vercel.app/
      "env": "production"
    }
    ```
+   
+   **Note:** The server exposes the health endpoint at `/health`. If your deployment configuration mounts the API under `/api`, use `/api/health` instead.
 
 3. **Share with Others**
    - Copy the URL
