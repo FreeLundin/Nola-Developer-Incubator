@@ -75,15 +75,7 @@
       <workItem from="1765769387550" duration="6013000" />
       <workItem from="1766052624463" duration="16123000" />
       <workItem from="1766069327596" duration="11461000" />
-      <workItem from="1766141886923" duration="3808000" />
-    </task>
-    <task id="LOCAL-00008" summary="feat(ui): add dev QR code overlay for quick app access on mobile devices">
-      <option name="closed" value="true" />
-      <created>1765233100449</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1765233100449</updated>
+      <workItem from="1766141886923" duration="4440000" />
     </task>
     <task id="LOCAL-00009" summary="feat(bots): implement local bot admin interface and runtime configuration; enhance audio management with Howler">
       <option name="closed" value="true" />
@@ -469,7 +461,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766145191769</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="feat(workspace): add new XML configuration files and clean up existing task summaries">
+      <option name="closed" value="true" />
+      <created>1766146193490</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1766146193490</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -479,7 +479,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat(scripts): add confirm-public-url helper for improved URL handling" />
     <MESSAGE value="feat(docs): add product backlog and update README for public playtest visibility" />
     <MESSAGE value="feat(scripts): add consolidate-single-location script for safe file merging" />
     <MESSAGE value="fix(docs): update project name references from &quot;Mardi Gras Parade&quot; to &quot;NDI_MardiGrasParade&quot;" />
@@ -504,7 +503,8 @@
     <MESSAGE value="chore(ci): configure GitHub Pages deployment and add polling for activation" />
     <MESSAGE value="chore: update workspace.xml to reflect recent changes and clean up task summaries" />
     <MESSAGE value="chore(workspace): clean up task summaries and update workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore(workspace): clean up task summaries and update workspace.xml" />
+    <MESSAGE value="feat(workspace): add new XML configuration files and clean up existing task summaries" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(workspace): add new XML configuration files and clean up existing task summaries" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
