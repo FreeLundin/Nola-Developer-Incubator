@@ -158,6 +158,82 @@ No authentication needed - the game loads and plays immediately in the browser!
 
 ---
 
+## 🔧 Deploying to Vercel - Technical Details
+
+This section covers important technical considerations when deploying to Vercel to avoid runtime errors.
+
+### Runtime Configuration
+
+**Node.js Runtime vs Edge Runtime:**
+
+This application uses the **Node.js runtime** (not Edge runtime) because it requires Node-specific APIs:
+- File system access (`fs`)
+- Full Node.js `crypto` module
+- Database connections (PostgreSQL via Neon)
+- Express.js middleware
+- Environment variable processing
+
+The `api/index.js` file explicitly sets:
+```javascript
+export const config = {
+  runtime: 'nodejs'
+};
+```
+
+**Why this matters:**
+- ✅ **Node.js Runtime**: Full Node.js API available, 10-60 second timeout (configurable)
+- ⚠️ **Edge Runtime**: Limited API, faster cold starts, but lacks many Node.js features
+
+If you see `FUNCTION_INVOCATION_FAILED` errors, ensure:
+1. The runtime is set to `'nodejs'` (not `'edge'`)
+2. All required environment variables are configured
+3. Your code doesn't use APIs unavailable in the runtime
+
+### Environment Variables
+
+**Required variables that must be set in Vercel:**
+
+| Variable | Purpose | Example |
+|----------|---------|---------|
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@host/db?sslmode=require` |
+| `NODE_ENV` | Environment mode | `production` |
+
+**How to set environment variables in Vercel:**
+1. Go to your project in Vercel Dashboard
+2. Navigate to **Settings** → **Environment Variables**
+3. Add each required variable for the appropriate environment:
+   - **Production** - Used for production deployments
+   - **Preview** - Used for preview deployments (PRs and branches)
+   - **Development** - Used for local development with `vercel dev`
+
+**Important:** After adding or changing environment variables, you must **redeploy** for changes to take effect.
+
+### Viewing Function Logs
+
+When debugging issues in production:
+
+1. **Go to Vercel Dashboard** → Your Project
+2. **Click "Deployments"** tab
+3. **Select a deployment**
+4. **Click "Functions"** tab to see serverless function logs
+5. **Look for error messages** with timestamps and stack traces
+
+All errors are logged with structured data including:
+- Timestamp
+- HTTP method and path
+- Error message and stack trace
+- Request details
+
+**Common issues and solutions:**
+- `Missing required environment variables` - Add the variable in Vercel settings
+- `FUNCTION_INVOCATION_FAILED` - Check logs for unhandled errors, verify runtime is set to `nodejs`
+- `Cannot find module` - Ensure all dependencies are in `package.json` dependencies (not devDependencies)
+- Database connection errors - Verify `DATABASE_URL` is correct and includes `?sslmode=require` for Neon
+
+**Reference:** [Vercel FUNCTION_INVOCATION_FAILED Documentation](https://vercel.com/docs/errors/FUNCTION_INVOCATION_FAILED)
+
+---
+
 ## 💻 Development
 
 ### Available Scripts

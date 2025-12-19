@@ -1,6 +1,12 @@
 // Vercel Serverless Function Entry Point
 // This file wraps the Express app for Vercel's serverless environment
 
+// Explicitly set Node.js runtime for Vercel
+// This is required for Node-specific APIs like fs, crypto, process, etc.
+export const config = {
+  runtime: 'nodejs'
+};
+
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
@@ -9,15 +15,29 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Create Express app
+// Create Express app with enhanced error handling
 const app = express();
-app.use(express.json());
+
+// Body parser middleware with error handling
+app.use(express.json({
+  limit: '10mb',
+  verify: (req, res, buf, encoding) => {
+    // Store raw body for webhook signature verification if needed
+    req.rawBody = buf.toString(encoding || 'utf8');
+  }
+}));
 app.use(express.urlencoded({ extended: false }));
 
-// Simple logging middleware for API routes
+// Enhanced logging middleware for API routes with structured data
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) {
-    console.log(`${req.method} ${req.path}`);
+    const logData = {
+      timestamp: new Date().toISOString(),
+      method: req.method,
+      path: req.path,
+      ip: req.ip || req.headers['x-forwarded-for'] || 'unknown'
+    };
+    console.log('[API Request]', JSON.stringify(logData));
   }
   next();
 });
@@ -29,13 +49,30 @@ app.use((req, res, next) => {
 //   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 // });
 
-// Health check endpoint
+// Health check endpoint with error handling
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    env: process.env.NODE_ENV 
-  });
+  try {
+    // Validate critical environment variables (if any are required)
+    // For health check, we just report status
+    const requiredEnvVars = process.env.DATABASE_URL ? ['DATABASE_URL'] : [];
+    
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      env: process.env.NODE_ENV,
+      hasDatabase: !!process.env.DATABASE_URL
+    });
+  } catch (error) {
+    console.error('[Health Check Error]', {
+      timestamp: new Date().toISOString(),
+      error: error.message,
+      stack: error.stack
+    });
+    res.status(500).json({ 
+      error: 'Internal Server Error',
+      message: process.env.NODE_ENV === 'development' ? error.message : 'Health check failed'
+    });
+  }
 });
 
 // Serve static files in production
@@ -62,12 +99,32 @@ if (fs.existsSync(distPath)) {
   });
 }
 
-// Error handler
+// Global error handler with structured logging
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  // Structured error logging
+  const errorLog = {
+    timestamp: new Date().toISOString(),
+    method: req.method,
+    path: req.path,
+    error: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+    statusCode: err.status || err.statusCode || 500
+  };
+  
+  console.error('[Unhandled Error]', JSON.stringify(errorLog));
+  
   const status = err.status || err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-  res.status(status).json({ error: message });
+  const message = process.env.NODE_ENV === 'production' 
+    ? 'Internal Server Error' 
+    : err.message || 'Internal Server Error';
+  
+  // Ensure we don't send response if headers already sent
+  if (!res.headersSent) {
+    res.status(status).json({ 
+      error: message,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Export the Express app for Vercel

@@ -39,12 +39,30 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+    // Structured error logging
+    const errorLog = {
+      timestamp: new Date().toISOString(),
+      method: req.method,
+      path: req.path,
+      error: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+      statusCode: err.status || err.statusCode || 500
+    };
+    
+    console.error('[Unhandled Error]', JSON.stringify(errorLog));
+    
     const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    const message = process.env.NODE_ENV === 'production' 
+      ? "Internal Server Error" 
+      : err.message || "Internal Server Error";
 
-    res.status(status).json({ message });
-    throw err;
+    if (!res.headersSent) {
+      res.status(status).json({ 
+        error: message,
+        timestamp: new Date().toISOString()
+      });
+    }
   });
 
   // importantly only setup vite in development and after
