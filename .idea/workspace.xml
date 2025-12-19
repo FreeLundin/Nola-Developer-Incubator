@@ -73,15 +73,7 @@
       <workItem from="1765769387550" duration="6013000" />
       <workItem from="1766052624463" duration="16123000" />
       <workItem from="1766069327596" duration="11461000" />
-      <workItem from="1766141886923" duration="5183000" />
-    </task>
-    <task id="LOCAL-00010" summary="refactor: simplify bots configuration loading by removing unnecessary variable">
-      <option name="closed" value="true" />
-      <created>1765275513513</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1765275513513</updated>
+      <workItem from="1766141886923" duration="5494000" />
     </task>
     <task id="LOCAL-00011" summary="docs: enhance design documentation with project links and asset checklist generation">
       <option name="closed" value="true" />
@@ -467,7 +459,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766147398181</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="feat(workspace): update XML configuration and clean up task summaries">
+      <option name="closed" value="true" />
+      <created>1766147747978</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1766147747978</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
