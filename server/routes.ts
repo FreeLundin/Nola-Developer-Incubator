@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import path from "path";
 import fs from "fs";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export function attachRoutes(app: Express) {
   // health check
   app.get('/health', (_req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 
@@ -21,6 +21,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // simple admin-only route to save overrides (local development only)
   app.post('/admin/bots', (req, res) => {
+    // Prevent writes in production / serverless environments (e.g., Vercel)
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+      return res.status(403).json({ error: 'writing overrides is disabled in production' });
+    }
+
     try {
       const file = path.resolve(process.cwd(), 'bots.override.json');
       fs.writeFileSync(file, JSON.stringify(req.body, null, 2), 'utf-8');
@@ -29,6 +34,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ error: 'failed to save' });
     }
   });
+}
 
+export async function registerRoutes(app: Express): Promise<Server> {
+  // attach routes to the provided app then return an http.Server
+  attachRoutes(app);
   return createServer(app);
 }
