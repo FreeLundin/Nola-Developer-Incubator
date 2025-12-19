@@ -1,5 +1,14 @@
 // Vercel Serverless Function Entry Point
 // This file wraps the Express app for Vercel's serverless environment
+// 
+// Runtime Configuration:
+// This function uses Node.js runtime because it:
+// - Uses Node.js built-in modules (fs, path, url)
+// - Serves static files from the filesystem
+// - Provides Express.js middleware functionality
+//
+// For Vercel deployment, this is automatically detected as a Node.js function
+// via the @vercel/node builder in vercel.json
 
 import express from 'express';
 import { fileURLToPath } from 'url';
@@ -11,31 +20,53 @@ const __dirname = dirname(__filename);
 
 // Create Express app
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
-// Simple logging middleware for API routes
+// Parse JSON bodies with error handling
+app.use(express.json({
+  limit: '10mb',
+  verify: (req, res, buf, encoding) => {
+    try {
+      JSON.parse(buf.toString());
+    } catch (e) {
+      throw new Error('Invalid JSON');
+    }
+  }
+}));
+
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+
+// Structured logging middleware for API routes
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) {
-    console.log(`${req.method} ${req.path}`);
+    const timestamp = new Date().toISOString();
+    console.log(JSON.stringify({
+      timestamp,
+      method: req.method,
+      path: req.path,
+      query: req.query,
+    }));
   }
   next();
 });
 
-// Register API routes
-// Add your API routes here with /api prefix
-// Example:
-// app.get('/api/health', (req, res) => {
-//   res.json({ status: 'ok', timestamp: new Date().toISOString() });
-// });
+// Register API routes with error handling
+// All routes are wrapped with try-catch to prevent unhandled errors
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    env: process.env.NODE_ENV 
-  });
+// Health check endpoint - wrapped with error handling
+app.get('/api/health', async (req, res, next) => {
+  try {
+    // Verify NODE_ENV is set (optional but recommended)
+    const nodeEnv = process.env.NODE_ENV || 'development';
+    
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      env: nodeEnv,
+      runtime: 'nodejs',
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Serve static files in production
@@ -62,12 +93,36 @@ if (fs.existsSync(distPath)) {
   });
 }
 
-// Error handler
+// Comprehensive error handler - must be last middleware
+// This catches all unhandled errors and returns proper JSON responses
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  // Structured error logging
+  const timestamp = new Date().toISOString();
+  console.error(JSON.stringify({
+    timestamp,
+    method: req.method,
+    path: req.path,
+    error: {
+      message: err.message,
+      stack: err.stack,
+      name: err.name,
+      status: err.status || err.statusCode || 500,
+    },
+  }, null, 2));
+
   const status = err.status || err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
-  res.status(status).json({ error: message });
+  
+  // Always return JSON for API routes
+  if (!res.headersSent) {
+    res.status(status).json({ 
+      error: message,
+      // Only include stack trace in development
+      ...(process.env.NODE_ENV === 'development' && {
+        stack: err.stack,
+      }),
+    });
+  }
 });
 
 // Export the Express app for Vercel

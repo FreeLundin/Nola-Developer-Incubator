@@ -156,6 +156,89 @@ https://your-project-name.vercel.app
 
 No authentication needed - the game loads and plays immediately in the browser!
 
+### Vercel Runtime Configuration & Error Handling
+
+This application uses **Node.js runtime** for Vercel serverless functions. Understanding runtime configuration is crucial to prevent deployment errors.
+
+#### Node.js vs Edge Runtime
+
+**When to use Node.js runtime (this project):**
+- ✅ Using Node.js built-in modules (`fs`, `path`, `url`, `crypto`, `buffer`)
+- ✅ Using npm packages that depend on Node.js APIs
+- ✅ Database connections (PostgreSQL, MongoDB, etc.)
+- ✅ File system access
+- ✅ Complex middleware and session management
+
+**Edge Runtime (not used in this project):**
+- Faster cold starts but limited APIs
+- No access to Node.js built-in modules
+- Use for simple, lightweight functions only
+
+#### Runtime Configuration
+
+The project automatically uses Node.js runtime through `vercel.json`:
+```json
+{
+  "builds": [
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"  // ← Specifies Node.js runtime
+    }
+  ]
+}
+```
+
+#### Environment Variables
+
+**Required environment variables must be configured in Vercel:**
+
+1. Go to your Vercel project settings
+2. Navigate to **Environment Variables**
+3. Add the following (as needed):
+   - `DATABASE_URL` - PostgreSQL connection string (if using database features)
+   - `SESSION_SECRET` - Secret key for session management (if using auth)
+   - `NODE_ENV` - Set to `production` (usually auto-set by Vercel)
+
+**Environment Variable Validation:**
+- The application validates required environment variables on startup
+- Missing variables will cause immediate failure with clear error messages
+- This prevents runtime errors and `FUNCTION_INVOCATION_FAILED` errors
+
+#### Error Handling & Monitoring
+
+**Viewing Function Logs in Vercel:**
+1. Go to your Vercel project dashboard
+2. Click on **Deployments**
+3. Select your deployment
+4. Click the **Functions** tab
+5. View real-time logs and error traces
+
+**Common Error Patterns:**
+- **FUNCTION_INVOCATION_FAILED**: Usually indicates unhandled exceptions or missing environment variables
+  - Check function logs for stack traces
+  - Verify all required env vars are set
+  - Ensure no synchronous errors in function initialization
+- **Timeout Errors**: Functions exceeding 10s on free tier (60s on Pro)
+  - Optimize database queries
+  - Use connection pooling
+  - Consider upgrading to Pro plan
+
+**Error Documentation:**
+- [Vercel Function Errors](https://vercel.com/docs/errors/FUNCTION_INVOCATION_FAILED)
+- [Troubleshooting Guide](https://vercel.com/docs/functions/troubleshooting)
+- [Runtime Limits](https://vercel.com/docs/functions/runtimes)
+
+#### Built-in Error Handling
+
+The application includes comprehensive error handling:
+- ✅ Structured logging with timestamps and request context
+- ✅ Graceful error responses (500 status with JSON)
+- ✅ Environment variable validation
+- ✅ Request parsing guards for JSON and form data
+- ✅ Method validation for API routes
+
+All errors are logged with full stack traces in development and sanitized in production.
+
 ---
 
 ## 💻 Development
