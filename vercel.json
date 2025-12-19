@@ -12,8 +12,11 @@
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/server/vercel-handler.ts" },
-    { "src": "/(.*)", "dest": "/dist/public/index.html" }
+    { "src": "^/api/(.*)", "dest": "/server/vercel-handler.ts" },
+    { "src": "^/health$", "dest": "/server/vercel-handler.ts" },
+    { "src": "^/bots.override.json$", "dest": "/server/vercel-handler.ts" },
+    { "src": "^/admin/(.*)", "dest": "/server/vercel-handler.ts" },
+    { "handle": "filesystem" },
+    { "src": "^(?:/.*)?$", "dest": "/dist/public/index.html" }
   ]
 }
-
