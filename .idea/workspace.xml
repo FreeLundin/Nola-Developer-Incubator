@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="278ffe03-206f-45dd-ba97-e0376756bdce" name="Changes" comment="" />
+    <list default="true" id="278ffe03-206f-45dd-ba97-e0376756bdce" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/index.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -73,15 +76,7 @@
       <workItem from="1765769387550" duration="6013000" />
       <workItem from="1766052624463" duration="16123000" />
       <workItem from="1766069327596" duration="11461000" />
-      <workItem from="1766141886923" duration="5494000" />
-    </task>
-    <task id="LOCAL-00011" summary="docs: enhance design documentation with project links and asset checklist generation">
-      <option name="closed" value="true" />
-      <created>1765276751716</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1765276751716</updated>
+      <workItem from="1766141886923" duration="7007000" />
     </task>
     <task id="LOCAL-00012" summary="docs: add game design document summary outlining vision, mechanics, scoring, and development checklist">
       <option name="closed" value="true" />
@@ -467,7 +462,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766147747978</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="feat(workspace): update XML configuration and increment local tasks counter">
+      <option name="closed" value="true" />
+      <created>1766148054369</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1766148054369</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -477,7 +480,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat(scripts): add consolidate-single-location script for safe file merging" />
     <MESSAGE value="fix(docs): update project name references from &quot;Mardi Gras Parade&quot; to &quot;NDI_MardiGrasParade&quot;" />
     <MESSAGE value="feat: add initial implementation of game components and audio management" />
     <MESSAGE value="fix: improve server startup handling for Windows and enhance error logging" />
@@ -502,7 +504,8 @@
     <MESSAGE value="chore(workspace): clean up task summaries and update workspace.xml" />
     <MESSAGE value="feat(workspace): add new XML configuration files and clean up existing task summaries" />
     <MESSAGE value="feat(workspace): update XML configuration and clean up task summaries" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(workspace): update XML configuration and clean up task summaries" />
+    <MESSAGE value="feat(workspace): update XML configuration and increment local tasks counter" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(workspace): update XML configuration and increment local tasks counter" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

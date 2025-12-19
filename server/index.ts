@@ -146,12 +146,10 @@ export async function startServer(): Promise<{ server: Server; shutdown: (code?:
 if (isMain) {
   (async () => {
     const { shutdown } = await startServer();
-    // force exit if shutdown takes too long
-    const forced = setTimeout(() => {
-      log('forced shutdown timeout reached, exiting');
-      process.exit(1);
-    }, 20000);
-    // clear forced timer when shutdown completes
-    shutdown().then(() => clearTimeout(forced));
+    // Do not call shutdown() immediately — keep the server running and rely on signal handlers
+    // that were registered inside startServer() when running as main.
+
+    // Keep process alive. If a forced shutdown is needed, it will be handled by the installed signal handlers.
+    // If you want an explicit programmatic shutdown from this block, call shutdown() on signal handlers only.
   })();
 }
