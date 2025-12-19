@@ -1,6 +1,6 @@
 # 🎭 NDI_MardiGrasParade
 
-+> Playtest (public): Try the live build: https://mardi-gras-parade-game.vercel.app/
++> Playtest (public): https://your-project-name.vercel.app (Note: Public demo may not be deployed. Set `PLAYTEST_URL` if needed.)
 +> Developer (local): Run the dev server and open http://localhost:5000
 +
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
@@ -50,25 +50,25 @@ npm install
 npm run dev
 
 # Open locally → http://localhost:5000
-# Public playtest (tester) → https://mardi-gras-parade-game.vercel.app/
+# Public playtest (tester) → https://your-project-name.vercel.app (if deployed)
 ```
 
 **Which link should I use?**
-- Testers / non-devs: use the Public playtest → https://mardi-gras-parade-game.vercel.app/
+- Testers / non-devs: use the Public playtest → https://your-project-name.vercel.app (if deployed)
 - Developers: run `npm run dev` and open the local URL → http://localhost:5000
 
-**Playwright / CI**: To run Playwright against the public deploy, set `PLAYTEST_URL` to the Vercel URL in GitHub Secrets or locally before running tests.
+**Playwright / CI**: To run Playwright against a deployed instance, set `PLAYTEST_URL` to your actual Vercel URL in GitHub Secrets or locally before running tests.
 
 PowerShell (local test):
 
 ```powershell
-$env:PLAYTEST_URL = 'https://mardi-gras-parade-game.vercel.app'; npx playwright test
+$env:PLAYTEST_URL = 'https://your-project-name.vercel.app'; npx playwright test
 ```
 
 Or on macOS / Linux:
 
 ```bash
-export PLAYTEST_URL='https://mardi-gras-parade-game.vercel.app' && npx playwright test
+export PLAYTEST_URL='https://your-project-name.vercel.app' && npx playwright test
 ```
 
 That's it! The simulator will open in your default browser (or open the public link for a hosted playtest).
