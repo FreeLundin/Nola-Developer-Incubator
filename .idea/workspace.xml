@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="278ffe03-206f-45dd-ba97-e0376756bdce" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="278ffe03-206f-45dd-ba97-e0376756bdce" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,15 +73,7 @@
       <workItem from="1765769387550" duration="6013000" />
       <workItem from="1766052624463" duration="16123000" />
       <workItem from="1766069327596" duration="11461000" />
-      <workItem from="1766141886923" duration="4440000" />
-    </task>
-    <task id="LOCAL-00009" summary="feat(bots): implement local bot admin interface and runtime configuration; enhance audio management with Howler">
-      <option name="closed" value="true" />
-      <created>1765273893078</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1765273893078</updated>
+      <workItem from="1766141886923" duration="5183000" />
     </task>
     <task id="LOCAL-00010" summary="refactor: simplify bots configuration loading by removing unnecessary variable">
       <option name="closed" value="true" />
@@ -469,7 +459,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766146193490</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="feat(workspace): update XML configuration and clean up task summaries">
+      <option name="closed" value="true" />
+      <created>1766147398181</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1766147398181</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -479,7 +477,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="feat(docs): add product backlog and update README for public playtest visibility" />
     <MESSAGE value="feat(scripts): add consolidate-single-location script for safe file merging" />
     <MESSAGE value="fix(docs): update project name references from &quot;Mardi Gras Parade&quot; to &quot;NDI_MardiGrasParade&quot;" />
     <MESSAGE value="feat: add initial implementation of game components and audio management" />
@@ -504,7 +501,8 @@
     <MESSAGE value="chore: update workspace.xml to reflect recent changes and clean up task summaries" />
     <MESSAGE value="chore(workspace): clean up task summaries and update workspace.xml" />
     <MESSAGE value="feat(workspace): add new XML configuration files and clean up existing task summaries" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(workspace): add new XML configuration files and clean up existing task summaries" />
+    <MESSAGE value="feat(workspace): update XML configuration and clean up task summaries" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(workspace): update XML configuration and clean up task summaries" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
