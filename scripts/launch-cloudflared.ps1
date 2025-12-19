@@ -14,6 +14,17 @@ if (-Not (Test-Path $cloudflared)) {
   $cloudflared = "cloudflared"
 }
 
+# DEPRECATED: Cloudflare tunnel launcher removed
+#
+# This script used to launch a cloudflared tunnel and open a public URL.
+# Cloudflare tunnel support has been removed from the project and this
+# script is intentionally inert to prevent accidental usage.
+
+Write-Host "DEPRECATED: cloudflared launcher removed. Cloudflare tunnels are no longer supported in this project." -ForegroundColor Yellow
+Write-Host "See scripts/archived/README.md for instructions to restore or manually run cloudflared if you maintain a fork." -ForegroundColor Yellow
+
+exit 0
+
 # Start cloudflared as a background job
 $arg = "tunnel --url http://localhost:$LocalPort --no-autoupdate --hostname $PublicHost"
 Write-Host "Starting cloudflared with: $arg"

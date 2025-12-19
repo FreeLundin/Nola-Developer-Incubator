@@ -75,29 +75,12 @@ That's it! The simulator will open in your default browser (or open the public l
 
 ---
 
-## 🔗 Quick Public Playtest (one-click)
+## 🔗 Public Playtest
 
-If you want to share the running build publicly (free, uses Cloudflare Tunnel):
+Cloudflare Tunnel (cloudflared) support has been removed from this repository.
 
-1. Start the dev server locally:
-
-```powershell
-npm install; npm run dev
-```
-
-2. In a separate PowerShell, run the one-click launcher (opens the public URL and saves a QR):
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\launch-cloudflared.ps1
-```
-
-3. The public URL and QR are shown/created by the script; share the URL (example: `https://mardi-gras-parade-game.vercel.app`).
-
-Note: You must have a configured Cloudflare tunnel/hostname or cloudflared installed and authenticated for the provided hostname to work.
-
-### Admin / Bot Overrides
-- Open the in-game Admin modal (HUD → Admin) to edit bot display names and personas locally; changes save to `bots.override.json` via `/admin/bots` and apply immediately.
-- You can also edit `bots.override.json` at the project root and reload the config in-game using the HUD `Reload config` button or run in console: `fetch('/bots.override.json').then(()=>window.dispatchEvent(new Event('bots:updated')))`.
+- Developers: run the local dev server with `npm run dev` and open `http://localhost:5000`.
+- For a public instance, deploy to Vercel (recommended) or another hosting provider. See `README_VERCEL.md` for deployment instructions.
 
 ---
 
@@ -348,11 +331,8 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for specific guidelines.
 If the public playtest URL returns an error (503 or similar):
 
 - Confirm the server is running locally: `npm run dev` (serves on http://localhost:5000)
-- Start the tunnel (if you control Cloudflare/hostname): run the one-click PowerShell script in `scripts/launch-cloudflared.ps1` or run cloudflared manually.
 - Check the health endpoint: `curl http://localhost:5000/health` should return `{ status: 'ok' }`.
-- If the hostname is managed via Cloudflare, ensure DNS is pointed to the tunnel and the hostname is active.
-
-One-click: `powershell -ExecutionPolicy Bypass -File scripts\launch-cloudflared.ps1`
+- For a publicly accessible instance, deploy to Vercel (recommended) or another hosting provider.
 
 
 ---
