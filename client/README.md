@@ -33,6 +33,13 @@ The development server includes:
 - 🐛 **Source Maps** - Easy debugging in browser DevTools
 - 🎨 **PostCSS/Tailwind** - Automatic style processing
 
+## ▶️ Playtest Links
+
+- Public playtest (testers / non-devs): https://mardi-gras-parade-game.vercel.app/
+- Developer (local): Start the dev server and open http://localhost:5000
+
+These links are referenced in the project README and used by the Playwright CI. To run Playwright locally against the public deploy set `PLAYTEST_URL` to the Vercel URL.
+
 ## 📁 Project Structure
 
 ```

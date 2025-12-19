@@ -1,6 +1,7 @@
 # 🎭 NDI_MardiGrasParade
 
-+> Playtest (public): Try the live build: https://mardi-gras-parade-game.vercel.app/ — or use one-click launch: [docs/launch.html](./docs/launch.html). Scan `docs/browser-qr.svg` to open on mobile.
++> Playtest (public): Try the live build: https://mardi-gras-parade-game.vercel.app/
++> Developer (local): Run the dev server and open http://localhost:5000
 +
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
@@ -19,8 +20,8 @@ Get the simulator running in under 2 minutes (developer) — or open the public 
 
 ```bash
 # Clone repository
-git clone https://github.com/FreeLundin/Nola-Developer-Incubator.git
-cd Nola-Developer-Incubator
+git clone https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame.git
+cd MardiGrasParadeGame
 
 # Install dependencies
 npm install
@@ -29,10 +30,14 @@ npm install
 npm run dev
 
 # Open locally → http://localhost:5000
-# Or open public playtest → https://mardi-gras-parade-game.vercel.app/
+# Public playtest (tester) → https://mardi-gras-parade-game.vercel.app/
 ```
 
-**Playtest (Vercel)**: You created a Vercel domain — to point Playwright tests and CI at it, set the environment variable `PLAYTEST_URL` to your Vercel URL (example: `https://mardi-gras-parade-game.vercel.app`) in your GitHub Actions workflow or locally before running tests:
+**Which link should I use?**
+- Testers / non-devs: use the Public playtest → https://mardi-gras-parade-game.vercel.app/
+- Developers: run `npm run dev` and open the local URL → http://localhost:5000
+
+**Playwright / CI**: To run Playwright against the public deploy, set `PLAYTEST_URL` to the Vercel URL in GitHub Secrets or locally before running tests.
 
 PowerShell (local test):
 
