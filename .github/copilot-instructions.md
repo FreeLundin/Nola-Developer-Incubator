@@ -1,5 +1,25 @@
 # GitHub Copilot Instructions for NDI_MardiGrasParade
 
+## Quick Reference
+
+**This is a 3D browser-based game built with React Three Fiber and TypeScript.**
+
+### Before You Start
+1. **Always run `npm run check`** - TypeScript compilation must pass
+2. **Test your changes** - Start dev server with `npm run dev` 
+3. **Keep changes minimal** - Make surgical, focused edits
+4. **Follow existing patterns** - Match the style of surrounding code
+
+### Key Commands
+```bash
+npm run dev          # Start dev server (http://localhost:5000)
+npm run check        # TypeScript type checking (RUN BEFORE COMMIT)
+npm run build        # Production build
+npx playwright test  # Run E2E tests
+```
+
+---
+
 ## Repository Overview
 
 This is NDI_MardiGrasParade, a 3D Mardi Gras parade experience built with React, Three.js, and Express.js. Players catch collectibles (beads, doubloons, cups) from parade floats in an immersive browser-based experience that celebrates New Orleans culture.
@@ -349,13 +369,21 @@ Test files are located in `tests/playwright/`. When adding new features, conside
 
 ### Pre-Commit Checklist
 - [ ] Code runs without errors (`npm run dev`)
-- [ ] TypeScript compiles (`npm run check`)
+- [ ] TypeScript compiles (`npm run check`) - **ALWAYS run this**
 - [ ] No console errors or warnings
 - [ ] Game is playable and features work
 - [ ] Performance is acceptable (45+ FPS)
 - [ ] Playwright tests pass (`npx playwright test`) if applicable
 - [ ] Code follows project style guidelines
 - [ ] Commit message follows conventional format
+- [ ] Security best practices followed (no secrets, input validation)
+
+### CI/CD Workflow
+- **Pull requests** trigger automated checks
+- **TypeScript compilation** runs on every PR
+- **Playwright tests** run in CI environment
+- **Review required** before merging to main
+- **Deploy to Vercel** happens automatically on merge to main
 
 ## Environment Variables
 
@@ -376,10 +404,95 @@ SESSION_SECRET=your_random_secret_here
 - **Follow existing patterns** - Match the coding style of surrounding code
 - **Update documentation** if you change public APIs or add new features
 
+## Working with GitHub Copilot
+
+### Best Practices for This Repository
+- **Understand before changing** - Read existing code and documentation first
+- **Test incrementally** - Make small changes and test frequently
+- **Use type safety** - Leverage TypeScript to catch errors early
+- **Preserve working code** - Only modify what's necessary to fix the issue
+- **Ask for clarification** - If requirements are unclear, ask before implementing
+- **Review your changes** - Always review diffs before committing
+
+### Making Changes
+1. **Explore** - Use `view`, `grep`, or `glob` to understand the codebase
+2. **Plan** - Think through the minimal changes needed
+3. **Implement** - Make focused, surgical edits
+4. **Validate** - Run `npm run check` and test the game
+5. **Review** - Check your changes match the requirements
+6. **Document** - Update docs if you changed public APIs
+
+## Security Guidelines
+
+### Security Best Practices
+- **Never commit secrets** - Use environment variables for sensitive data
+- **Validate user input** - Always sanitize and validate data from external sources
+- **Use parameterized queries** - Prevent SQL injection with Drizzle ORM's type-safe queries
+- **Secure dependencies** - Keep packages updated, audit regularly with `npm audit`
+- **HTTPS only** - Always use HTTPS in production
+- **Content Security Policy** - Follow CSP headers for XSS protection
+- **Rate limiting** - Implement rate limiting on API endpoints
+- **Error handling** - Don't expose sensitive information in error messages
+
+### Common Security Patterns
+```typescript
+// Good: Use parameterized queries with Drizzle
+const user = await db.select().from(users).where(eq(users.id, userId));
+
+// Good: Validate input
+if (!userId || typeof userId !== 'number' || userId < 1) {
+  return res.status(400).json({ error: 'Invalid user ID' });
+}
+
+// Good: Don't expose internal errors
+catch (error) {
+  console.error('Database error:', error);
+  res.status(500).json({ error: 'Internal server error' });
+}
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**TypeScript errors after pulling changes:**
+```bash
+# Clear build cache and reinstall
+rm -rf node_modules package-lock.json
+npm install
+npm run check
+```
+
+**Port already in use:**
+```bash
+# Find process using port 5000
+lsof -i :5000  # macOS/Linux
+netstat -ano | findstr :5000  # Windows
+
+# Kill the process or use different port
+PORT=3000 npm run dev
+```
+
+**Database connection errors:**
+- Verify `DATABASE_URL` in `.env` file
+- Check database is running and accessible
+- Test connection: `npm run db:push`
+
+**Build failures:**
+- Ensure Node.js version is 18+: `node --version`
+- Clear Vite cache: `rm -rf node_modules/.vite`
+- Rebuild: `npm run build`
+
+**Game performance issues:**
+- Open DevTools Performance tab
+- Check FPS counter (Perf component in dev mode)
+- Reduce geometry complexity or shadow quality
+- Profile with React DevTools Profiler
+
 ## Resources
 
-- <a>CONTRIBUTING.md</a> - Full contribution guidelines
-- <a>DEVELOPMENT_GUIDE.md</a> - Detailed technical documentation
-- <a href="https://docs.pmnd.rs/react-three-fiber">React Three Fiber Docs</a>
-- <a href="https://threejs.org/docs">Three.js Documentation</a>
-- <a href="https://orm.drizzle.team">Drizzle ORM Docs</a>
+- [docs/CONTRIBUTING.md](../docs/CONTRIBUTING.md) - Full contribution guidelines
+- [docs/DEVELOPMENT_GUIDE.md](../docs/DEVELOPMENT_GUIDE.md) - Detailed technical documentation
+- [React Three Fiber Docs](https://docs.pmnd.rs/react-three-fiber) - R3F official documentation
+- [Three.js Documentation](https://threejs.org/docs) - Three.js API reference
+- [Drizzle ORM Docs](https://orm.drizzle.team) - Database ORM documentation
