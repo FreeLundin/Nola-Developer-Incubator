@@ -34,7 +34,8 @@ async function initHandler() {
       console.error('[vercel-handler] serverless-http did not export a function; falling back to raw app');
     } catch (innerErr) {
       // Common in serverless environments where devDependencies are not installed
-      console.warn('[vercel-handler] failed to import serverless-http; using raw express app as handler', innerErr?.message || innerErr);
+      const _inner: any = innerErr;
+      console.warn('[vercel-handler] failed to import serverless-http; using raw express app as handler', _inner?.message || _inner);
       // fall through to set the raw app as handler
     }
 
@@ -45,7 +46,8 @@ async function initHandler() {
         // Express apps are functions that accept (req, res)
         return (app as any)(req, res);
       } catch (e) {
-        console.error('[vercel-handler] fallback handler error', e);
+        const _e: any = e;
+        console.error('[vercel-handler] fallback handler error', _e?.stack || _e?.message || _e);
         throw e;
       }
     };
@@ -53,8 +55,9 @@ async function initHandler() {
     return _handler;
   } catch (err) {
     // Cache init error to avoid repeated re-init attempts on subsequent invocations
-    _initError = err instanceof Error ? err : new Error(String(err));
-    console.error('[vercel-handler] initialization error:', err && (err.stack || err.message || err));
+    const _err: any = err;
+    _initError = _err instanceof Error ? _err : new Error(String(_err));
+    console.error('[vercel-handler] initialization error:', _err && (_err.stack || _err.message || _err));
     throw _initError;
   }
 }
@@ -70,14 +73,16 @@ export default async function vercelHandler(req: IncomingMessage & any, res: Ser
     // handler expects (req, res) like a standard Node http request
     return handler(req, res);
   } catch (err) {
-    console.error('[vercel-handler] invocation error:', err && (err.stack || err.message || err));
+    const _err: any = err;
+    console.error('[vercel-handler] invocation error:', _err && (_err.stack || _err.message || _err));
     try {
       res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ error: 'Server initialization failed' }));
     } catch (e) {
       // If even responding fails, just log and swallow to avoid crashing the runtime
-      console.error('[vercel-handler] failed to send error response:', e && (e.stack || e.message || e));
+      const _e: any = e;
+      console.error('[vercel-handler] failed to send error response:', _e && (_e.stack || _e.message || _e));
     }
   }
 }
