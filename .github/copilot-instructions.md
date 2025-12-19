@@ -70,6 +70,13 @@ npm start          # Start production server
 npm run db:push    # Push database schema to PostgreSQL
 ```
 
+### Testing
+```bash
+npx playwright test              # Run Playwright end-to-end tests
+npx playwright test --ui         # Run tests in UI mode
+npx playwright test --headed     # Run tests in headed mode (see browser)
+```
+
 ## Coding Standards
 
 ### TypeScript
@@ -305,6 +312,8 @@ perf(rendering): reduce draw calls for better FPS
 
 ## Testing Guidelines
 
+### Manual Testing
+
 Since this is a game, most testing is manual:
 
 1. **Start dev server**: `npm run dev`
@@ -315,12 +324,36 @@ Since this is a game, most testing is manual:
 6. **Check console**: Ensure no errors or warnings
 7. **Type check**: Run `npm run check` before committing
 
+### Automated Testing
+
+The project includes Playwright end-to-end tests:
+
+```bash
+# Run all tests
+npx playwright test
+
+# Run tests in UI mode for debugging
+npx playwright test --ui
+
+# Run tests with visible browser
+npx playwright test --headed
+
+# Run against deployed instance (set PLAYTEST_URL environment variable)
+# Windows PowerShell:
+$env:PLAYTEST_URL = 'https://mardi-gras-parade-game.vercel.app'; npx playwright test
+# macOS/Linux:
+export PLAYTEST_URL='https://mardi-gras-parade-game.vercel.app' && npx playwright test
+```
+
+Test files are located in `tests/playwright/`. When adding new features, consider adding corresponding Playwright tests to ensure functionality.
+
 ### Pre-Commit Checklist
 - [ ] Code runs without errors (`npm run dev`)
 - [ ] TypeScript compiles (`npm run check`)
 - [ ] No console errors or warnings
 - [ ] Game is playable and features work
 - [ ] Performance is acceptable (45+ FPS)
+- [ ] Playwright tests pass (`npx playwright test`) if applicable
 - [ ] Code follows project style guidelines
 - [ ] Commit message follows conventional format
 
