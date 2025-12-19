@@ -1,6 +1,10 @@
 // Vercel Serverless Function Entry Point
 // This file wraps the Express app for Vercel's serverless environment
 
+// Explicitly set runtime to Node.js since we use Node-specific APIs
+// (fs, path, Buffer, process.env, etc.)
+export const runtime = 'nodejs';
+
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
@@ -14,10 +18,16 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Simple logging middleware for API routes
+// Structured logging middleware for API routes
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) {
-    console.log(`${req.method} ${req.path}`);
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      method: req.method,
+      path: req.path,
+      query: req.query,
+    };
+    console.log('[API Request]', JSON.stringify(logEntry));
   }
   next();
 });
@@ -29,13 +39,28 @@ app.use((req, res, next) => {
 //   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 // });
 
-// Health check endpoint
+// Health check endpoint with error handling
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    env: process.env.NODE_ENV 
-  });
+  try {
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      env: process.env.NODE_ENV || 'development',
+      runtime: 'nodejs'
+    });
+  } catch (error) {
+    console.error('[API Error]', {
+      timestamp: new Date().toISOString(),
+      method: req.method,
+      path: req.path,
+      error: error.message,
+      stack: error.stack
+    });
+    res.status(500).json({ 
+      error: 'Internal Server Error',
+      message: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
 });
 
 // Serve static files in production
@@ -62,12 +87,30 @@ if (fs.existsSync(distPath)) {
   });
 }
 
-// Error handler
+// Enhanced error handler with structured logging
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  // Structured error logging
+  const errorLog = {
+    timestamp: new Date().toISOString(),
+    method: req.method,
+    path: req.path,
+    error: err.message || 'Internal Server Error',
+    stack: err.stack || 'No stack trace',
+    status: err.status || err.statusCode || 500
+  };
+  console.error('[API Error]', JSON.stringify(errorLog, null, 2));
+  
   const status = err.status || err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
-  res.status(status).json({ error: message });
+  
+  // Don't send response if headers already sent
+  if (!res.headersSent) {
+    res.status(status).json({ 
+      error: message,
+      // Only include stack trace in development
+      ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    });
+  }
 });
 
 // Export the Express app for Vercel

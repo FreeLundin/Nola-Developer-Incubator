@@ -39,12 +39,29 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+    // Structured error logging
+    const errorLog = {
+      timestamp: new Date().toISOString(),
+      method: req.method,
+      path: req.path,
+      error: err.message || "Internal Server Error",
+      stack: err.stack || "No stack trace",
+      status: err.status || err.statusCode || 500
+    };
+    console.error("[API Error]", JSON.stringify(errorLog, null, 2));
+
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
-    res.status(status).json({ message });
-    throw err;
+    // Don't send response if headers already sent
+    if (!res.headersSent) {
+      res.status(status).json({ 
+        error: message,
+        // Only include details in development
+        ...(process.env.NODE_ENV === "development" && { stack: err.stack })
+      });
+    }
   });
 
   // importantly only setup vite in development and after
