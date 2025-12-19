@@ -35,10 +35,16 @@ The development server includes:
 
 ## ▶️ Playtest Links
 
-- Public playtest (testers / non-devs): https://mardi-gras-parade-game.vercel.app/
+- Public playtest (testers / non-devs): https://your-project-name.vercel.app/
 - Developer (local): Start the dev server and open http://localhost:5000
 
-These links are referenced in the project README and used by the Playwright CI. To run Playwright locally against the public deploy set `PLAYTEST_URL` to the Vercel URL.
+Note: The public playtest URL used in examples is a placeholder. If a public demo is required for tests or CI, set `PLAYTEST_URL` locally or in repository secrets to point to your deployed Vercel URL.
+
+To run Playwright locally against a public deploy set `PLAYTEST_URL` to the Vercel URL.
+
+```powershell
+$env:PLAYTEST_URL = 'https://your-project-name.vercel.app'; npx playwright test
+```
 
 ## 📁 Project Structure
 

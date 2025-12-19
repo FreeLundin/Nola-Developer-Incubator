@@ -1,12 +1,12 @@
 # 🎭 NDI_MardiGrasParade
 
-+> Playtest (public): Try the live build: https://mardi-gras-parade-game.vercel.app/
++> Playtest (public): Try the live build: https://your-project-name.vercel.app/
 +> Developer (local): Run the dev server and open http://localhost:5000
 +
-[![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
-[![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+<a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-18.3-61dafb"></a>
+<a href="https://threejs.org/"><img src="https://img.shields.io/badge/Three.js-WebGL-black"></a>
+<a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.6-3178c6"></a>
+<a><img src="https://img.shields.io/badge/License-MIT-green.svg"></a>
 
 > **An immersive 3D Mardi Gras parade experience playable directly in your browser!**
 > 
@@ -18,19 +18,19 @@
 
 **Ready to deploy to Vercel!** This application is configured for one-click deployment to Vercel, making it publicly accessible to anyone with the deployment URL.
 
-📖 **[View Complete Deployment Guide →](README_VERCEL.md)**
+📖 **<a>View Complete Deployment Guide →</a>**
 
 ### Deploy Your Own Instance
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame)
+<a href="https://vercel.com/new/clone?repository-url=https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame"><img src="https://vercel.com/button"></a>
 
 Or manually:
 1. Fork this repository
-2. Connect to [Vercel](https://vercel.com)
-3. Add `DATABASE_URL` environment variable (see [Deployment Guide](README_VERCEL.md))
+2. Connect to <a href="https://vercel.com">Vercel</a>
+3. Add `DATABASE_URL` environment variable (see <a>Deployment Guide</a>)
 4. Deploy! Your game will be live at `https://your-project-name.vercel.app`
 
-The deployed application is **fully public** - anyone with the URL can play the game directly in their browser, no installation required!
+Note: A public demo may not be deployed for this repository. If you rely on a public playtest URL (for testing or CI), set the PLAYTEST_URL environment variable locally or as a repository secret. Replace `your-project-name` with your actual Vercel project name when deployed.
 
 ---
 
@@ -50,25 +50,25 @@ npm install
 npm run dev
 
 # Open locally → http://localhost:5000
-# Public playtest (tester) → https://mardi-gras-parade-game.vercel.app/
+# Public playtest (tester) → https://your-project-name.vercel.app/
 ```
 
 **Which link should I use?**
-- Testers / non-devs: use the Public playtest → https://mardi-gras-parade-game.vercel.app/
+- Testers / non-devs: use the Public playtest → https://your-project-name.vercel.app/ (or your deployed project URL)
 - Developers: run `npm run dev` and open the local URL → http://localhost:5000
 
-**Playwright / CI**: To run Playwright against the public deploy, set `PLAYTEST_URL` to the Vercel URL in GitHub Secrets or locally before running tests.
+**Playwright / CI**: To run Playwright against a public deploy, set `PLAYTEST_URL` to the deployed Vercel URL (or set a repository secret `PLAYTEST_URL`) when necessary.
 
 PowerShell (local test):
 
 ```powershell
-$env:PLAYTEST_URL = 'https://mardi-gras-parade-game.vercel.app'; npx playwright test
+$env:PLAYTEST_URL = 'https://your-project-name.vercel.app'; npx playwright test
 ```
 
 Or on macOS / Linux:
 
 ```bash
-export PLAYTEST_URL='https://mardi-gras-parade-game.vercel.app' && npx playwright test
+export PLAYTEST_URL='https://your-project-name.vercel.app' && npx playwright test
 ```
 
 That's it! The simulator will open in your default browser (or open the public link for a hosted playtest).
