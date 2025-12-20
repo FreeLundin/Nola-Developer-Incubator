@@ -1,0 +1,49 @@
+Business Source License 1.1
+
+Copyright (c) 2025 Nola-Developer-Incubator
+
+This Business Source License (the "License") governs use of the source code and other
+materials (collectively, the "Software") in this repository.
+
+1. Definitions
+- "Change Date" means 2028-12-20 (three years after initial release).
+- "Permitted Use" means copying, modifying, and using the Software for internal,
+  research, evaluation, and non-commercial development purposes.
+- "Commercial Offering" means providing the Software (or a derivative of it)
+  to third parties as part of a product or service for which such third parties
+  are charged a fee (e.g., hosted services, distribution for a fee, or
+  similar commercial use).
+
+2. License Grant
+Subject to the terms below, Licensor grants you a limited, non-exclusive,
+non-transferable license to use, copy, modify, and create derivative works of
+the Software for Permitted Use.
+
+3. Restrictions on Commercial Use
+You may NOT use the Software to provide a Commercial Offering without obtaining
+a separate commercial license from the Licensor. If you wish to use the Software
+in a Commercial Offering prior to the Change Date, you must contact the
+Licensor to obtain a commercial license or other permission.
+
+4. Change Date and Post-Change License
+On the Change Date, the licensor will relicense the Software under the terms of
+the Apache License, Version 2.0 (or such other open-source license as the
+Licensor may specify), at which time the restrictions in Section 3 will no
+longer apply to the then-current version(s) released under the Change Date.
+
+5. Attribution
+Any redistribution of the Software (or derivative works) under Permitted Use must
+include this License and attribution to the Licensor.
+
+6. No Warranty
+The Software is provided "AS IS", without warranties of any kind, express or
+implied. The Licensor is not liable for any damages arising from the use of the
+Software.
+
+7. Governing Law
+This License is governed by the laws of the jurisdiction of the Licensor.
+
+Notes:
+- This is a template/draft of Business Source License-style terms intended for
+  use as a starting point. You should consult legal counsel to finalize wording,
+  confirm the Change Date, and ensure compliance with applicable laws.
