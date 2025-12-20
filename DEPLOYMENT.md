@@ -47,6 +47,79 @@ This document provides deployment status, public access information, and quick r
 
 **Documentation:** [README_VERCEL.md](README_VERCEL.md)
 
+### 🤖 Automated Vercel Deployment via GitHub Actions
+
+**Status:** ✅ Workflow configured and ready  
+**Trigger:** Automatic on push to `main` branch  
+**Setup Time:** ~10 minutes (one-time setup)  
+
+This repository includes a GitHub Actions workflow that automatically deploys to Vercel when code is pushed to the `main` branch.
+
+#### What It Does
+1. ✅ Builds the application (`npm run vercel-build`)
+2. ✅ Deploys to Vercel production
+3. ✅ Optionally pushes database schema if `DATABASE_URL` is provided
+
+#### Required Setup Steps
+
+**Before the workflow can run, you must add the following repository secrets:**
+
+1. **Navigate to GitHub Settings**
+   - Go to: `https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame/settings/secrets/actions`
+   - Or: Repository → Settings → Secrets and variables → Actions
+
+2. **Add Required Secrets**
+   | Secret Name | Description | How to Get |
+   |-------------|-------------|------------|
+   | `VERCEL_TOKEN` | Vercel API authentication token | [vercel.com/account/tokens](https://vercel.com/account/tokens) |
+   | `VERCEL_ORG_ID` | Your Vercel organization/user ID | Vercel project settings or `.vercel/project.json` |
+   | `VERCEL_PROJECT_ID` | Your Vercel project ID | Vercel project settings or `.vercel/project.json` |
+   | `DATABASE_URL` | PostgreSQL connection string (optional) | Neon database dashboard |
+
+3. **Configure Vercel Environment Variables**
+   - In your Vercel project → Settings → Environment Variables
+   - Add: `DATABASE_URL`, `NODE_ENV` (production), `SESSION_SECRET`
+
+4. **Initialize Database**
+   - Run `npm run db:push` locally with `DATABASE_URL` set
+   - Or let the workflow do it automatically if `DATABASE_URL` secret is added
+
+5. **Push to Main**
+   ```bash
+   git push origin main
+   ```
+   The workflow will automatically deploy your application!
+
+#### Detailed Setup Guide
+
+For complete step-by-step instructions on:
+- Creating a Vercel project
+- Obtaining VERCEL_TOKEN, VERCEL_ORG_ID, and VERCEL_PROJECT_ID
+- Adding GitHub secrets
+- Setting up Neon PostgreSQL database
+- Troubleshooting common issues
+
+**📖 See: [docs/VERCEL_CI.md](docs/VERCEL_CI.md)**
+
+#### Monitoring Deployments
+
+- **GitHub Actions:** View workflow runs in the Actions tab
+- **Vercel Dashboard:** View deployments at [vercel.com/dashboard](https://vercel.com/dashboard)
+- **Logs:** Check both GitHub Actions logs and Vercel function logs for errors
+
+#### Workflow File
+
+The workflow is located at `.github/workflows/deploy-to-vercel.yml`
+
+#### Manual Deployment Script
+
+For manual deployments, use the included script:
+```bash
+./scripts/deploy-vercel.sh
+```
+
+---
+
 ### Option 2: Self-Hosting
 
 **Status:** ✅ Supported  
@@ -222,6 +295,186 @@ When someone visits your deployed URL:
 - ✅ Open browser console (F12) for errors
 - ✅ Check that DATABASE_URL is set in Vercel environment
 - ✅ Verify API health endpoint returns "ok"
+
+### Performance Issues
+- ✅ Test on different browser (Chrome recommended)
+- ✅ Check device meets minimum requirements
+- ✅ Disable browser extensions that might interfere
+- ✅ Try on different network connection
+
+---
+
+## 📋 Deployment Definition of Done (DOD)
+
+Use this comprehensive checklist to ensure your deployment is complete and production-ready:
+
+### Prerequisites
+- [ ] GitHub repository access (admin permissions required for secrets)
+- [ ] Vercel account created ([vercel.com/signup](https://vercel.com/signup))
+- [ ] Neon PostgreSQL account created ([neon.tech](https://neon.tech))
+- [ ] Node.js 18+ installed locally for testing
+
+### Vercel Project Setup
+- [ ] Vercel project created and linked to GitHub repository
+- [ ] Project settings verified (Framework: Other, Build: `npm run vercel-build`, Output: `dist/public`)
+- [ ] `VERCEL_ORG_ID` obtained from Vercel settings
+- [ ] `VERCEL_PROJECT_ID` obtained from Vercel project settings
+- [ ] `VERCEL_TOKEN` generated from [vercel.com/account/tokens](https://vercel.com/account/tokens)
+
+### Database Setup
+- [ ] Neon PostgreSQL database created
+- [ ] Database connection string obtained (format: `postgresql://user:pass@host/db?sslmode=require`)
+- [ ] Database connection tested locally
+- [ ] `SESSION_SECRET` generated (use: `openssl rand -base64 32`)
+
+### GitHub Repository Secrets
+Navigate to: Settings → Secrets and variables → Actions
+
+- [ ] `VERCEL_TOKEN` added to GitHub secrets
+- [ ] `VERCEL_ORG_ID` added to GitHub secrets
+- [ ] `VERCEL_PROJECT_ID` added to GitHub secrets
+- [ ] `DATABASE_URL` added to GitHub secrets (optional, for auto DB push in CI)
+
+### Vercel Environment Variables
+Navigate to: Vercel Project → Settings → Environment Variables
+
+- [ ] `DATABASE_URL` set for Production, Preview, and Development
+- [ ] `NODE_ENV` set to `production` for Production environment
+- [ ] `SESSION_SECRET` set for Production, Preview, and Development
+
+### Database Initialization
+- [ ] Schema pushed successfully using `npm run db:push`
+  - Option A: Run locally with `DATABASE_URL` env var set
+  - Option B: Let GitHub Actions workflow run it (if `DATABASE_URL` secret added)
+- [ ] Database tables created and verified
+
+### Code Verification (Local)
+- [ ] Dependencies installed: `npm install`
+- [ ] TypeScript compilation passes: `npm run check`
+- [ ] Production build succeeds: `npm run build`
+- [ ] Local production server runs: `npm start`
+- [ ] Application loads correctly at `http://localhost:5000`
+
+### GitHub Actions Workflow
+- [ ] Workflow file exists at `.github/workflows/deploy-to-vercel.yml`
+- [ ] Code pushed to `main` branch to trigger deployment
+- [ ] Workflow run completes successfully (check Actions tab)
+- [ ] All workflow steps pass:
+  - [ ] Checkout
+  - [ ] Setup Node.js 20
+  - [ ] Install dependencies
+  - [ ] Build (vercel-build)
+  - [ ] Deploy to Vercel
+  - [ ] Run DB schema push (if DATABASE_URL provided)
+
+### Vercel Deployment Verification
+- [ ] Deployment visible in Vercel dashboard with "Ready" status
+- [ ] Production URL accessible (format: `https://project-name.vercel.app`)
+- [ ] Deployment shows no build errors
+- [ ] Function logs show no critical errors
+
+### Application Functionality Testing
+- [ ] Home page loads without errors
+- [ ] 3D game scene renders correctly
+- [ ] Game controls work (WASD/click-to-move)
+- [ ] Collectibles appear and can be caught
+- [ ] Score updates correctly
+- [ ] Sound effects play (if enabled)
+- [ ] API health check returns success: `curl https://your-app.vercel.app/api/health`
+- [ ] Browser console shows no critical errors
+- [ ] No 404 errors for assets (textures, sounds, models)
+
+### Mobile & Cross-Browser Testing
+- [ ] Desktop Chrome/Edge - works correctly
+- [ ] Desktop Firefox - works correctly
+- [ ] Desktop Safari - works correctly
+- [ ] Mobile iOS Safari - works correctly
+- [ ] Mobile Android Chrome - works correctly
+- [ ] Responsive layout works on different screen sizes
+- [ ] Touch controls work on mobile devices
+- [ ] Performance acceptable (45+ FPS on modern mobile devices)
+
+### Performance Verification
+- [ ] Initial page load time < 5 seconds on good connection
+- [ ] 3D rendering performs at 45+ FPS on mobile, 60 FPS on desktop
+- [ ] No memory leaks during extended gameplay
+- [ ] Assets load progressively without blocking
+
+### Security & Best Practices
+- [ ] No secrets committed to repository
+- [ ] All environment variables properly configured
+- [ ] HTTPS enabled (automatic via Vercel)
+- [ ] Database connection uses SSL (`?sslmode=require`)
+- [ ] CORS configured correctly
+- [ ] No sensitive data exposed in client code
+
+### Documentation & Communication
+- [ ] Production URL documented (record below)
+- [ ] Deployment date recorded (record below)
+- [ ] Team members notified of deployment
+- [ ] Custom domain configured (optional)
+- [ ] Deployment monitoring set up (GitHub/Vercel notifications)
+
+### Post-Deployment Monitoring
+- [ ] GitHub Actions notifications enabled for failures
+- [ ] Vercel deployment notifications configured
+- [ ] Error tracking/monitoring set up (if applicable)
+- [ ] Regular deployment logs reviewed
+
+---
+
+### 📍 Deployment Record
+
+**Production URL:** `_____________________________________________________`
+
+**Deployment Date:** `_____________________________________________________`
+
+**Deployed By:** `_____________________________________________________`
+
+**Database Provider:** `_____________________________________________________`
+
+**Notes:** 
+```
+_____________________________________________________
+_____________________________________________________
+_____________________________________________________
+```
+
+---
+
+### ⚠️ Common Post-Deployment Issues
+
+**Issue:** GitHub Actions workflow fails with "Missing required secret"
+- **Solution:** Verify all four secrets exist in GitHub Settings → Secrets
+- **Check:** `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` are correctly set
+
+**Issue:** Deployment succeeds but site shows "Internal Server Error"
+- **Solution:** Check Vercel function logs for detailed errors
+- **Check:** Environment variables set in Vercel (not just GitHub secrets)
+- **Verify:** `DATABASE_URL` is correct and database is accessible
+
+**Issue:** Database connection fails
+- **Solution:** Ensure connection string includes `?sslmode=require`
+- **Check:** Database is accessible from Vercel's IP ranges
+- **Test:** Run `npm run db:push` locally with the same `DATABASE_URL`
+
+**Issue:** Assets (textures/sounds) not loading
+- **Solution:** Verify assets are in `client/public/` directory
+- **Check:** Build output includes all asset files
+- **Review:** Browser console for 404 errors on specific assets
+
+---
+
+### 📞 Support Resources
+
+- **CI/CD Setup Guide:** [docs/VERCEL_CI.md](docs/VERCEL_CI.md)
+- **Vercel Deployment Guide:** [README_VERCEL.md](README_VERCEL.md)
+- **Development Guide:** [docs/DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md)
+- **GitHub Issues:** [github.com/Nola-Developer-Incubator/MardiGrasParadeGame/issues](https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame/issues)
+- **Vercel Documentation:** [vercel.com/docs](https://vercel.com/docs)
+- **Vercel Support:** [vercel.com/help](https://vercel.com/help)
+
+---
 
 ### Performance Issues
 - ✅ Test on different browser (Chrome recommended)

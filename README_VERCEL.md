@@ -276,4 +276,191 @@ Once deployed successfully, your game will be accessible at:
 
 ---
 
+## 🤖 Automated GitHub Actions Deployment
+
+This repository includes a GitHub Actions workflow that automatically deploys to Vercel when you push to the `main` branch.
+
+### Workflow File
+
+The workflow is located at `.github/workflows/deploy-to-vercel.yml` and runs on every push to `main`.
+
+### What It Does
+
+1. ✅ Checks out the code
+2. ✅ Sets up Node.js 20
+3. ✅ Installs dependencies with `npm ci`
+4. ✅ Builds the project with `npm run vercel-build`
+5. ✅ Deploys to Vercel production
+6. ✅ Optionally runs database schema push (`npm run db:push`) if `DATABASE_URL` is provided
+
+### Required GitHub Secrets
+
+To use the automated deployment workflow, you must add the following repository secrets in GitHub Settings → Secrets and variables → Actions:
+
+| Secret Name | Description | How to Get |
+|-------------|-------------|------------|
+| `VERCEL_TOKEN` | Vercel API token for authentication | Create at [vercel.com/account/tokens](https://vercel.com/account/tokens) |
+| `VERCEL_ORG_ID` | Your Vercel organization/user ID | Found in Vercel project settings or `.vercel/project.json` |
+| `VERCEL_PROJECT_ID` | Your Vercel project ID | Found in Vercel project settings or `.vercel/project.json` |
+| `DATABASE_URL` | PostgreSQL connection string (optional) | From your Neon database dashboard |
+
+📖 **For detailed setup instructions, see:** [docs/VERCEL_CI.md](docs/VERCEL_CI.md)
+
+### How to Set Up Automated Deployment
+
+1. **Create a Vercel project** (if you haven't already)
+   - Use the Vercel Dashboard or CLI to create/link your project
+   
+2. **Get your Vercel IDs**
+   ```bash
+   # Install Vercel CLI
+   npm install -g vercel
+   
+   # Login and link project
+   vercel login
+   vercel link
+   
+   # Check .vercel/project.json for IDs
+   cat .vercel/project.json
+   ```
+
+3. **Generate a Vercel token**
+   - Go to [vercel.com/account/tokens](https://vercel.com/account/tokens)
+   - Click "Create Token"
+   - Give it a name like "GitHub Actions - MardiGrasParadeGame"
+   - Copy the token (you won't see it again!)
+
+4. **Add secrets to GitHub**
+   - Go to your repository → Settings → Secrets and variables → Actions
+   - Click "New repository secret"
+   - Add each of the required secrets listed above
+
+5. **Configure Vercel environment variables**
+   - In Vercel project settings → Environment Variables
+   - Add `DATABASE_URL`, `NODE_ENV`, and `SESSION_SECRET`
+
+6. **Push to main branch**
+   ```bash
+   git push origin main
+   ```
+   
+   The workflow will automatically trigger and deploy your app!
+
+7. **Monitor the deployment**
+   - Check the Actions tab in GitHub for workflow status
+   - View deployment in your Vercel dashboard
+
+### Manual Deployment with CLI
+
+If you prefer manual deployment, use the included script:
+
+```bash
+# Make sure Vercel CLI is installed
+npm install -g vercel
+
+# Run the deployment script
+./scripts/deploy-vercel.sh
+
+# Or directly with Vercel CLI
+vercel --prod
+```
+
+---
+
+## ✅ Deployment Definition of Done (DOD)
+
+Use this checklist to ensure your deployment is complete and fully functional:
+
+### Pre-Deployment Setup
+- [ ] Vercel project created and linked to GitHub repository
+- [ ] Neon PostgreSQL database created
+- [ ] `DATABASE_URL` obtained from Neon dashboard
+- [ ] `SESSION_SECRET` generated (use `openssl rand -base64 32`)
+
+### GitHub Secrets Configuration
+- [ ] `VERCEL_TOKEN` added to GitHub repository secrets
+- [ ] `VERCEL_ORG_ID` added to GitHub repository secrets
+- [ ] `VERCEL_PROJECT_ID` added to GitHub repository secrets
+- [ ] `DATABASE_URL` added to GitHub repository secrets (optional, for auto DB push)
+
+### Vercel Environment Variables
+- [ ] `DATABASE_URL` set in Vercel project (Production, Preview, Development)
+- [ ] `NODE_ENV` set to `production` in Vercel project
+- [ ] `SESSION_SECRET` set in Vercel project (Production, Preview, Development)
+
+### Database Initialization
+- [ ] Database schema pushed successfully (`npm run db:push` locally or via CI)
+- [ ] Database connection verified (check application logs)
+
+### Deployment Verification
+- [ ] Workflow ran successfully in GitHub Actions
+- [ ] Deployment visible in Vercel dashboard with "Ready" status
+- [ ] Production URL accessible (e.g., `https://your-project.vercel.app`)
+- [ ] Home page loads without errors
+- [ ] 3D game scene renders correctly
+- [ ] API health endpoint returns success: `/api/health`
+- [ ] Browser console shows no critical errors
+- [ ] Mobile responsiveness verified (use DevTools or real device)
+
+### Post-Deployment
+- [ ] Public URL shared and documented (paste below)
+- [ ] Custom domain configured (optional)
+- [ ] Monitoring set up (GitHub Actions notifications, Vercel alerts)
+- [ ] Team members notified of deployment
+
+### 📍 Record Your Deployment URL
+
+**Production URL:** `_________________________________`
+
+**Preview URL (if applicable):** `_________________________________`
+
+**Date Deployed:** `_________________________________`
+
+---
+
+## 🚨 Troubleshooting Automated Deployment
+
+### GitHub Actions Workflow Fails
+
+**Issue:** Workflow fails with "Missing required secret"
+- **Solution:** Verify all four secrets are added in GitHub Settings → Secrets
+  - `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `DATABASE_URL` (optional)
+
+**Issue:** Workflow fails at "Deploy to Vercel" step
+- **Solution:** 
+  - Verify your `VERCEL_TOKEN` is valid and not expired
+  - Check that `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` match your Vercel project
+  - Ensure the Vercel project exists and is linked correctly
+
+**Issue:** Build fails with TypeScript errors
+- **Solution:**
+  - Run `npm run check` locally to identify TypeScript issues
+  - Fix compilation errors and push again
+
+### Database Push Fails in Workflow
+
+**Issue:** "Run DB schema push" step fails
+- **Solution:**
+  - Verify `DATABASE_URL` secret is set correctly in GitHub
+  - Test the connection string locally: `npm run db:push`
+  - Ensure database is accessible (no IP restrictions blocking GitHub Actions)
+
+### Deployment Succeeds But Site Doesn't Work
+
+**Issue:** Deployment completes but site shows errors
+- **Solution:**
+  - Check Vercel function logs for runtime errors
+  - Verify environment variables are set in Vercel (not just GitHub secrets)
+  - Test API endpoint: `https://your-app.vercel.app/api/health`
+  - Check that `DATABASE_URL` includes `?sslmode=require`
+
+### Need More Help?
+
+- 📖 Read the complete CI/CD setup guide: [docs/VERCEL_CI.md](docs/VERCEL_CI.md)
+- 🔍 Check GitHub Actions logs for detailed error messages
+- 📊 View Vercel deployment logs in the Vercel dashboard
+- 💬 Create an issue on GitHub with deployment logs and error details
+
+---
+
 **Note:** The first deployment may take 2-3 minutes to complete. Subsequent deployments are typically faster due to caching.
