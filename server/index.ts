@@ -2,7 +2,10 @@ import { createServer } from "http";
 import { createApp } from "./app";
 import { setupVite, log } from "./vite";
 
-(async () => {
+// Check if this module is being run directly
+const isMain = import.meta.url === `file://${process.argv[1]}`;
+
+async function startServer() {
   const app = await createApp();
   const server = createServer(app);
 
