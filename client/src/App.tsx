@@ -1,8 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useState, useCallback, useEffect } from "react";
 import { KeyboardControls } from "@react-three/drei";
-import { SpeedInsights } from "@vercel/speed-insights/react";
-import "@fontsource/inter";
+// SpeedInsights is optional; dynamically import it so builds don't fail if the package isn't installed
 import { GameScene } from "./components/game/GameScene";
 import { GameUI } from "./components/game/GameUI";
 import { WinScreen } from "./components/game/WinScreen";
@@ -25,6 +24,7 @@ function App() {
   const phase = useParadeGame((state) => state.phase);
   const isMobile = useIsMobile();
   const [joystickInput, setJoystickInput] = useState<JoystickInput | null>(null);
+  const [SpeedInsightsComp, setSpeedInsightsComp] = useState<React.ComponentType | null>(null);
   
   const handleJoystickInput = useCallback((input: TouchInput) => {
     setJoystickInput({ x: input.x, y: input.y });
@@ -36,6 +36,24 @@ function App() {
       setJoystickInput(null);
     }
   }, [joystickEnabled, phase]);
+  
+  // Try to dynamically import SpeedInsights if available; ignore failures
+  useEffect(() => {
+    let mounted = true;
+    // Use a runtime variable so Vite doesn't try to statically resolve this optional package
+    const pkg = '@vercel/speed-insights/react';
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    import(pkg as any)
+      .then((m: any) => {
+        if (mounted && (m.SpeedInsights || m.default)) {
+          setSpeedInsightsComp(() => m.SpeedInsights || m.default);
+        }
+      })
+      .catch(() => {
+        // optional dependency not present - silently ignore
+      });
+    return () => { mounted = false; };
+  }, []);
   
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
@@ -70,7 +88,7 @@ function App() {
           <TouchControls onInput={handleJoystickInput} />
         )}
       </KeyboardControls>
-      <SpeedInsights />
+      {SpeedInsightsComp && <SpeedInsightsComp />}
     </div>
   );
 }
