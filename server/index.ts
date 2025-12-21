@@ -2,8 +2,17 @@ import { createServer } from "http";
 import { createApp } from "./app";
 import { setupVite, log } from "./vite";
 
+console.log('server/index.ts executing', { argv: process.argv.slice(0, 10), nodeEnv: process.env.NODE_ENV });
+
 // Check if this module is being run directly
-const isMain = import.meta.url === `file://${process.argv[1]}`;
+// Some loaders (like tsx) set process.argv differently, so make this detection
+// robust: treat the module as main if either import.meta.url matches argv[1]
+// or if argv contains the server entry path. Accept both source and built entry names
+// so `node dist/index.js`, `tsx server/index.ts` and similar invocations start the server.
+const entryCandidates = ["server/index.ts", "dist/index.js", "index.js", "server/index.js"];
+const isMain =
+  import.meta.url === `file://${process.argv[1]}` ||
+  (process.argv && process.argv.some((a) => entryCandidates.some((c) => String(a).endsWith(c))));
 
 async function startServer() {
   const app = await createApp();
