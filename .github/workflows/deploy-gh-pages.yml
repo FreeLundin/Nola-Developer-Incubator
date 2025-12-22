@@ -1,11 +1,13 @@
-name: CI / Deploy GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
       - main
-      - master
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -23,27 +25,11 @@ jobs:
         run: npm ci
 
       - name: Build
-        env:
-          # Set GH_PAGES_BASE to root by default. If you need a subdirectory base, adjust this manually.
-          GH_PAGES_BASE: '/'
         run: npm run build
 
-      - name: Ensure 404.html for SPA routing
-        run: |
-          echo "Copying index.html to 404.html to support SPA deep links"
-          # Ensure dist/public exists and index.html is present; fail fast with diagnostics if not
-          if [ -f ./dist/public/index.html ]; then
-            cp ./dist/public/index.html ./dist/public/404.html
-            echo "Copied ./dist/public/index.html → ./dist/public/404.html"
-          else
-            echo "Error: ./dist/public/index.html not found. Build may have failed or output path changed."
-            echo "Listing ./dist contents for debugging:"
-            ls -la ./dist || true
-            exit 1
-          fi
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist/public
+
