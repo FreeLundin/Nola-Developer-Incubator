@@ -1,4 +1,4 @@
-// Vercel serverless function entry point
+// Serverless function entry point
 // This file exports the Express app as a serverless function handler
 
 // Cache the app instance to avoid recreating it on every request
@@ -51,7 +51,7 @@ async function getApp() {
   return appPromise;
 }
 
-// Export handler for Vercel serverless functions
+// Export handler for serverless functions
 export default async function handler(req, res) {
   try {
     const app = await getApp();
