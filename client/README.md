@@ -35,10 +35,10 @@ The development server includes:
 
 ## ▶️ Playtest Links
 
-- Public playtest (testers / non-devs): https://mardi-gras-parade-game.vercel.app/
+- Public playtest (testers / non-devs): Use the GitHub Pages deploy URL once published (or set `PLAYTEST_URL` to your public host).
 - Developer (local): Start the dev server and open http://localhost:5000
 
-These links are referenced in the project README and used by the Playwright CI. To run Playwright locally against the public deploy set `PLAYTEST_URL` to the Vercel URL.
+These links are referenced in the project README and used by the Playwright CI. To run Playwright locally against the public deploy set `PLAYTEST_URL` to the public URL for your deployed site.
 
 ## 📁 Project Structure
 

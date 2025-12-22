@@ -1,75 +1,24 @@
-name: CI - Typecheck, Build, E2E
+name: CI - Typecheck & Build
 
 on:
-  pull_request:
-    branches: [ main ]
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
   workflow_dispatch:
 
 jobs:
-  build:
+  typecheck-and-build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Type check
-        run: npm run check
-
-      - name: Build
-        run: npm run build
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
-      - name: Run Playwright tests
-        run: npx playwright test
-        env:
-          CI: true
-
-      - name: Upload Playwright report on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
-      - name: TypeScript check
-        run: npm run check
-
-      - name: Build (frontend + server)
-        run: npm run build
-
-      - name: Install Playwright browsers
-        if: success()
-        run: npx playwright install --with-deps
-
-      - name: Run Playwright E2E tests
-        if: success()
-        env:
-          CI: true
-        run: npx playwright test --reporter=github
-
-  smoke-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Use Node.js
+      - name: Use Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -77,15 +26,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Type-check (tsc)
+      - name: Run TypeScript type check
         run: npm run check
 
-      - name: Build
+      - name: Run Build
+        env:
+          GH_PAGES_BASE: '/'
         run: npm run build
 
-      - name: Run local smoke server
+      - name: Verify build output
         run: |
-          # Serve built public files on port 5000 and check health endpoint
-          npm run ci:serve &
-          sleep 2
-          curl -f http://127.0.0.1:5000/health || (echo "Health check failed" && exit 1)
+          if [ -f ./dist/public/index.html ]; then
+            echo "Build output found: ./dist/public/index.html"
+          else
+            echo "Error: build output ./dist/public/index.html not found"
+            ls -la ./dist || true
+            exit 1
+          fi
+

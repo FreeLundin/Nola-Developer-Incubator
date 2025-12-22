@@ -2,7 +2,7 @@
 
 +> Playtest (public): Try the live build: https://mardi-gras-parade-game.vercel.app/ (legacy; may be removed)
 +> Developer (local): Run the dev server and open http://localhost:5000
-+
+
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6)](https://www.typescriptlang.org/)
@@ -32,7 +32,7 @@ The site will be available at `https://<your-org-or-username>.github.io/<reposit
 
 ### Legacy: Vercel (archived)
 
-If you rely on the previous Vercel deployment, note that the Vercel config is intentionally deprecated in this repository. Original `vercel.json` content has been moved to `vercel.json.bak` for reference.
+If you relied on the previous Vercel deployment, note that the Vercel config is intentionally deprecated in this repository. Original `vercel.json` content is backed up in `vercel.json.bak` for reference.
 
 ---
 
@@ -155,29 +155,17 @@ NDI_MardiGrasParade/
 
 ### GitHub Pages (Recommended)
 
-This application is **production-ready for GitHub Pages deployment**:
+This application is production-ready for GitHub Pages deployment. A workflow at `.github/workflows/deploy-gh-pages.yml` builds the site and publishes `dist/public` to the `gh-pages` branch.
 
-✅ **Public Access** - Deployed instances are publicly accessible to anyone with the URL  
-✅ **Auto-Deploy** - Push to main branch automatically deploys  
-✅ **Preview URLs** - Every PR gets its own preview deployment  
+To deploy manually via Actions:
+1. Push to `main` (the workflow will build and publish automatically), or use the `workflow_dispatch` trigger in the Actions UI to run it on demand.
+2. Ensure `npm run build` completes successfully and `dist/public/index.html` is created.
 
-**Complete deployment instructions:** See [README_VERCEL.md](README_VERCEL.md)
+The site will be available at `https://<your-org-or-username>.github.io/<repository-name>/` when published.
 
-**Key Features When Deployed:**
-- Game accessible at `https://your-project-name.vercel.app`
-- Share the link with anyone - no login or setup required for players
-- Automatic HTTPS and global CDN
-- API routes work as serverless functions
-- Database persists user data and high scores
+### Legacy: Vercel (archived)
 
-### Testing Your Deployment
-
-Once deployed, anyone can test by visiting:
-```
-https://your-project-name.vercel.app
-```
-
-No authentication needed - the game loads and plays immediately in the browser!
+If you relied on the previous Vercel deployment, note that the Vercel config is intentionally deprecated in this repository. Original `vercel.json` content is backed up in `vercel.json.bak` for reference.
 
 ---
 
