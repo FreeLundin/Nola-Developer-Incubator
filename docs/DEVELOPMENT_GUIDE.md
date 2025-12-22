@@ -460,7 +460,7 @@ Test thoroughly in production mode before deployment.
 
 The project is designed for deployment to platforms like:
 
-- **Vercel** - Frontend hosting
+- **GitHub Pages** - Frontend hosting (static)
 - **Railway** - Backend hosting
 - **Render** - Full-stack hosting
 - **Neon** - PostgreSQL database
