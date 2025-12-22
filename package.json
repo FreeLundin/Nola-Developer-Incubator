@@ -21,7 +21,10 @@
     "playwright:preview": "cross-env PREVIEW_URL=$PREVIEW_URL npx playwright test tests/playwright/interaction.spec.ts --project=chromium",
     "ci:serve": "http-server ./dist/public -p 5000 -c-1",
     "playwright:test": "cross-env PREVIEW_URL=http://127.0.0.1:5000 npx playwright test",
-    "deploy:gh-pages": "node ./scripts/build-gh-pages.js && npx gh-pages --dotfiles -d dist/public"
+    "build:gh-pages": "node ./scripts/build-gh-pages.js",
+    "publish:gh-pages": "node ./scripts/publish-gh-pages.js",
+    "deploy:gh-pages": "node ./scripts/build-gh-pages.js && npx gh-pages --dotfiles -d dist/public",
+    "deploy:gh-pages:local": "npm run deploy:gh-pages"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.5",

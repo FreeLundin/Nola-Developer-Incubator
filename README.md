@@ -18,6 +18,8 @@
 
 **Note:** This repository has been migrated away from the previous hosting provider; frontend deploys are now recommended via GitHub Pages. The previous hosting configuration has been archived in `archive/legacy-hosting/` and top-level backups for reference.
 
+A small set of legacy Vercel configuration and deployment files have also been archived to `archive/vercel-archive/` for historical reference; they are no longer used for current deployments.
+
 If you still have a working public URL from the previous hosting, you can use it for playtesting, but new deploys should use GitHub Pages (instructions below).
 
 ### Public Playtest URL (where to put your live link)
@@ -46,6 +48,22 @@ To deploy manually via Actions:
 2. Ensure `npm run build` completes successfully and `dist/public/index.html` is created.
 
 The site will be available at `https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/` when published.
+
+Local publish (developer):
+
+1. Build the site and publish to the `gh-pages` branch using the included npm script (this uses the `gh-pages` package to push a commit to the `gh-pages` branch):
+
+```powershell
+# Build and publish to gh-pages branch (local)
+npm run deploy:gh-pages:local
+```
+
+2. If you only want to build and inspect the output without publishing, run:
+
+```powershell
+# Build only (creates dist/public)
+node ./scripts/build-gh-pages.js
+```
 
 ---
 

@@ -57,3 +57,5 @@ Expect a JSON response with `{ "status": "ok" }`.
 - For static-only frontend hosting, publish `dist/public` to your static host of choice (GitHub Pages, Netlify, S3, etc.).
 
 If you need to recover previous provider-specific instructions, check repository history or the `archive/` directory for historical notes.
+
+Note: Legacy Vercel configuration and deploy files have been moved to `archive/vercel-archive/` for reference; they are not used by current CI/deploy workflows.
