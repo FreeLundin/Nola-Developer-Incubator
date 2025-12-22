@@ -6,7 +6,9 @@ import fs from 'fs';
 
 // Compute a relative base path for GitHub Pages if running in CI with GITHUB_REPOSITORY
 const repo = process.env.GITHUB_REPOSITORY || '';
-const base = process.env.GH_PAGES_BASE || (repo.includes('/') ? `/${repo.split('/')[1]}/` : '/');
+let base = process.env.GH_PAGES_BASE || (repo.includes('/') ? `/${repo.split('/')[1]}/` : '/');
+// Trim any accidental whitespace from environment or computed value
+base = String(base).trim();
 
 console.log('Using base:', base);
 
@@ -32,6 +34,23 @@ try {
     shell: true,
   });
   console.log('Build complete.');
+
+  // Post-build: add cache-busting query param to built asset references in dist/public/index.html
+  try {
+    const distIndex = path.resolve(process.cwd(), 'dist', 'public', 'index.html');
+    if (fs.existsSync(distIndex)) {
+      const timestamp = Date.now();
+      let html = fs.readFileSync(distIndex, 'utf-8');
+      // Append ?v=<timestamp> to JS and CSS asset references that match index-*.js and index-*.css
+      html = html.replace(/(src=")([^"]*index-[^"\s]*\.js)(")/g, `$1$2?v=${timestamp}$3`);
+      html = html.replace(/(href=")([^"]*index-[^"\s]*\.css)(")/g, `$1$2?v=${timestamp}$3`);
+      fs.writeFileSync(distIndex, html, 'utf-8');
+      console.log('Applied cache-buster to dist/public/index.html:', timestamp);
+    }
+  } catch (e) {
+    console.warn('Cache-buster step failed:', e);
+  }
+
 } catch (err) {
   console.error('Build failed:', err);
   // Restore original if backup exists
