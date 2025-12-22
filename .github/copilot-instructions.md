@@ -360,9 +360,9 @@ npx playwright test --headed
 
 # Run against deployed instance (set PLAYTEST_URL environment variable)
 # Windows PowerShell:
-$env:PLAYTEST_URL = 'https://mardi-gras-parade-game.vercel.app'; npx playwright test
+$env:PLAYTEST_URL = 'https://<your-org-or-username>.github.io/<repository-name>/' ; npx playwright test
 # macOS/Linux:
-export PLAYTEST_URL='https://mardi-gras-parade-game.vercel.app' && npx playwright test
+export PLAYTEST_URL='https://<your-org-or-username>.github.io/<repository-name>/' && npx playwright test
 ```
 
 Test files are located in `tests/playwright/`. When adding new features, consider adding corresponding Playwright tests to ensure functionality.
@@ -383,7 +383,7 @@ Test files are located in `tests/playwright/`. When adding new features, conside
 - **TypeScript compilation** runs on every PR
 - **Playwright tests** run in CI environment
 - **Review required** before merging to main
-- **Deploy to Vercel** happens automatically on merge to main
+- **Deploy to GitHub Pages** happens automatically on merge to main
 
 ## Environment Variables
 

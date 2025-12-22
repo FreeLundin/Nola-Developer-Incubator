@@ -21,8 +21,8 @@ export function attachRoutes(app: Express) {
 
   // simple admin-only route to save overrides (local development only)
   app.post('/admin/bots', (req, res) => {
-    // Prevent writes in production / serverless environments (e.g., Vercel)
-    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+    // Prevent writes in production or serverless environments
+    if (process.env.NODE_ENV === 'production') {
       return res.status(403).json({ error: 'writing overrides is disabled in production' });
     }
 
