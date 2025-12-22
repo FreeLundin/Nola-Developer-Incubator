@@ -5,6 +5,7 @@ on:
     branches: [ main ]
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -62,3 +63,29 @@ jobs:
         env:
           CI: true
         run: npx playwright test --reporter=github
+
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check (tsc)
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - name: Run local smoke server
+        run: |
+          # Serve built public files on port 5000 and check health endpoint
+          npm run ci:serve &
+          sleep 2
+          curl -f http://127.0.0.1:5000/health || (echo "Health check failed" && exit 1)

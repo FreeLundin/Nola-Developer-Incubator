@@ -24,20 +24,26 @@ jobs:
 
       - name: Build
         env:
-          # Ensure Vite emits correct base when running in Actions
-          GH_PAGES_BASE: ${{ github.repository ? '/' + github.repository.split('/')[1] + '/' : '/' }}
+          # Set GH_PAGES_BASE to root by default. If you need a subdirectory base, adjust this manually.
+          GH_PAGES_BASE: '/'
         run: npm run build
 
       - name: Ensure 404.html for SPA routing
         run: |
           echo "Copying index.html to 404.html to support SPA deep links"
-          cp ./dist/public/index.html ./dist/public/404.html
+          # Ensure dist/public exists and index.html is present; fail fast with diagnostics if not
+          if [ -f ./dist/public/index.html ]; then
+            cp ./dist/public/index.html ./dist/public/404.html
+            echo "Copied ./dist/public/index.html → ./dist/public/404.html"
+          else
+            echo "Error: ./dist/public/index.html not found. Build may have failed or output path changed."
+            echo "Listing ./dist contents for debugging:"
+            ls -la ./dist || true
+            exit 1
+          fi
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist/public
-          # Keep history small
-          keep_history: false
-

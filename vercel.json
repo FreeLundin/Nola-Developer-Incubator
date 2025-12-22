@@ -1,27 +1,5 @@
 {
   "deprecated": true,
-  "note": "This project uses GitHub Pages for frontend deploys. Original Vercel config retained here for reference — do not use for new deploys.",
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist/public" }
-    },
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "api/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
-  "outputDirectory": "dist/public"
+  "note": "Vercel deployment is deprecated for this repository - GitHub Pages is used instead. Original config backed up to vercel.json.bak.",
+  "version": 2
 }
