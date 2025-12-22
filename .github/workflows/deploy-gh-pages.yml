@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -22,7 +23,15 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          # Ensure Vite emits correct base when running in Actions
+          GH_PAGES_BASE: ${{ github.repository ? '/' + github.repository.split('/')[1] + '/' : '/' }}
         run: npm run build
+
+      - name: Ensure 404.html for SPA routing
+        run: |
+          echo "Copying index.html to 404.html to support SPA deep links"
+          cp ./dist/public/index.html ./dist/public/404.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

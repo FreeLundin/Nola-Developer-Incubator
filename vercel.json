@@ -1,4 +1,6 @@
 {
+  "deprecated": true,
+  "note": "This project uses GitHub Pages for frontend deploys. Original Vercel config retained here for reference — do not use for new deploys.",
   "version": 2,
   "builds": [
     {
