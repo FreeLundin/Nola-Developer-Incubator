@@ -4,9 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 export function Environment() {
-  // Use Vite's base URL so textures load correctly on project pages (GH Pages)
-  const baseUrl = (import.meta.env && (import.meta.env.BASE_URL as string)) || '/';
-  const asphaltTexture = useTexture(`${baseUrl}textures/asphalt.png`);
+  const asphaltTexture = useTexture("/textures/asphalt.png");
   const spotlightGroupRef = useRef<THREE.Group>(null);
   
   // Pre-calculate building positions to avoid Math.random in render
@@ -123,17 +121,12 @@ export function Environment() {
       {/* Street/Ground - Main parade route */}
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[14, 50]} />
-        {asphaltTexture ? (
-          <meshStandardMaterial
-            map={asphaltTexture}
-            map-repeat={new THREE.Vector2(3, 10)}
-            map-wrapS={THREE.RepeatWrapping}
-            map-wrapT={THREE.RepeatWrapping}
-          />
-        ) : (
-          // Fallback plain material if texture fails to load
-          <meshStandardMaterial color="#444444" />
-        )}
+        <meshStandardMaterial 
+          map={asphaltTexture} 
+          map-repeat={new THREE.Vector2(3, 10)}
+          map-wrapS={THREE.RepeatWrapping}
+          map-wrapT={THREE.RepeatWrapping}
+        />
       </mesh>
       
       {/* Street yellow center line */}

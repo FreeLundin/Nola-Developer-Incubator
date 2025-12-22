@@ -23,7 +23,7 @@ export const useAudio = create<AudioState>((set, get) => ({
   backgroundMusic: null,
   hitSound: null,
   successSound: null,
-  isMuted: false, // Start unmuted by default (user preference: audio on)
+  isMuted: true, // Start muted by default
 
   setBackgroundMusic: (music) => set({ backgroundMusic: music }),
   setHitSound: (sound) => set({ hitSound: sound }),
@@ -90,10 +90,3 @@ export const useAudio = create<AudioState>((set, get) => ({
     }
   }
 }));
-
-// Ensure Howler global mute matches the store default on startup
-try {
-  Howler.mute(useAudio.getState().isMuted);
-} catch (e) {
-  // ignore in environments without audio
-}

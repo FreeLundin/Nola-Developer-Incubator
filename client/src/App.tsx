@@ -37,30 +37,6 @@ function App() {
   
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
-      {/* Clickable logo linking to public playtest. Prefer user-provided PNG if present, otherwise fallback to favicon. */}
-      {/* Place your PNG at client/public/Copilot_20251220_062127.png to use it automatically. */}
-      {
-        (() => {
-          const [imgSrc, setImgSrc] = (function() {
-            // lightweight self-contained hook emulation inside JSX to avoid adding imports
-            const src = typeof window !== 'undefined' && (window as any).__INITIAL_LOGO_SRC__ ? (window as any).__INITIAL_LOGO_SRC__ : '/Copilot_20251220_062127.png';
-            return [src, (newSrc: string) => { (window as any).__INITIAL_LOGO_SRC__ = newSrc; }];
-          })();
-          return (
-            <a href="https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/" target="_blank" rel="noopener noreferrer" style={{ position: 'absolute', top: 8, left: 8, zIndex: 99999 }}>
-              <img
-                src={imgSrc}
-                onError={(e) => { const img = e.currentTarget as HTMLImageElement; img.onerror = null; img.src = '/favicon-32.png'; }}
-                alt="Open Live Playtest"
-                width={36}
-                height={36}
-                style={{ display: 'block', borderRadius: 6, boxShadow: '0 6px 14px rgba(0,0,0,0.5)' }}
-              />
-            </a>
-          );
-        })()
-      }
-      
       <KeyboardControls map={controls}>
         <Canvas
           shadows

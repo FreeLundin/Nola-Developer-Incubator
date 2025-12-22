@@ -16,7 +16,6 @@ import { toast } from "sonner";
 export function GameUI() {
   const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
-  const backgroundMusic = useAudio((s) => s.backgroundMusic);
   const [showTutorial, setShowTutorial] = useState(true);
   const [showFirstLevelTutorial, setShowFirstLevelTutorial] = useState(false);
   const [comboVisible, setComboVisible] = useState(false);
@@ -25,11 +24,7 @@ export function GameUI() {
   const [showShop, setShowShop] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showPersonas, setShowPersonas] = useState<boolean>(() => {
-    try {
-      return typeof window !== 'undefined' && localStorage.getItem('showPersonas') === 'true';
-    } catch (e) {
-      return false;
-    }
+    try { return typeof window !== 'undefined' && localStorage.getItem('showPersonas') === 'true'; } catch { return false; }
   });
   const [showAdmin, setShowAdmin] = useState(false);
   const isMobile = useIsMobile();
@@ -97,23 +92,6 @@ export function GameUI() {
     startGame();
   };
   
-  const unlockAudio = () => {
-    try {
-      // Try to play/pause the background music to unlock audio on browsers
-      if (backgroundMusic) {
-        backgroundMusic.play();
-        backgroundMusic.pause();
-      }
-      // Ensure store is unmuted
-      if (useAudio.getState().isMuted) {
-        useAudio.getState().toggleMute();
-      }
-      console.log('Attempted to unlock audio via user action');
-    } catch (e) {
-      console.warn('Unlock audio failed:', e);
-    }
-  };
-
   return (
     <>
       {/* Tutorial Overlay */}
@@ -224,13 +202,6 @@ export function GameUI() {
                 className="bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white p-1 md:p-2"
               >
                 {isMuted ? <VolumeX size={14} className="md:w-[18px] md:h-[18px]" /> : <Volume2 size={14} className="md:w-[18px] md:h-[18px]" />}
-              </Button>
-              <Button
-                onClick={unlockAudio}
-                size="sm"
-                className="ml-2 bg-green-600 hover:bg-green-500 border-2 border-yellow-400 text-white p-1 md:p-2"
-              >
-                Enable Audio
               </Button>
               
               {isMobile && (

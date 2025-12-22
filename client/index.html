@@ -6,7 +6,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <title>NDI_MardiGrasParade</title>
-    <base href="%BASE%"> <!-- replaced at build time by scripts/build-gh-pages.js -->
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <style>
@@ -22,61 +21,7 @@
         width: 100%;
         height: 100%;
       }
-      /* Error overlay styles */
-      #__error_overlay__ {
-        position: fixed;
-        left: 10px;
-        right: 10px;
-        top: 10px;
-        z-index: 999999;
-        background: rgba(0,0,0,0.85);
-        color: #fff;
-        padding: 12px;
-        font-family: monospace;
-        font-size: 13px;
-        border-radius: 6px;
-        max-height: 60vh;
-        overflow: auto;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      }
-      #__error_overlay__ h2 { margin: 0 0 8px 0; font-size: 14px; }
-      #__error_overlay__ pre { white-space: pre-wrap; margin: 0; }
     </style>
-    <script>
-      (function installErrorOverlay(){
-        if (typeof window === 'undefined') return;
-        function createOverlay(){
-          var o = document.createElement('div');
-          o.id = '__error_overlay__';
-          o.style.display = 'none';
-          o.innerHTML = '<h2>Client Error</h2><pre id="__error_overlay_pre__"></pre>';
-          document.addEventListener('DOMContentLoaded', function(){ document.body.appendChild(o); });
-          return o;
-        }
-        var overlay = createOverlay();
-        function showError(message){
-          try{
-            var pre = document.getElementById('__error_overlay_pre__');
-            if (!pre && overlay) pre = overlay.querySelector('pre');
-            if (pre) pre.textContent = message;
-            if (overlay) overlay.style.display = 'block';
-          }catch(e){/* ignore */}
-          // also log to console for automated capture
-          console.error('Captured client error:', message);
-        }
-
-        window.addEventListener('error', function(e){
-          var msg = (e && e.error && e.error.stack) ? e.error.stack : (e && e.message) ? e.message : String(e);
-          showError(msg);
-        });
-        window.addEventListener('unhandledrejection', function(ev){
-          var reason = ev && ev.reason ? (ev.reason.stack || ev.reason) : ev;
-          showError('Unhandled Rejection: ' + (reason && reason.stack ? reason.stack : String(reason)));
-        });
-        // expose helper
-        window.__showClientError = showError;
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>
