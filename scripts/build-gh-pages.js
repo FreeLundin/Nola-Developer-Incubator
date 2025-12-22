@@ -46,6 +46,15 @@ try {
       html = html.replace(/(href=")([^"]*index-[^"\s]*\.css)(")/g, `$1$2?v=${timestamp}$3`);
       fs.writeFileSync(distIndex, html, 'utf-8');
       console.log('Applied cache-buster to dist/public/index.html:', timestamp);
+
+      // Also write a debug.html copy so cached index isn't needed
+      try {
+        const debugPath = path.resolve(process.cwd(), 'dist', 'public', 'debug.html');
+        fs.writeFileSync(debugPath, html, 'utf-8');
+        console.log('Wrote debug page to dist/public/debug.html');
+      } catch (e) {
+        console.warn('Failed to write debug.html:', e);
+      }
     }
   } catch (e) {
     console.warn('Cache-buster step failed:', e);

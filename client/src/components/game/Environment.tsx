@@ -4,7 +4,9 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 export function Environment() {
-  const asphaltTexture = useTexture("/textures/asphalt.png");
+  // Use Vite's base URL so textures load correctly on project pages (GH Pages)
+  const baseUrl = (import.meta.env && (import.meta.env.BASE_URL as string)) || '/';
+  const asphaltTexture = useTexture(`${baseUrl}textures/asphalt.png`);
   const spotlightGroupRef = useRef<THREE.Group>(null);
   
   // Pre-calculate building positions to avoid Math.random in render
