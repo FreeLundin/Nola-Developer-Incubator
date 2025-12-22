@@ -1,7 +1,7 @@
 # 🎭 NDI_MardiGrasParade
 
-+> Playtest (public): Try the live build: https://<your-org-or-username>.github.io/<repository-name>/ (legacy; may be removed)
-+> Developer (local): Run the dev server and open http://localhost:5000
++> Playtest (public): Public demo (replace with your published URL): https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/
++> Developer (local): Run the dev server or serve the built site locally
 
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
@@ -20,6 +20,23 @@
 
 If you still have a working public URL from the previous hosting, you can use it for playtesting, but new deploys should use GitHub Pages (instructions below).
 
+### Public Playtest URL (where to put your live link)
+
+- When the site is published via GitHub Pages the canonical public URL will be:
+-
+-  https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/
+
+- Example placeholder for this repository (published under the original org):
+
+  https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/
+
+- To find your exact public URL after publishing:
+  1. Open your repository on GitHub.
+  2. Go to Settings → Pages (or look at the GitHub Pages section on the main repo page) — it will show the published URL.
+  3. If using the `deploy-gh-pages` workflow, check the Actions run logs — the job will indicate the final published URL.
+
+> NOTE: Replace the placeholder above with your org/username and repository name when sharing a public playtest link.
+
 ### Deploy to GitHub Pages (recommended)
 
 This repo includes a GitHub Actions workflow that builds the site and publishes `dist/public` to GitHub Pages (`gh-pages` branch). The workflow is located at `.github/workflows/deploy-gh-pages.yml`.
@@ -28,7 +45,7 @@ To deploy manually via Actions:
 1. Push to `main` (the workflow will build and publish automatically), or use the `workflow_dispatch` trigger in the Actions UI to run it on demand.
 2. Ensure `npm run build` completes successfully and `dist/public/index.html` is created.
 
-The site will be available at `https://<your-org-or-username>.github.io/<repository-name>/` when published.
+The site will be available at `https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/` when published.
 
 ---
 
@@ -50,6 +67,18 @@ npm run dev
 # Open locally → http://localhost:5000
 ```
 
+### Run the built production server (serves `dist/public` on port 5000)
+
+```powershell
+# Build client + bundle server
+npm run build
+
+# Start the production server (serves both API and front-end)
+npm start
+
+# Open in browser: http://localhost:5000
+```
+
 ### Windows PowerShell notes
 
 If you get errors like "`npm.ps1 cannot be loaded because running scripts is disabled on this system`", run this in PowerShell (temporary for the session):
@@ -69,6 +98,7 @@ If `npx` or `npm exec` is blocked by the PS wrapper, use the `cmd /c` fallback s
 ## 🔗 Public Playtest
 
 - Developers: run the local dev server with `npm run dev` and open `http://localhost:5000`.
+- If the dev server does not appear to start, try running the built server (production) with `npm run build` and `npm start` — this will serve the already-built `dist/public` on port 5000.
 - For a public instance, deploy using the GitHub Pages workflow or another hosting provider. See `DEPLOYMENT.md` for more options.
 
 ---
@@ -157,7 +187,7 @@ To deploy manually via Actions:
 1. Push to `main` (the workflow will build and publish automatically), or use the `workflow_dispatch` trigger in the Actions UI to run it on demand.
 2. Ensure `npm run build` completes successfully and `dist/public/index.html` is created.
 
-The site will be available at `https://<your-org-or-username>.github.io/<repository-name>/` when published.
+The site will be available at `https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/` when published.
 
 ---
 
@@ -304,6 +334,20 @@ If the public playtest URL returns an error (503 or similar):
 
 - Confirm the server is running locally: `npm run dev` (serves on http://localhost:5000)
 - Check the health endpoint: `curl http://localhost:5000/health` should return `{ status: 'ok' }`.
+
+  PowerShell (Windows):
+
+  ```powershell
+  # check health
+  Invoke-WebRequest -Uri 'http://localhost:5000/health' -UseBasicParsing | Select-Object StatusCode, Content
+  ```
+
+  curl (macOS / Linux / Windows with curl):
+
+  ```bash
+  curl -v http://localhost:5000/health
+  ```
+
 - For a publicly accessible instance, deploy using the GitHub Pages workflow or another hosting provider.
 
 ---

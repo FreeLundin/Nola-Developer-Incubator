@@ -13,11 +13,7 @@ npm run build
 npm run deploy:gh-pages
 ```
 
-The published site will be available at:
-
-```
-https://<your-org-or-username>.github.io/<repository-name>/
-```
+The site will be available at https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/ when published.
 
 ## Self-hosting (backend + frontend)
 
