@@ -1,6 +1,6 @@
 # 🎭 NDI_MardiGrasParade
 
-+> Playtest (public): Try the live build: https://mardi-gras-parade-game.vercel.app/ (legacy; may be removed)
++> Playtest (public): Try the live build: https://<your-org-or-username>.github.io/<repository-name>/ (legacy; may be removed)
 +> Developer (local): Run the dev server and open http://localhost:5000
 
 [![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
@@ -16,9 +16,9 @@
 
 ## 🌐 Live Demo
 
-**Note:** This repository has been migrated away from Vercel to GitHub Pages for frontend deploys. The old Vercel configuration has been archived to `vercel.json.bak` and `vercel.json` is marked deprecated to avoid accidental Vercel deploys.
+**Note:** This repository has been migrated away from the previous hosting provider; frontend deploys are now recommended via GitHub Pages. The previous hosting configuration has been archived in `archive/legacy-hosting/` and top-level backups for reference.
 
-If you still have a working public Vercel URL, you can use it for playtesting, but new deploys should use GitHub Pages (instructions below).
+If you still have a working public URL from the previous hosting, you can use it for playtesting, but new deploys should use GitHub Pages (instructions below).
 
 ### Deploy to GitHub Pages (recommended)
 
@@ -29,10 +29,6 @@ To deploy manually via Actions:
 2. Ensure `npm run build` completes successfully and `dist/public/index.html` is created.
 
 The site will be available at `https://<your-org-or-username>.github.io/<repository-name>/` when published.
-
-### Legacy: Vercel (archived)
-
-If you relied on the previous Vercel deployment, note that the Vercel config is intentionally deprecated in this repository. Original `vercel.json` content is backed up in `vercel.json.bak` for reference.
 
 ---
 
@@ -73,7 +69,7 @@ If `npx` or `npm exec` is blocked by the PS wrapper, use the `cmd /c` fallback s
 ## 🔗 Public Playtest
 
 - Developers: run the local dev server with `npm run dev` and open `http://localhost:5000`.
-- For a public instance, deploy using the GitHub Actions workflow to GitHub Pages. See the section above for details.
+- For a public instance, deploy using the GitHub Pages workflow or another hosting provider. See `DEPLOYMENT.md` for more options.
 
 ---
 
@@ -162,10 +158,6 @@ To deploy manually via Actions:
 2. Ensure `npm run build` completes successfully and `dist/public/index.html` is created.
 
 The site will be available at `https://<your-org-or-username>.github.io/<repository-name>/` when published.
-
-### Legacy: Vercel (archived)
-
-If you relied on the previous Vercel deployment, note that the Vercel config is intentionally deprecated in this repository. Original `vercel.json` content is backed up in `vercel.json.bak` for reference.
 
 ---
 
@@ -312,12 +304,11 @@ If the public playtest URL returns an error (503 or similar):
 
 - Confirm the server is running locally: `npm run dev` (serves on http://localhost:5000)
 - Check the health endpoint: `curl http://localhost:5000/health` should return `{ status: 'ok' }`.
-- For a publicly accessible instance, deploy to Vercel (recommended) or another hosting provider.
-
+- For a publicly accessible instance, deploy using the GitHub Pages workflow or another hosting provider.
 
 ---
 
 ## 🛡️ Server & Deployment Updates (2025-12-18)
 
 - Graceful shutdown implemented: server now tracks open sockets and destroys lingering connections on shutdown. This improves reliability when restarting under process managers (pm2) or tunnels (cloudflared).
-- Use `startServer()` export from `server/index.ts` for programmatic start/shutdown in tests/CI.
+- Use `startServer()` export from `server/index.ts` for programmatic start/shutdown in tests/CI

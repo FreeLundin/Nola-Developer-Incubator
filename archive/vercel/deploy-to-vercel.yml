@@ -1,0 +1,4 @@
+# Archived: Original GitHub Actions workflow to deploy to Vercel.
+# This file was moved from .github/workflows/deploy-to-vercel.yml when Vercel deployment was deprecated.
+# See docs/VERCEL_CI.md (archived) or DEPLOYMENT.md for current deployment instructions (GitHub Pages).
+

@@ -1,3 +1,5 @@
-# (Archived) Vercel Deployment Guide
+# (Archived) Deployment Guide
 
-This file has been moved to `archive/vercel/README_VERCEL.md`. See that file for the original Vercel deployment guide.
+This deployment guide has been archived. The project now recommends GitHub Pages for frontend deployments and documents deployment options in `DEPLOYMENT.md` and `README.md`.
+
+For the original instructions, see `archive/legacy-hosting/README_VERCEL.md`.
