@@ -7,7 +7,19 @@ import glsl from "vite-plugin-glsl";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Compute a sensible base path when running in GitHub Actions so Vite emits
+// assets with the repository name as the base (e.g. '/repo-name/'). Locally
+// and in other CI this will default to '/'.
+const repoBase =
+  process.env.GITHUB_REPOSITORY && process.env.GITHUB_REPOSITORY.includes('/')
+    ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
+    : '/';
+
 export default defineConfig({
+  // Use the computed base by default. If you need a custom base for other
+  // hosting (CDN or custom domain), set the GH_PAGES_BASE env var or override
+  // this value in your environment.
+  base: process.env.GH_PAGES_BASE || repoBase,
   plugins: [
     react(),
     glsl(), // Add GLSL shader support
