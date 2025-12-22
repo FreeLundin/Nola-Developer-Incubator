@@ -1,5 +1,7 @@
 # 🎭 NDI_MardiGrasParade
 
+[![Playtest](https://nola-developer-incubator.github.io/MardiGrasParadeGame/favicon-32.png)](https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/ "Open Live Playtest")
+
 +> Playtest (public): https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/  
 +> Repository: https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame  
 +> About (GitHub): https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame#readme  
