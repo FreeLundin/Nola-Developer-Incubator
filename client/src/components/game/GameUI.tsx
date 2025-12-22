@@ -24,8 +24,12 @@ export function GameUI() {
   const [, forceUpdate] = useState(0); // For power-up countdown updates
   const [showShop, setShowShop] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showPersonas, setShowPersonas<boolean>(() => {
-    try { return typeof window !== 'undefined' && localStorage.getItem('showPersonas') === 'true'; } catch { return false; }
+  const [showPersonas, setShowPersonas] = useState<boolean>(() => {
+    try {
+      return typeof window !== 'undefined' && localStorage.getItem('showPersonas') === 'true';
+    } catch (e) {
+      return false;
+    }
   });
   const [showAdmin, setShowAdmin] = useState(false);
   const isMobile = useIsMobile();
