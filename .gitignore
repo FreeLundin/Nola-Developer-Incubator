@@ -17,5 +17,6 @@ coverage/
 
 # Local OS files
 Thumbs.db
+# Legacy Vercel directory (kept in .gitignore). The project no longer uses Vercel; archived Vercel configs are in archive/legacy-hosting/.
 .vercel
 .env*.local
