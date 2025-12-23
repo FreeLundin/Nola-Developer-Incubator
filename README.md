@@ -11,9 +11,12 @@ Summary
 - Local development: `npm run dev` (dev server with HMR) and `http://localhost:5000`.
 - Production build served locally: `npm run build` then `npm start` (serves `dist/public` on port 5000).
 
-Why this README changed
-- This file is the canonical project entry and has been cleaned and simplified.
-- Other README files in the repo have been archived and now point back here.
+Definition of Done (DOD) — Sprint 1 (short)
+- Frontend compiles and runs locally (npm run dev) and there is a production build (npm run build).
+- Public, shareable build is published to GitHub Pages and the public URL above loads the game.
+- Mobile joystick controls work and are documented in Settings and this README.
+- Competitor (bot) scores are visible on desktop and a compact overlay appears on mobile when joystick is enabled.
+- Audio is enabled by default when the page is first loaded (user can mute via the HUD).
 
 Quick start (developer)
 1. Clone the repo:
@@ -21,12 +24,17 @@ Quick start (developer)
    git clone https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame.git
    cd MardiGrasParadeGame
 
-2. Install dependencies and run dev server:
+2. Install dependencies and run dev server (Windows PowerShell may block npm wrappers; see troubleshooting):
 
    npm ci
    npm run dev
 
 3. Open in browser: http://localhost:5000
+
+Joystick (mobile/tablet) — how to enable and use
+- Open Settings (gear icon) while on a phone or tablet.
+- Toggle "Joystick Controls" to enable the on-screen joystick.
+- Use: touch and drag the circular joystick area to move the player. Release to stop. The joystick supports pointer events and multi-touch in modern browsers.
 
 Build & publish (GitHub Pages)
 - Local build only (inspect output):
@@ -49,10 +57,8 @@ Troubleshooting
 - If the GitHub Pages site shows a blank page, clear browser cache and unregister service workers, then reload.
 
 Files changed in this cleanup
-- This `README.md` — canonical, cleaned, includes public link.
-- `client/README.md` — archived (now points to this file).
-- `scripts/archived/README.md` — archived (now points to this file).
-- `docs/archive/README.md` — archived (now points to this file).
+- `README.md` — canonical, cleaned, includes public link and joystick instructions.
+- UI: Settings modal and mobile HUD were updated to document joystick usage and show compact bot overlay.
 
 Contact / Project lead
 - Brian C Lundin

@@ -14,7 +14,7 @@ import { SettingsModal } from "./SettingsModal";
 import { toast } from "sonner";
 
 export function GameUI() {
-  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
+  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins, joystickEnabled } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [showFirstLevelTutorial, setShowFirstLevelTutorial] = useState(false);
@@ -122,6 +122,7 @@ export function GameUI() {
                     <div className="space-y-1 sm:space-y-2">
                       <p className="text-xs sm:text-sm">• Move: Tap screen to move</p>
                       <p className="text-xs sm:text-sm">• Get close to items to catch them</p>
+                      <p className="text-xs sm:text-sm">• Joystick available in Settings for on-screen movement</p>
                     </div>
                   )}
                   <p className="text-xs sm:text-sm text-yellow-300 font-bold">• Match your color for 3x points!</p>
@@ -256,7 +257,7 @@ export function GameUI() {
             )}
           </AnimatePresence>
           
-          {/* Bot Scores - Hidden on phones */}
+          {/* Bot Scores - Hidden on phones (desktop view) - but show compact overlay on mobile when joystick enabled */}
           <div className="hidden md:block absolute bottom-4 left-4 pointer-events-auto">
             <Card className="bg-black/40 backdrop-blur-md border-2 border-gray-400 shadow-2xl px-4 py-3">
               <div className="text-sm text-gray-200 font-black mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">🤖 COMPETITOR CATCHES</div>
@@ -279,6 +280,23 @@ export function GameUI() {
               </div>
             </Card>
           </div>
+
+          {/* Mobile compact bot overlay when joystick enabled - positioned above joystick to avoid overlap */}
+          {isMobile && joystickEnabled && (
+            <div className="block md:hidden absolute bottom-40 left-2 right-2 pointer-events-auto">
+              <Card className="bg-black/50 backdrop-blur-md border-2 border-gray-400 shadow-2xl px-3 py-2">
+                <div className="flex items-center justify-between text-xs text-gray-200 font-black mb-1">🤖 COMPETITORS</div>
+                <div className="flex gap-2 overflow-x-auto">
+                  {sortedBots.slice(0,4).map(bot => (
+                    <div key={bot.id} className="flex-shrink-0 flex flex-col items-center w-16">
+                      <div className="w-6 h-6 rounded-full mb-1" style={{ backgroundColor: bot.color }} />
+                      <div className="text-[11px] text-white text-center">{bot.catches}</div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </div>
+          )}
           
           {/* Small HUD toggles - top-right compact */}
           <div className="absolute top-4 right-4">

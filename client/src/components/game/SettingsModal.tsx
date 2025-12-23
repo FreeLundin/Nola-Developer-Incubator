@@ -42,6 +42,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <p className="text-xs text-gray-300 mt-1">
                   Use on-screen joystick for movement
                 </p>
+                <p className="text-xs text-gray-300 mt-1">
+                  How to use: touch and drag the round joystick. Release to stop.
+                  Drag up/down/left/right to move in that direction. The joystick
+                  supports multi-touch and pointer events for modern browsers.
+                </p>
+                <p className="text-xs text-yellow-300 mt-2 font-semibold">
+                  Tip: Enable joystick for tablet & phone gameplay.
+                </p>
               </div>
               <Switch
                 checked={joystickEnabled}
