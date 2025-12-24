@@ -1,314 +1,65 @@
-# 🎭 NDI_MardiGrasParade
+# 🎭 NDI_MardiGrasParade — Playable 3D Mardi Gras Parade
 
-+> Playtest (public): Try the live build: https://<your-org-or-username>.github.io/<repository-name>/ (legacy; may be removed)
-+> Developer (local): Run the dev server and open http://localhost:5000
+This repository provides a browser-playable 3D Mardi Gras parade experience built with React, React Three Fiber, Three.js and TypeScript.
 
-[![React](https://img.shields.io/badge/React-18.3-61dafb)](https://reactjs.org/)
-[![Three.js](https://img.shields.io/badge/Three.js-WebGL-black)](https://threejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+Public playtest (GitHub Pages): https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/
 
-> **An immersive 3D Mardi Gras parade experience playable directly in your browser!**
-> 
-> Catch beads, doubloons, and cups from parade floats while competing with AI opponents in this celebration of New Orleans culture.
+Repository: https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame
 
----
+Summary
+- Playable in the browser via GitHub Pages (see public link above).
+- Local development: `npm run dev` (dev server with HMR) and `http://localhost:5000`.
+- Production build served locally: `npm run build` then `npm start` (serves `dist/public` on port 5000).
 
-## 🌐 Live Demo
+Definition of Done (DOD) — Sprint 1 (short)
+- Frontend compiles and runs locally (npm run dev) and there is a production build (npm run build).
+- Public, shareable build is published to GitHub Pages and the public URL above loads the game.
+- Mobile joystick controls work and are documented in Settings and this README.
+- Competitor (bot) scores are visible on desktop and a compact overlay appears on mobile when joystick is enabled.
+- Audio is enabled by default when the page is first loaded (user can mute via the HUD).
 
-**Note:** This repository has been migrated away from the previous hosting provider; frontend deploys are now recommended via GitHub Pages. The previous hosting configuration has been archived in `archive/legacy-hosting/` and top-level backups for reference.
+Quick start (developer)
+1. Clone the repo:
 
-If you still have a working public URL from the previous hosting, you can use it for playtesting, but new deploys should use GitHub Pages (instructions below).
+   git clone https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame.git
+   cd MardiGrasParadeGame
 
-### Deploy to GitHub Pages (recommended)
+2. Install dependencies and run dev server (Windows PowerShell may block npm wrappers; see troubleshooting):
 
-This repo includes a GitHub Actions workflow that builds the site and publishes `dist/public` to GitHub Pages (`gh-pages` branch). The workflow is located at `.github/workflows/deploy-gh-pages.yml`.
+   npm ci
+   npm run dev
 
-To deploy manually via Actions:
-1. Push to `main` (the workflow will build and publish automatically), or use the `workflow_dispatch` trigger in the Actions UI to run it on demand.
-2. Ensure `npm run build` completes successfully and `dist/public/index.html` is created.
+3. Open in browser: http://localhost:5000
 
-The site will be available at `https://<your-org-or-username>.github.io/<repository-name>/` when published.
+Joystick (mobile/tablet) — how to enable and use
+- Open Settings (gear icon) while on a phone or tablet.
+- Toggle "Joystick Controls" to enable the on-screen joystick.
+- Use: touch and drag the circular joystick area to move the player. Release to stop. The joystick supports pointer events and multi-touch in modern browsers.
 
----
+Build & publish (GitHub Pages)
+- Local build only (inspect output):
 
-## 🚀 Quick Start (Local Development)
+  node ./scripts/build-gh-pages.js
 
-Get the simulator running in under 2 minutes (developer):
+- Build + publish to `gh-pages` branch (uses `gh-pages` package):
 
-```bash
-# Clone repository
-git clone https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame.git
-cd MardiGrasParadeGame
+  npm run deploy:gh-pages:local
 
-# Install dependencies
-npm ci
+- Or use the included GitHub Actions workflow at `.github/workflows/deploy-gh-pages.yml` to publish on push to `main` or via manual dispatch. After a successful publish the site will be available at the public playtest URL above.
 
-# Start development server (dev):
-npm run dev
+Troubleshooting
+- Windows PowerShell may block `npm.ps1` wrappers. To allow for the session only:
 
-# Open locally → http://localhost:5000
-```
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
 
-### Windows PowerShell notes
+  If `npm`/`npx` still errors, use a cmd fallback: `cmd /c "npm ci"` or `cmd /c "npm run dev"`.
 
-If you get errors like "`npm.ps1 cannot be loaded because running scripts is disabled on this system`", run this in PowerShell (temporary for the session):
+- If the GitHub Pages site shows a blank page, clear browser cache and unregister service workers, then reload.
 
-```powershell
-# Allow scripts for this session (safe, temporary):
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
+Files changed in this cleanup
+- `README.md` — canonical, cleaned, includes public link and joystick instructions.
+- UI: Settings modal and mobile HUD were updated to document joystick usage and show compact bot overlay.
 
-# If npm.ps1 wrapper still blocks, run via cmd fallback:
-cmd /c "npm ci"
-```
-
-If `npx` or `npm exec` is blocked by the PS wrapper, use the `cmd /c` fallback shown above.
-
----
-
-## 🔗 Public Playtest
-
-- Developers: run the local dev server with `npm run dev` and open `http://localhost:5000`.
-- For a public instance, deploy using the GitHub Pages workflow or another hosting provider. See `DEPLOYMENT.md` for more options.
-
----
-
-## 🎮 Game Features
-
-### Core Gameplay
-- **🕹️ Player Movement** - WASD, click-to-move, and touch controls for mobile
-- **🎪 Parade Floats** - Moving floats throw collectibles with realistic physics
-- **🎯 Collectibles** - Beads, doubloons, cups, king cake, and power-ups
-- **⚡ Combo System** - Chain catches within 3 seconds for bonus points
-- **🎨 Color Matching** - Catch your assigned color for 3x points
-- **💪 Power-Ups** - Speed boost (1.5x) and double points (2x)
-- **📈 Level Progression** - Complete objectives to advance through levels
-
-### Competition & Challenge
-- **🤖 AI Competitors** - 6 AI opponents with unique personalities (King Rex, Queen Zulu, etc.)
-- **⚠️ Obstacles** - Moving hazards that break combos
-- **👹 Aggressive NPCs** - Chase the player when hit
-- **🎯 Strategic Gameplay** - Trajectory hints and smart timing
-
-### Customization & Settings
-- **🎨 Character Skins** - Unlock cosmetic appearances with coins (golden, rainbow, ghost, king, jester)
-- **🔊 Audio Controls** - Adjustable music and sound effects volumes
-- **📱 Mobile Optimized** - Responsive touch controls with optional on-screen joystick
-- **👀 Camera Modes** - Toggle between third-person and first-person views
-- **⚙️ Difficulty Scaling** - Accessible for ages 10-80, gradually scales after level 3
-
----
-
-## 🏗️ Project Structure
-
-```
-NDI_MardiGrasParade/
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/
-│   │   │   └── game/      # Game components and logic
-│   │   ├── lib/stores/    # Zustand state management
-│   │   └── hooks/         # Custom React hooks
-│   └── public/            # Static assets (textures, sounds)
-│
-├── server/                # Express.js backend
-│   ├── index.ts          # Main server entry
-│   ├── routes.ts         # API endpoints
-│   └── storage.ts        # Database operations
-│
-├── shared/               # Shared types and schemas
-│   └── schema.ts        # Drizzle ORM database schema
-│
-└── docs/                # Documentation
-    ├── CONTRIBUTING.md  # Contribution guidelines
-    └── DEVELOPMENT_GUIDE.md  # Technical setup
-```
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-- **React 18** - Modern UI framework with hooks
-- **Three.js** - WebGL 3D graphics library
-- **React Three Fiber** - React renderer for Three.js
-- **React Three Drei** - Useful helpers for R3F
-- **Zustand** - Lightweight state management
-- **TypeScript** - Type-safe development
-- **Vite** - Fast build tool and dev server
-- **TailwindCSS** - Utility-first CSS framework
-
-### Backend
-- **Express.js** - Fast, minimalist web framework
-- **TypeScript** - Type-safe server code
-- **Drizzle ORM** - Lightweight SQL ORM
-- **PostgreSQL** - Robust relational database (Neon)
-- **WebSocket** - Real-time communication (optional)
-
----
-
-## 🌐 Deployment
-
-### GitHub Pages (Recommended)
-
-This application is production-ready for GitHub Pages deployment. A workflow at `.github/workflows/deploy-gh-pages.yml` builds the site and publishes `dist/public` to the `gh-pages` branch.
-
-To deploy manually via Actions:
-1. Push to `main` (the workflow will build and publish automatically), or use the `workflow_dispatch` trigger in the Actions UI to run it on demand.
-2. Ensure `npm run build` completes successfully and `dist/public/index.html` is created.
-
-The site will be available at `https://<your-org-or-username>.github.io/<repository-name>/` when published.
-
----
-
-## 💻 Development
-
-### Available Scripts
-
-```bash
-# Development mode with hot reload
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Type checking
-npm run check
-
-# Push database schema
-npm run db:push
-```
-
-### Development Workflow
-
-1. **Start the dev server** - `npm run dev`
-2. **Make changes** - Files auto-reload via HMR
-3. **Test in browser** - View at http://localhost:5000
-4. **Check types** - Run `npm run check` before committing
-5. **Build** - Run `npm run build` to test production build
-
-### Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-DATABASE_URL=your_postgresql_connection_string
-PORT=5000
-NODE_ENV=development
-```
-
----
-
-## 📚 Documentation
-
-### Getting Started
-- **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - How to contribute to the project
-- **[DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md)** - Detailed technical setup and development workflow
-
-### Community & Contact
-- **Project Lead** - Brian C Lundin
-- **Discord (community)** - Nola Unreal Developer Incubator: https://discord.com/channels/809846008842158161/1424089949224960031
-
-### Code Resources
-- **Backend API** - Express.js REST API (see `server/routes.ts`)
-- **Database Schema** - Drizzle ORM schema (see `shared/schema.ts`)
-- **Game Components** - React Three.js components (see `client/src/components/game/`)
-- **State Management** - Zustand stores (see `client/src/lib/stores/`)
-
----
-
-## 🎯 Game Mechanics
-
-### Scoring System
-- **Base Points** - 1 point per collectible
-- **Color Match Bonus** - 3x points for matching your assigned color
-- **Combo Multiplier** - Catch multiple items within 3 seconds
-- **Coin Rewards** - Earn coins from catches and combos
-
-### Level Progression
-- **Starting Level** - Level 1 with tutorial
-- **Floats Per Level** - 10 floats must pass to complete each level
-- **Difficulty Curve** - Gentle progression through level 3, then gradual scaling
-- **Target Scores** - Starts at 5 points, increases by 2 each level
-
-### Power-Ups
-- **Speed Boost** - 1.5x movement speed for 8 seconds
-- **Double Points** - 2x score for 8 seconds
-- **King Cake** - Rare collectible worth 5 points
-
----
-
-## 🤝 Contributing
-
-We welcome contributions from developers of all skill levels! Whether you're fixing bugs, adding features, improving documentation, or creating new assets, your help is appreciated.
-
-### How to Contribute
-
-1. **Fork the repository**
-2. **Create a feature branch** - `git checkout -b feature/your-feature-name`
-3. **Make your changes**
-4. **Test thoroughly** - Ensure the game still runs correctly
-5. **Commit your changes** - Use clear, descriptive commit messages
-6. **Push to your fork** - `git push origin feature/your-feature-name`
-7. **Open a Pull Request** - Describe your changes and why they're valuable
-
-### Code Style
-
-- **TypeScript** - Use strict mode, type everything
-- **React** - Functional components with hooks
-- **Formatting** - Follow existing code style
-- **Comments** - Add comments for complex logic
-- **Testing** - Test your changes thoroughly in the browser
-
-For detailed contribution guidelines, see [CONTRIBUTING.md](docs/CONTRIBUTING.md).
-
----
-
-## 🎨 For Designers & Artists
-
-### What You Can Contribute
-
-Even without coding experience, you can contribute:
-
-- **3D Models** - Create or improve parade floats, collectibles, or environment assets
-- **Textures** - Design materials and texture maps
-- **Sound Effects** - Create or source audio for catches, combos, power-ups
-- **Music** - Compose festive background music
-- **UI/UX Design** - Propose interface improvements
-- **Documentation** - Improve guides and tutorials
-
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for specific guidelines.
-
----
-
-## 📈 Performance Targets
-
-### Desktop
-- **Frame Rate** - 60 FPS @ 1080p on mid-range hardware
-- **Load Time** - Under 5 seconds initial load
-- **Responsiveness** - Smooth controls and physics
-
-### Mobile
-- **Frame Rate** - 45+ FPS on iPhone 11 / Galaxy S10 equivalent
-- **Touch Controls** - Responsive joystick and tap-to-move
-- **Battery Life** - Optimized for extended play sessions
-
----
-
-## 🚨 Troubleshooting & Public Playtest
-
-If the public playtest URL returns an error (503 or similar):
-
-- Confirm the server is running locally: `npm run dev` (serves on http://localhost:5000)
-- Check the health endpoint: `curl http://localhost:5000/health` should return `{ status: 'ok' }`.
-- For a publicly accessible instance, deploy using the GitHub Pages workflow or another hosting provider.
-
----
-
-## 🛡️ Server & Deployment Updates (2025-12-18)
-
-- Graceful shutdown implemented: server now tracks open sockets and destroys lingering connections on shutdown. This improves reliability when restarting under process managers (pm2) or tunnels (cloudflared).
-- Use `startServer()` export from `server/index.ts` for programmatic start/shutdown in tests/CI
+Contact / Project lead
+- Brian C Lundin
+- Issues: https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame/issues

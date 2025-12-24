@@ -10,6 +10,7 @@ import { TouchControls, TouchInput } from "./components/game/TouchControls";
 import { Controls, JoystickInput } from "./components/game/Player";
 import { useParadeGame } from "./lib/stores/useParadeGame";
 import { useIsMobile } from "./hooks/use-is-mobile";
+import DevOverlay from "./components/game/DevOverlay";
 
 const controls = [
   { name: Controls.forward, keys: ["KeyW", "ArrowUp"] },
@@ -67,6 +68,8 @@ function App() {
         {isMobile && joystickEnabled && phase === "playing" && (
           <TouchControls onInput={handleJoystickInput} />
         )}
+
+        {process.env.NODE_ENV === 'development' && <DevOverlay />}
       </KeyboardControls>
     </div>
   );

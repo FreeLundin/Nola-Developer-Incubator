@@ -20,7 +20,7 @@ jobs:
       - name: Set PLAYTEST_URL (secret or fallback)
         run: |
           if [ -z "${{ secrets.PLAYTEST_URL }}" ]; then
-            echo "PLAYTEST_URL=https://<your-org-or-username>.github.io/<repository-name>/" >> $GITHUB_ENV
+            echo "PLAYTEST_URL=https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/" >> $GITHUB_ENV
           else
             echo "PLAYTEST_URL=${{ secrets.PLAYTEST_URL }}" >> $GITHUB_ENV
           fi

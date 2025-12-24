@@ -1,0 +1,52 @@
+name: PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build-and-deploy-preview:
+    name: Build and deploy preview to gh-pages/previews
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to gh-pages (previews/<run_id>)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist/public
+          # Place builds under previews/<run_id> so multiple previews can coexist
+          destination_dir: previews/${{ github.run_id }}
+
+      - name: Comment PR with preview URL
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
+            const runId = process.env.GITHUB_RUN_ID;
+            const url = `https://${owner}.github.io/${repo}/previews/${runId}/`;
+            const body = `✅ Preview build available: ${url}\n\nIf you don't see the preview, ensure the repository has GitHub Pages configured to serve from the \`gh-pages\` branch (root).`;
+            await github.rest.issues.createComment({
+              owner, repo,
+              issue_number: context.payload.pull_request.number,
+              body
+            });
+

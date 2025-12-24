@@ -27,3 +27,9 @@ Archive commit: 5563321
 Files moved to: `scripts/archived/binbackup/`
 
 If this archive needs to be reverted, restore files from git history or from `scripts/archived/binbackup/` and update the scripts accordingly.
+
+# Archived: scripts/archived/README.md
+
+This README has been archived. The canonical documentation and playtest link are in the top-level `README.md`.
+
+See: ../.. /README.md

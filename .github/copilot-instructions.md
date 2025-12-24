@@ -360,9 +360,9 @@ npx playwright test --headed
 
 # Run against deployed instance (set PLAYTEST_URL environment variable)
 # Windows PowerShell:
-$env:PLAYTEST_URL = 'https://<your-org-or-username>.github.io/<repository-name>/' ; npx playwright test
+$env:PLAYTEST_URL = 'https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/' ; npx playwright test
 # macOS/Linux:
-export PLAYTEST_URL='https://<your-org-or-username>.github.io/<repository-name>/' && npx playwright test
+export PLAYTEST_URL='https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/' && npx playwright test
 ```
 
 Test files are located in `tests/playwright/`. When adding new features, consider adding corresponding Playwright tests to ensure functionality.

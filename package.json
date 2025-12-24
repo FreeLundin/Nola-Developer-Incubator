@@ -21,7 +21,10 @@
     "playwright:preview": "cross-env PREVIEW_URL=$PREVIEW_URL npx playwright test tests/playwright/interaction.spec.ts --project=chromium",
     "ci:serve": "http-server ./dist/public -p 5000 -c-1",
     "playwright:test": "cross-env PREVIEW_URL=http://127.0.0.1:5000 npx playwright test",
-    "deploy:gh-pages": "node ./scripts/build-gh-pages.js && npx gh-pages --dotfiles -d dist/public"
+    "build:gh-pages": "node ./scripts/build-gh-pages.js",
+    "publish:gh-pages": "node ./scripts/publish-gh-pages.js",
+    "deploy:gh-pages": "node ./scripts/build-gh-pages.js && npx gh-pages --dotfiles -d dist/public",
+    "deploy:gh-pages:local": "npm run deploy:gh-pages"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.5",
@@ -63,7 +66,7 @@
     "cmdk": "^1.0.0",
     "connect-pg-simple": "^10.0.0",
     "date-fns": "^3.6.0",
-    "drizzle-orm": "^0.39.1",
+    "drizzle-orm": "0.45.1",
     "drizzle-zod": "^0.7.0",
     "embla-carousel-react": "^8.3.0",
     "express": "^4.21.2",
@@ -129,14 +132,15 @@
     "autoprefixer": "^10.4.20",
     "drizzle-kit": "^0.30.4",
     "esbuild": "^0.25.0",
+    "gh-pages": "^5.0.0",
     "object-hash": "^3.0.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "terser": "^5.44.1",
     "tsx": "^4.19.1",
     "typescript": "5.6.3",
-    "vite": "^5.4.19",
-    "gh-pages": "^5.0.0"
+    "cross-env": "^7.0.3",
+    "vite": "^5.4.19"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
