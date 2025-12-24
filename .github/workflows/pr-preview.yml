@@ -21,15 +21,7 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        # Try a reproducible install first (npm ci). If it fails (lockfile mismatch), fall back to npm install for contributor forks.
-        run: |
-          echo "Attempting reproducible install (npm ci)..."
-          if npm ci; then
-            echo "npm ci succeeded"
-          else
-            echo "npm ci failed — falling back to npm install"
-            npm install
-          fi
+        run: npm ci
 
       - name: Build project
         run: npm run build
@@ -57,3 +49,4 @@ jobs:
               issue_number: context.payload.pull_request.number,
               body
             });
+
