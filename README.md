@@ -1,51 +1,42 @@
-# MardiGrasParadeGame
+## Project Plan (Updated 2025-12-28)
 
-[Insert existing introductory content here if present.]
+### 1. Gameplay Experience & UX
+- Notify players when additional obstacles (red balls) and aggressive point-stealing NPCs (white squares) are added.
+- Refine joystick UI for simplicity and intuitiveness on both mobile and desktop.
+- Separate competitor catch area from joystick on mobile to avoid control conflicts.
+- Add clear visual indicator showing the number of floats left.
+- Improve hint timing, especially for mobile players.
+- Patch inconsistent audio toggle behavior.
 
----
+### 2. Metrics & Analytics (Backend)
+- Track unique player sessions and total player counts (using Firebase, Supabase, or SQLite with free-tier API).
+- Record session length to determine average play time.
+- Log key gameplay events (level completion, rewards, NPC interactions).
+- Display leaderboards for weekly/monthly scores and personal bests.
+- Add daily/weekly challenge system and track completion.
+- Create a basic admin dashboard (active users, funnel analysis, challenge stats).
 
-## Product Backlog
-The Product Backlog contains all desired features, improvements, technical tasks, and patches for MardiGrasParadeGame. This list is prioritized and regularly refined, serving as the primary input for Sprint Planning.
+### 3. Feature Enhancements
+- Increase float spawn rates on early levels, add reward for clearing first 3 levels.
+- Add helper bot that appears on combo or purchase.
+- Redesign floats for more variety and reduce screen clutter.
+- Add haptic and/or audio alerts for major events.
+- Enable cloud save for player progress and achievements.
+- Public sharing options for high scores/achievements.
 
-**Current Product Backlog Items:**
-- Feature Implementation: Add new parade float customization options
-- Feature Implementation: Implement collectible bead types with bonus effects
-- Patch: Fix bug in float collision detection
-- Patch: Adjust sound playback timing on mobile devices
-- Metric Tracking: Integrate daily and weekly active player tracking
-- Backend Analytics: Add endpoint for reporting in-game event completions
-- Backend Analytics: Improve data export functionality for player metrics
-- UX/Gameplay: Redesign parade participant selection screen
-- UX/Gameplay: Improve onboarding tutorial for new users
-- UX/Gameplay: Add haptic feedback support during gameplay
+### 4. Playtesting & Iteration
+- Internal and external playtesting of new features and fixes.
+- Continuous backlog refinement from feedback.
+- Prioritize polish and fixes before public updates.
 
----
-
-## Sprint Planning
-Sprint Planning is conducted at the start of each sprint to select Product Backlog items to work on, establish sprint goals, and define tasks and responsibilities. Key considerations are team velocity, item priority, dependencies, and feedback from previous increments.
-
-**Typical Sprint Planning Steps:**
-1. Review Product Backlog priorities and capacity.
-2. Select and commit to items achievable within the sprint.
-3. Break down selected items into actionable tasks.
-4. Identify dependencies and blockers.
-5. Document sprint goals and acceptance criteria.
-
-**Sprint Goal Example:**
-- Improve core gameplay engagement by implementing player metrics tracking and onboarding enhancements.
-
----
-
-## Sprint Backlog
-Items selected for the current sprint are listed in the Sprint Backlog. Tasks are tracked, updated, and reviewed throughout the sprint.
-
-**Current Sprint Backlog Items:**
-- Implement daily and weekly active player metric tracking
-- Add backend analytics endpoint for in-game event completions
-- Update onboarding tutorial with new instructional steps
-- Patch: Adjust sound playback timing on mobile devices
-- UX: Add haptic feedback to bead collection events
+### 5. Free Backend Features to Improve Playability
+- Player progress & rewards persistence with a free-tier backend.
+- Dynamic leaderboards and personal best tracking.
+- Daily & weekly in-game challenges.
+- Cloud save (cross-device resume).
+- Analytics on session count, length, challenge usage, retention, platform breakdown.
+- Social score/achievement sharing (simple webhook or API).
 
 ---
 
-For more information on our workflow and process, see [CONTRIBUTING.md](CONTRIBUTING.md) or reach out to the project maintainers.
+Thank you all for your feedback and suggestions. This plan compiles the most-requested priorities and documents our path forward for upcoming sprints and updates.
