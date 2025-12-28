@@ -1,65 +1,51 @@
-# 🎭 NDI_MardiGrasParade — Playable 3D Mardi Gras Parade
+# MardiGrasParadeGame
 
-This repository provides a browser-playable 3D Mardi Gras parade experience built with React, React Three Fiber, Three.js and TypeScript.
+[Insert existing introductory content here if present.]
 
-Public playtest (GitHub Pages): https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/
+---
 
-Repository: https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame
+## Product Backlog
+The Product Backlog contains all desired features, improvements, technical tasks, and patches for MardiGrasParadeGame. This list is prioritized and regularly refined, serving as the primary input for Sprint Planning.
 
-Summary
-- Playable in the browser via GitHub Pages (see public link above).
-- Local development: `npm run dev` (dev server with HMR) and `http://localhost:5000`.
-- Production build served locally: `npm run build` then `npm start` (serves `dist/public` on port 5000).
+**Current Product Backlog Items:**
+- Feature Implementation: Add new parade float customization options
+- Feature Implementation: Implement collectible bead types with bonus effects
+- Patch: Fix bug in float collision detection
+- Patch: Adjust sound playback timing on mobile devices
+- Metric Tracking: Integrate daily and weekly active player tracking
+- Backend Analytics: Add endpoint for reporting in-game event completions
+- Backend Analytics: Improve data export functionality for player metrics
+- UX/Gameplay: Redesign parade participant selection screen
+- UX/Gameplay: Improve onboarding tutorial for new users
+- UX/Gameplay: Add haptic feedback support during gameplay
 
-Definition of Done (DOD) — Sprint 1 (short)
-- Frontend compiles and runs locally (npm run dev) and there is a production build (npm run build).
-- Public, shareable build is published to GitHub Pages and the public URL above loads the game.
-- Mobile joystick controls work and are documented in Settings and this README.
-- Competitor (bot) scores are visible on desktop and a compact overlay appears on mobile when joystick is enabled.
-- Audio is enabled by default when the page is first loaded (user can mute via the HUD).
+---
 
-Quick start (developer)
-1. Clone the repo:
+## Sprint Planning
+Sprint Planning is conducted at the start of each sprint to select Product Backlog items to work on, establish sprint goals, and define tasks and responsibilities. Key considerations are team velocity, item priority, dependencies, and feedback from previous increments.
 
-   git clone https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame.git
-   cd MardiGrasParadeGame
+**Typical Sprint Planning Steps:**
+1. Review Product Backlog priorities and capacity.
+2. Select and commit to items achievable within the sprint.
+3. Break down selected items into actionable tasks.
+4. Identify dependencies and blockers.
+5. Document sprint goals and acceptance criteria.
 
-2. Install dependencies and run dev server (Windows PowerShell may block npm wrappers; see troubleshooting):
+**Sprint Goal Example:**
+- Improve core gameplay engagement by implementing player metrics tracking and onboarding enhancements.
 
-   npm ci
-   npm run dev
+---
 
-3. Open in browser: http://localhost:5000
+## Sprint Backlog
+Items selected for the current sprint are listed in the Sprint Backlog. Tasks are tracked, updated, and reviewed throughout the sprint.
 
-Joystick (mobile/tablet) — how to enable and use
-- Open Settings (gear icon) while on a phone or tablet.
-- Toggle "Joystick Controls" to enable the on-screen joystick.
-- Use: touch and drag the circular joystick area to move the player. Release to stop. The joystick supports pointer events and multi-touch in modern browsers.
+**Current Sprint Backlog Items:**
+- Implement daily and weekly active player metric tracking
+- Add backend analytics endpoint for in-game event completions
+- Update onboarding tutorial with new instructional steps
+- Patch: Adjust sound playback timing on mobile devices
+- UX: Add haptic feedback to bead collection events
 
-Build & publish (GitHub Pages)
-- Local build only (inspect output):
+---
 
-  node ./scripts/build-gh-pages.js
-
-- Build + publish to `gh-pages` branch (uses `gh-pages` package):
-
-  npm run deploy:gh-pages:local
-
-- Or use the included GitHub Actions workflow at `.github/workflows/deploy-gh-pages.yml` to publish on push to `main` or via manual dispatch. After a successful publish the site will be available at the public playtest URL above.
-
-Troubleshooting
-- Windows PowerShell may block `npm.ps1` wrappers. To allow for the session only:
-
-  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force
-
-  If `npm`/`npx` still errors, use a cmd fallback: `cmd /c "npm ci"` or `cmd /c "npm run dev"`.
-
-- If the GitHub Pages site shows a blank page, clear browser cache and unregister service workers, then reload.
-
-Files changed in this cleanup
-- `README.md` — canonical, cleaned, includes public link and joystick instructions.
-- UI: Settings modal and mobile HUD were updated to document joystick usage and show compact bot overlay.
-
-Contact / Project lead
-- Brian C Lundin
-- Issues: https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame/issues
+For more information on our workflow and process, see [CONTRIBUTING.md](CONTRIBUTING.md) or reach out to the project maintainers.
