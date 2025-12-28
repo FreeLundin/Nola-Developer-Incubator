@@ -26,7 +26,10 @@ Quick start (developer)
    npm ci
    npm run dev
 
-3. Open in browser (local dev server): http://localhost:5000
+3. Open in browser (public preview or local dev server):
+
+   - Public preview: https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/
+   - Local dev server (if running): http://localhost:5000
 
 Joystick (mobile/tablet) — how to enable and use
 - Open Settings (gear icon) while on a phone or tablet.
@@ -63,6 +66,17 @@ Contact / Project lead
 
 ---
 
+## Key project artifacts (new)
+The project now includes focused design and planning artifacts in the `docs/` folder. These are the canonical sources for game design, backlog, roadmap, and sprint planning.
+
+- Game Design Document (GDD): `docs/Game_Design.md` — systems, mechanics, UX, controls, visuals, audio, and acceptance criteria.
+- Product Strategy & Roadmap: `docs/PRODUCT_BACKLOG.md` — prioritized backlog, sprint candidates, and roadmap with monetization notes.
+- Ticket template & QA: `docs/TICKET_TEMPLATE.md` — issue template and Playwright skeleton guidance.
+
+Please review the linked docs for the expanded artifacts (gameplay goals, monetization notes, product backlog tables, and sprint planning estimates).
+
+---
+
 Game Design Document (GDD) — Overview
 This project is a lightweight, family-friendly 3D arcade experience that simulates a Mardi Gras parade. Players move along a parade route, catching themed collectibles (beads, doubloons, cups) thrown from floats while avoiding obstacles and competing NPCs. The experience emphasizes short, replayable sessions, accessible mobile controls, and vibrant visual feedback.
 
@@ -80,25 +94,7 @@ Design goals
 - High visual polish at small asset sizes for performance
 - Competitive but fair AI competitors
 
-Artifacts
-- Full design docs live in `docs/Game_Design.md` (add/expand as the project matures).
-
-Product Strategy
-Vision
-- Deliver a playful, shareable web-native Mardi Gras parade game that showcases New Orleans culture and encourages social sharing.
-
-Objectives (12 months)
-- Reach casual players via web playtests and social sharing.
-- Maintain 60%+ day-1 retention for repeat play within the first week of release testing.
-- Support optional monetization that doesn't harm core gameplay.
-
-Target audience
-- Casual mobile and desktop players (ages 12+), festival goers, and educators showcasing regional culture.
-
-Monetization strategy (high-level)
-- Cosmetic items (non-pay-to-win) sold via an in-game shop (skins, particle effects).
-- Optional rewarded ads (AdRewardScreen component present) for players who want free boosts or coins.
-- Seasonally-themed limited-time bundles and events.
+For the full GDD, open `docs/Game_Design.md`.
 
 Product Backlog (high-level priority list)
 1. Improve UX & Controls: mobile joystick refinement, reduced HUD clutter, accessible hints. (P0)
@@ -110,27 +106,11 @@ Product Backlog (high-level priority list)
 7. Leaderboards and social sharing hooks. (P2)
 8. Performance: reduce draw calls, instancing for repeated objects. (P1)
 
-For an up-to-date backlog table, see `docs/DEVELOPMENT_GUIDE.md` or `docs/Game_Design.md`.
-
-Product Roadmap (quarters)
-Q1 — Core polish
-- Complete joystick and HUD improvements, fix audio toggles, stabilize controls.
-- Implement session analytics and basic cloud save (free-tier). 
-
-Q2 — Content & engagement
-- Add new float types and early-level rewards, seasonal events.
-- Introduce cosmetic shop MVP and rewarded ad flow (opt-in only).
-
-Q3 — Social & retention
-- Leaderboards, daily/weekly challenges, helper bots and combo rewards.
-- A/B test cosmetic bundles and ad placement to measure impact.
-
-Q4 — Scaling & live ops
-- Seasonal monetization campaigns, remote config for events, expand cloud save to cross-device sync.
-
-Monetization notes
-- Always prioritize player experience. Cosmetics and rewarded ads should be optional and non-intrusive.
-- Avoid pay-to-win mechanics. Ensure balance by providing coin sinks and fair reward pacing.
+Product Roadmap (quarters) — includes monetization notes
+- Q1 — Core polish: joystick and HUD improvements, audio fixes, analytics prototype.
+- Q2 — Content & engagement: new floats, beginner rewards, cosmetic shop MVP (UI-only).
+- Q3 — Social & retention: leaderboards, daily/weekly challenges, helper bot features.
+- Q4 — Live ops & monetization experiments: seasonal bundles, A/B testing for cosmetic offers and rewarded ad placements.
 
 Sprint Planning (next sprint — 2 weeks)
 Goal: Improve mobile controls and HUD clarity.
@@ -153,11 +133,12 @@ Acceptance criteria
 
 How to contribute
 - Run `npm ci` then `npm run dev` to test locally.
-- Create a branch for your feature or bugfix and open a PR. The PR preview workflow publishes a shareable preview URL when builds succeed.
+- Create a branch for your feature or bugfix and open a PR. The PR preview workflow uploads a preview artifact and posts a link in the PR comment when available.
 
 ---
 
 If you'd like, I can now:
-- Create or update `docs/Game_Design.md` and `docs/PRODUCT_BACKLOG.md` with expanded artifacts and tables.
-- Open a test PR from a branch in this repo to generate a preview build and share the public preview URL.
+- Expand any backlog item into a ticket template or Playwright test skeleton (I added a joystick skeleton under `tests/playwright/joystick.spec.ts`).
+- Enable automatic gh-pages publishing for PR previews (requires adding `GH_PAGES_PAT` secret) so previews are publicly hosted instead of artifacts.
+
 Tell me which one you want next and I'll proceed.
