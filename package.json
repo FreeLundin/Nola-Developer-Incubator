@@ -116,6 +116,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.0",
     "@rollup/pluginutils": "^5.3.0",
     "@tailwindcss/typography": "^0.5.15",
     "@types/connect-pg-simple": "^7.0.3",
@@ -130,6 +131,7 @@
     "@types/ws": "^8.5.13",
     "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "drizzle-kit": "^0.30.4",
     "esbuild": "^0.25.0",
     "gh-pages": "^5.0.0",
@@ -139,7 +141,6 @@
     "terser": "^5.44.1",
     "tsx": "^4.19.1",
     "typescript": "5.6.3",
-    "cross-env": "^7.0.3",
     "vite": "^5.4.19"
   },
   "optionalDependencies": {
