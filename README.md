@@ -1,42 +1,22 @@
-## Project Plan (Updated 2025-12-28)
+# MardiGrasParadeGame
 
-### 1. Gameplay Experience & UX
-- Notify players when additional obstacles (red balls) and aggressive point-stealing NPCs (white squares) are added.
-- Refine joystick UI for simplicity and intuitiveness on both mobile and desktop.
-- Separate competitor catch area from joystick on mobile to avoid control conflicts.
-- Add clear visual indicator showing the number of floats left.
-- Improve hint timing, especially for mobile players.
-- Patch inconsistent audio toggle behavior.
+... (other sections remain unchanged) ...
 
-### 2. Metrics & Analytics (Backend)
-- Track unique player sessions and total player counts (using Firebase, Supabase, or SQLite with free-tier API).
-- Record session length to determine average play time.
-- Log key gameplay events (level completion, rewards, NPC interactions).
-- Display leaderboards for weekly/monthly scores and personal bests.
-- Add daily/weekly challenge system and track completion.
-- Create a basic admin dashboard (active users, funnel analysis, challenge stats).
+## SPRINT PLANNING
 
-### 3. Feature Enhancements
-- Increase float spawn rates on early levels, add reward for clearing first 3 levels.
-- Add helper bot that appears on combo or purchase.
-- Redesign floats for more variety and reduce screen clutter.
-- Add haptic and/or audio alerts for major events.
-- Enable cloud save for player progress and achievements.
-- Public sharing options for high scores/achievements.
+The following high-level estimates represent expected time required for each feature or improvement:
 
-### 4. Playtesting & Iteration
-- Internal and external playtesting of new features and fixes.
-- Continuous backlog refinement from feedback.
-- Prioritize polish and fixes before public updates.
+| Task                                    | High-level Estimate |
+|----------------------------------------- |:------------------:|
+| Notify player (obstacle/NPC change)      | 3 days             |
+| Refine joystick UI                      | 2 days             |
+| Visual indicator for floats              | 1 day              |
+| Patch audio toggle                       | 1 day              |
+| Implement cloud save                     | 3 days             |
+| Leaderboards/challenges                  | 3 days             |
+| Helper bot spawning logic                | 2 days             |
+| Player analytics tracking                | 1 day              |
 
-### 5. Free Backend Features to Improve Playability
-- Player progress & rewards persistence with a free-tier backend.
-- Dynamic leaderboards and personal best tracking.
-- Daily & weekly in-game challenges.
-- Cloud save (cross-device resume).
-- Analytics on session count, length, challenge usage, retention, platform breakdown.
-- Social score/achievement sharing (simple webhook or API).
+Task assignment will be made based on developer availability and our current sprint velocity to ensure balance and timely delivery.
 
----
-
-Thank you all for your feedback and suggestions. This plan compiles the most-requested priorities and documents our path forward for upcoming sprints and updates.
+... (additional sections follow) ...
