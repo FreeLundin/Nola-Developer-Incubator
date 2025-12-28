@@ -8,6 +8,9 @@ jobs:
   build-and-deploy-preview:
     name: Build and deploy preview to gh-pages/previews
     runs-on: ubuntu-latest
+    env:
+      # Ensure preview builds render the minimal HUD
+      VITE_MINIMAL_HUD: 'true'
 
     steps:
       - name: Checkout
@@ -28,20 +31,49 @@ jobs:
           npm install -g npm@10.8.3
           npm --version
 
-      - name: Install dependencies
-        # Try a reproducible install first (npm ci). If it fails (lockfile mismatch), fall back to npm install for contributor forks.
+      - name: Detect forked PR
+        id: check-fork
         run: |
-          echo "Attempting reproducible install (npm ci)..."
-          if npm ci; then
-            echo "npm ci succeeded"
+          echo "head_repo=${{ github.event.pull_request.head.repo.full_name }}";
+          echo "base_repo=${{ github.repository }}";
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
+            echo "is_fork=true" >> $GITHUB_OUTPUT;
           else
-            echo "npm ci failed — falling back to npm install"
-            npm install
+            echo "is_fork=false" >> $GITHUB_OUTPUT;
           fi
 
+      - name: Install dependencies (strict)
+        if: steps.check-fork.outputs.is_fork == 'false'
+        # Strict reproducible install. Fail the workflow if lockfile and package.json are out of sync.
+        run: |
+          echo "Running strict reproducible install (npm ci)..."
+          npm ci --prefer-offline --no-audit --no-fund
+
+      - name: Install dependencies (fork fallback)
+        if: steps.check-fork.outputs.is_fork == 'true'
+        run: |
+          echo "WARNING: Forked PR detected — using npm install fallback (npm ci skipped)" >&2
+          npm install
+
+      - name: Comment on PR about install fallback
+        if: steps.check-fork.outputs.is_fork == 'true'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            if (pr) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: '⚠️ This PR originates from a fork. The preview build used `npm install` instead of `npm ci` to allow building the forked code. Maintainors should run `npm ci` locally before merging to ensure lockfile fidelity.'
+              });
+            }
+
       - name: Build project (preview minimal HUD)
-        # Set VITE_MINIMAL_HUD so the preview build uses the simplified HUD for review.
-        run: VITE_MINIMAL_HUD=true npm run build
+        # VITE_MINIMAL_HUD is provided at the job env level
+        run: npm run build
 
       - name: Deploy to gh-pages (previews/<run_id>)
         uses: peaceiris/actions-gh-pages@v4
