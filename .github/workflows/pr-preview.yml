@@ -39,8 +39,9 @@ jobs:
             npm install
           fi
 
-      - name: Build project
-        run: npm run build
+      - name: Build project (preview minimal HUD)
+        # Set VITE_MINIMAL_HUD so the preview build uses the simplified HUD for review.
+        run: VITE_MINIMAL_HUD=true npm run build
 
       - name: Deploy to gh-pages (previews/<run_id>)
         uses: peaceiris/actions-gh-pages@v4
