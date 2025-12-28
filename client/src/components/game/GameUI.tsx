@@ -42,6 +42,11 @@ export function GameUI() {
     return () => window.removeEventListener('minimalHud:updated', handler);
   }, []);
 
+  // Allow preview builds to force a minimal HUD via Vite env flag (VITE_MINIMAL_HUD=true)
+  // This is safe because the flag will only be set in preview CI jobs and not in production builds.
+  const previewMinimalHud = (import.meta as any).env?.VITE_MINIMAL_HUD === 'true';
+  const effectiveMinimalHud = previewMinimalHud || minimalHud;
+
   // Map player color to display info
   const colorDisplayMap = {
     beads: { name: "Purple Beads", color: "#9b59b6" },
@@ -105,8 +110,8 @@ export function GameUI() {
     startGame();
   };
 
-  // Render a minimal HUD when requested in dev
-  if (minimalHud && process.env.NODE_ENV === 'development') {
+  // Render a minimal HUD when requested in dev or preview builds
+  if (effectiveMinimalHud) {
     return (
       <>
         {phase === 'tutorial' && (
