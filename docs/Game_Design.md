@@ -1,140 +1,72 @@
-# Game Design Document — NDI_MardiGrasParade
-
-Version: 0.1
-Date: 2025-12-28
-Author: Project Team
+# Game Design Document (GDD)
 
 ## Overview
-NDI_MardiGrasParade is a lightweight, web-native 3D arcade experience where players move along a parade route and catch themed collectibles (beads, doubloons, cups) thrown from passing floats. The core loop is short, satisfying sessions (30–120s) with strong visual feedback, simple controls, and replayability.
+NDI_MardiGrasParade is a short-session, browser-based 3D arcade game that simulates a Mardi Gras parade. Players move along a parade route and catch collectibles thrown by floats while avoiding obstacles and competing NPCs. The core loop is quick and satisfying: catch items, build combos, unlock cosmetic rewards.
 
-This document captures gameplay systems, UX/HUD requirements, controls, scoring, progression, art and audio guidance, analytics events, and acceptance criteria for features targeted in the next few sprints.
+Sessions: 30–120 seconds for most levels.
+Target platforms: Desktop and Mobile (iOS / Android browsers).
 
----
+## Core Systems
+- Player movement & input
+  - Keyboard (A/D/←/→), mouse, and on-screen joystick for touch.
+  - Smooth acceleration, subtle inertia for a pleasing feel.
+- Float spawning & collectible throws
+  - Floats spawn on lanes at controlled intervals; difficulty increases with level.
+  - Collectibles thrown with randomized trajectories and fall arc.
+- Collision & catch logic
+  - Distance-based catch radius using THREE.Vector3 distance checks.
+  - Catch success triggers audio/haptic cue, score increment, and optional VFX.
+- NPC competitors
+  - Simple AI that moves along lanes and attempts to catch collectibles.
+  - Some NPCs are aggressive (steal points) or create obstacles.
+- Power-ups & helpers
+  - Temporary magnets, helper bots, score multipliers.
+- HUD & UX
+  - Minimal, unobtrusive HUD by default; optional expanded HUD for debugging.
+  - Visual indicator for remaining floats, combo meter, score, lives.
 
-## Core Gameplay
-
-- Player controls: keyboard, mouse, and optional on-screen joystick. Movement is continuous; players aim to position near falling collectibles to "catch" them.
-- Floats: spawn at the top of the play area, travel along lanes, and throw collectibles at intervals. Floats can be different colors and types affecting throw patterns and rewards.
-- Collectibles: three primary types (beads, doubloons, cups). Matching the player's active color grants a point multiplier.
-- NPC competitors: simple AI bots that move and collect items; they provide comparative feedback and minor competition for collectibles.
-- Obstacles: hazardous items (e.g., red balls) and aggressive NPCs (white squares) that can reduce score or steal recent catches.
-- Power-ups: temporary effects (speed, magnet, double points) with visible timers.
-
----
-
-## Controls & Input
-
+## Controls & UX
 - Desktop
-  - Movement: WASD or arrow keys.
-  - Mouse: click-to-move toggle; drag for camera rotation (where applicable).
-  - UI: keyboard and mouse friendly UI controls.
+  - Keyboard for movement, mouse to interact with UI.
+- Mobile (touch)
+  - On-screen joystick: simple circular drag area (configurable size/position).
+  - Separate catch area for competitors if needed to avoid input conflicts.
+- Accessibility
+  - Large hit targets for touch, high-contrast HUD, audio toggle, haptic optional.
 
-- Mobile / Touch
-  - Tap-to-move: single tap moves player toward that point.
-  - Joystick: optional on-screen joystick (Settings -> Joystick Controls).
-  - Catch area separation: on small screens the catch area is distinct from joystick region to avoid conflicts.
-
-Design constraints: joystick must support multi-touch and not block core catch gestures.
-
----
-
-## HUD & UX
-
-Goals for HUD
-- Minimal, non-blocking information on-screen for mobile players.
-- Clear visual indicator for remaining floats and current level progress.
-- Accessible controls for mute, settings, and shop.
-
-HUD Elements
-- Top-left: Level and score (compact card).
-- Top-right: coins and quick toggles (mute, settings).
-- Center-top: combo indicator (animated when active).
-- Mobile-only: compact competitor overlay placed above joystick to avoid overlap.
-
-Minimal HUD mode
-- Shown for preview builds and an opt-in local dev mode.
-- Displays only level, score, and coins (small card) plus a prominent Start button on tutorial.
-
----
-
-## Scoring & Progression
-
-- Base points per collectible: beads = 10, doubloon = 25, cup = 5.
-- Color match multiplier: 3x when collectible color matches player color.
-- Combo: catching multiple items within a short window increases multiplier (e.g., 2x, 3x).
-- Level progression: reach a target score to advance; later levels increase spawn rate and variety.
-
----
-
-## AI Competitors
-
-- Behavior: follow waypoints, prioritize nearby collectibles, occasionally aim for player's area.
-- Difficulty tuning: bot speed and aggressiveness scale per level. Ensure fairness: bots cannot "teleport" — must obey same movement constraints.
-
----
+## Visuals & Art
+- Low-poly floats and instanced collectibles to preserve performance.
+- Limited texture sizes (<= 2048) and compressed formats where possible.
+- Use baked lighting where possible for static props; dynamic lighting for floats and important events.
 
 ## Audio & Haptics
+- Short audio cues for catches, level complete, and warnings (obstacle spawn).
+- Haptic feedback on supported devices for major events (catch, combo, fail).
 
-- Audio cues for: new float spawn, item thrown, catch success, combo start/end, life lost, level complete.
-- Haptic feedback hooks for mobile (success vibration on major events, optional under settings).
-- Audio toggle must persist across sessions.
+## Analytics & Backend Integration
+- Events to log (session start/stop, level start/complete, reward claimed, purchase, helper spawn).
+- Free-tier ready backends supported: Supabase, Firebase, or SQLite-based endpoints.
+- Session and cloud-save endpoints should be optional and togglable in development.
 
----
+## Monetization (Design Notes)
+- Cosmetics only (no pay-to-win): skins, particle trails, custom float colors.
+- Optional rewarded ads for non-pay players to gain a temporary boost or coins (opt-in only).
+- Seasonal bundles and limited-time events to encourage engagement.
 
-## Visual & Art Guidelines
+## Performance Targets
+- Desktop: 60 FPS target.
+- Mobile: 45+ FPS target.
+- Keep draw calls low, reuse geometry instances, and disable shadows on lower-end devices.
 
-- Low-poly, stylized assets optimized for WebGL and mobile. Keep per-object tris low (< 10k for large objects; collectibles < 1k tris).
-- Texture sizes limited to 2048x2048 and compressed where possible.
-- Use instancing for repeated objects (beads, simple decorations).
+## Acceptance Criteria
+- On mobile: joystick is responsive; no input conflicts with catch area.
+- Visual remaining-floats indicator shows accurate count and updates in real time.
+- Audio toggle works consistently across levels and persists between sessions.
+- Build succeeds (`npm run build`) and game runs locally and in preview builds.
 
----
+## Appendix: Implementation Notes
+- Collision: use THREE.Vector3.distanceTo for catch checks.
+- Physics: gravity and velocity vectors using THREE.Vector3; apply per-frame updates in `useFrame`.
+- Stores: use Zustand stores in `client/src/lib/stores/` for player state and session state.
 
-## Analytics Events (recommended)
-
-Track these events (example payloads):
-- session.start { sessionId, timestamp }
-- session.end { sessionId, duration, score }
-- level.start { sessionId, level }
-- level.complete { sessionId, level, score, time }
-- collectible.caught { sessionId, type, value, colorMatch }
-- npc.interaction { sessionId, npcId, action }
-- ad.reward { sessionId, adProvider, rewardType }
-
-Privacy: ensure no PII is logged. Provide opt-out toggle for analytics in Settings if needed.
-
----
-
-## Metrics & Success Criteria
-
-- Performance: target 60 FPS desktop, 45+ FPS mobile.
-- Retention: day-1 metric target 60% (research-backed initial goal to validate sessions mechanics).
-- Engagement: average session length 30–120s; goal to increase baseline via power-ups and rewards.
-
----
-
-## Acceptance Criteria for Next Release
-- Mobile joystick is responsive and does not conflict with catch areas.
-- Minimal HUD mode hides non-essential elements and displays compact score/coins.
-- Audio toggle persists and works on iOS and Android browsers.
-- Preview build (GH Pages) renders minimal HUD when flagged.
-- Basic analytics events emitted to mocked backend.
-
----
-
-## Implementation Notes & References
-- React Three Fiber patterns: use `useFrame` for per-frame logic and keep physics lightweight.
-- State: Zustand stores in `client/src/lib/stores/`.
-- Server: `server/` contains a simple Express app used for mock analytics and possible cloud saves.
-- Docs: expand `docs/DEVELOPMENT_GUIDE.md` and this file as features are implemented.
-
----
-
-## Open questions
-- Which free-tier backend should be standardized for cloud save and analytics (Firebase, Supabase, or SQLite via a small server)?
-- What privacy/consent mechanism is required for analytics in targeted release countries?
-
----
-
-## Appendix — quick design sketches
-(Keep UI sketches and small Figma references here — add links or images as they are produced.)
-
+For implementation details and engineering guidelines, see `docs/PRODUCT_BACKLOG.md` for prioritized tickets and `docs/TICKET_TEMPLATE.md` for ticket structure.
