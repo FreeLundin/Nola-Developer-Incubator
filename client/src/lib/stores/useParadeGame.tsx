@@ -58,6 +58,7 @@ interface ParadeGameState {
   totalFloats: number; // Total floats for current level (10 * level)
   floatsPassed: number; // How many floats have passed the player
   aggressiveNPCs: AggressiveNPC[]; // Aggressive NPCs that chase player when hit
+  helperBots: number; // number of helper bots currently active
   
   // Monetization features
   coins: number; // Currency earned from gameplay
@@ -151,6 +152,7 @@ export const useParadeGame = create<ParadeGameState>()(
     totalFloats: 10, // Start with 10 floats for level 1
     floatsPassed: 0,
     aggressiveNPCs: [],
+    helperBots: 0, // number of helper bots currently active
     
     // Settings state
     joystickEnabled: typeof window !== 'undefined' 
@@ -595,11 +597,24 @@ export const useParadeGame = create<ParadeGameState>()(
       console.log(`Equipped skin: ${skin}`);
     },
     
+    // Helper bot spawn: spawns helper bot which assists player for a duration
+    spawnHelperBot: (durationMs = 8000) => {
+      const id = Date.now();
+      console.log(`Spawning helper bot ${id} for ${durationMs}ms`);
+      set((state) => ({ helperBots: state.helperBots + 1 }));
+      setTimeout(() => {
+        set((state) => ({ helperBots: Math.max(0, state.helperBots - 1) }));
+        console.log(`Helper bot ${id} expired`);
+      }, durationMs);
+    },
+    
+    // Inactivity timeout
     endGameDueToInactivity: () => {
       console.log("Game ended due to inactivity (30 seconds without movement)");
       set({ phase: "won" });
     },
     
+    // Float collision
     eliminatePlayer: () => {
       console.log("💥 Player hit by parade float! Eliminated!");
       set({ phase: "won" });
