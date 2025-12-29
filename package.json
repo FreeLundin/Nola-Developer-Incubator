@@ -4,6 +4,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+    "db:seed": "node server/supabase/seed.js",
     "dev": "tsx server/index.ts",
     "dev:clean": "powershell -File ./scripts/start-dev.ps1 -LogPath ./dev-detached.log -Port 5000",
     "dev:ps1": "powershell -File ./scripts/start-dev.ps1 -LogPath ./dev-detached.log -Port 5000",
