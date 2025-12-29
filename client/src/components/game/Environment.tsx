@@ -5,7 +5,8 @@ import * as THREE from "three";
 
 export function Environment() {
   // Use Vite's BASE_URL so textures resolve correctly when the app is served from a subpath
-  const asphaltTexture = useTexture(`${import.meta.env.BASE_URL}textures/asphalt.png`);
+  const assetBase = (import.meta as any).env?.VITE_ASSET_BASE_URL ?? (import.meta as any).env?.BASE_URL ?? '';
+  const asphaltTexture = useTexture(`${assetBase.replace(/\/$/, '')}/${'textures/asphalt.png'.replace(/^\/+/, '')}`);
   const spotlightGroupRef = useRef<THREE.Group>(null);
   
   // Pre-calculate building positions to avoid Math.random in render
