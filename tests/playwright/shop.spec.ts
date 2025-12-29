@@ -2,6 +2,17 @@ import { test, expect } from '@playwright/test';
 
 test('shop purchase helper', async ({ page }) => {
   await page.goto(process.env.PLAYTEST_URL ?? 'http://localhost:5000');
+
+  // Ensure the main tutorial overlay is handled: click Start Game if present
+  const startButton = page.getByRole('button', { name: /Start Game/i });
+  try {
+    if (await startButton.isVisible({ timeout: 3000 })) {
+      await startButton.click();
+    }
+  } catch {
+    // If not visible, assume already past tutorial
+  }
+
   // Wait for HUD and open shop button
   const open = page.getByTestId('open-shop');
   await open.waitFor({ timeout: 10000 });
@@ -15,7 +26,7 @@ test('shop purchase helper', async ({ page }) => {
   // Expect shop message to appear
   const msg = page.getByTestId('shop-message');
   await expect(msg).toBeVisible({ timeout: 5000 });
-  const text = await msg.textContent();
+  const text = (await msg.textContent())?.trim();
   // Either NOT_ENOUGH_COINS or HELPER_PURCHASED
   expect(['NOT_ENOUGH_COINS', 'HELPER_PURCHASED']).toContain(text);
 });
