@@ -11,11 +11,9 @@ import { CosmeticShop } from "./CosmeticShop";
 import { AdminModal } from '@/components/ui/AdminModal';
 import { FirstLevelTutorial } from "./FirstLevelTutorial";
 import { SettingsModal } from "./SettingsModal";
-import { MinimalHUD } from "@/components/ui/MinimalHUD";
-import { RemainingFloats } from "@/components/ui/RemainingFloats";
 
 export function GameUI() {
-  const { phase, score, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins, joystickEnabled, totalFloats, floatsPassed } = useParadeGame();
+  const { phase, score, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins, joystickEnabled } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [showFirstLevelTutorial, setShowFirstLevelTutorial] = useState(false);
