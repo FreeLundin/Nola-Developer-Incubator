@@ -100,6 +100,7 @@ interface ParadeGameState {
   addCoins: (amount: number) => void;
   purchaseSkin: (skin: PlayerSkin) => boolean;
   setSkin: (skin: PlayerSkin) => void;
+  spawnHelperBot: (durationMs?: number) => void;
   
   // Inactivity timeout
   endGameDueToInactivity: () => void;
