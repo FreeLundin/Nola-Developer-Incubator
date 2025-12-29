@@ -4,19 +4,26 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests',
+  testDir: './tests/playwright',
+  timeout: 30_000,
+  expect: { timeout: 5_000 },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: process.env.CI ? 'github' : 'html',
+  reporter: process.env.CI ? [['github']] : [['list']],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    actionTimeout: 0,
+    navigationTimeout: 30_000,
+    headless: true,
+    ignoreHTTPSErrors: true,
+    viewport: { width: 1280, height: 800 },
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5000',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
@@ -39,34 +46,4 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
-export default defineConfig({
-  testDir: 'tests/e2e',
-  timeout: 30_000,
-  expect: {
-    timeout: 5_000
-  },
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? [['github']] : [['list']],
-  use: {
-    actionTimeout: 0,
-    navigationTimeout: 30_000,
-    headless: true,
-    ignoreHTTPSErrors: true,
-    viewport: { width: 1280, height: 720 },
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5000',
-  },
-  webServer: {
-    command: 'npm run dev',
-    port: 5000,
-    reuseExistingServer: !process.env.CI
-  },
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
-    }
-  ]
 });
