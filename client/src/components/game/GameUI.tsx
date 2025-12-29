@@ -217,6 +217,7 @@ export function GameUI() {
                   onClick={() => setShowShop(true)}
                   size="sm"
                   className="hidden sm:flex bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white"
+                  data-testid="open-shop"
                 >
                   <ShoppingBag size={18} />
                 </Button>

@@ -1,20 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParadeGame } from '@/lib/stores/useParadeGame';
 import { Button } from '@/components/ui/button';
 
 export function Shop({ onClose }: { onClose?: () => void }) {
   const { coins, purchaseSkin, addCoins, spawnHelperBot } = useParadeGame();
+  const [message, setMessage] = useState<string | null>(null);
 
   const handleBuyHelper = () => {
     const cost = 20;
     if (coins < cost) {
-      alert('Not enough coins');
+      setMessage('NOT_ENOUGH_COINS');
       return;
     }
     // Deduct and spawn helper
     useParadeGame.getState().addCoins(-cost);
     spawnHelperBot(12000); // 12s helper
-    alert('Helper purchased!');
+    setMessage('HELPER_PURCHASED');
   };
 
   return (
@@ -28,7 +29,7 @@ export function Shop({ onClose }: { onClose?: () => void }) {
               <div className="font-bold">Helper Bot (12s)</div>
               <div className="text-sm text-gray-300">Spawns a helper bot that attracts nearby collectibles.</div>
             </div>
-            <Button onClick={handleBuyHelper} className="bg-purple-700">Buy 20</Button>
+            <Button onClick={handleBuyHelper} className="bg-purple-700" data-testid="buy-helper">Buy 20</Button>
           </div>
 
           <div className="flex items-center justify-between">
@@ -36,15 +37,20 @@ export function Shop({ onClose }: { onClose?: () => void }) {
               <div className="font-bold">Golden Skin</div>
               <div className="text-sm text-gray-300">A shiny cosmetic skin.</div>
             </div>
-            <Button onClick={() => { const ok = purchaseSkin('golden'); if (!ok) alert('Not enough coins'); else alert('Purchased golden skin'); }} className="bg-purple-700">Buy 100</Button>
+            <Button onClick={() => { const ok = purchaseSkin('golden'); if (!ok) setMessage('NOT_ENOUGH_COINS'); else setMessage('SKIN_PURCHASED'); }} className="bg-purple-700" data-testid="buy-golden">Buy 100</Button>
           </div>
         </div>
 
+        {message && (
+          <div data-testid="shop-message" className="mt-3 p-2 bg-white/10 rounded text-sm">
+            {message}
+          </div>
+        )}
+
         <div className="mt-4 text-right">
-          <Button onClick={onClose} className="bg-gray-700">Close</Button>
+          <Button onClick={onClose} className="bg-gray-700" data-testid="close-shop">Close</Button>
         </div>
       </div>
     </div>
   );
 }
-
