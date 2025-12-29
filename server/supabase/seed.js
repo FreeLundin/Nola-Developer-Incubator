@@ -4,12 +4,47 @@
 
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
+const fs = require('fs');
+const path = require('path');
+
+async function seedLocal() {
+  // Ensure data directories
+  const dataDir = path.resolve(process.cwd(), 'data');
+  const leaderboardFile = path.join(dataDir, 'leaderboard.json');
+  const sessionsDir = path.join(dataDir, 'sessions');
+  try {
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
+    if (!fs.existsSync(sessionsDir)) fs.mkdirSync(sessionsDir);
+
+    const leaderboard = {
+      scores: [
+        { name: 'King Rex', score: 120, ts: Math.floor(Date.now() / 1000) },
+        { name: 'Queen Zulu', score: 95, ts: Math.floor(Date.now() / 1000) },
+        { name: 'Lil Jester', score: 80, ts: Math.floor(Date.now() / 1000) },
+      ],
+    };
+    fs.writeFileSync(leaderboardFile, JSON.stringify(leaderboard, null, 2), 'utf8');
+    console.log('Wrote demo leaderboard to', leaderboardFile);
+
+    const sessionId = `local-${Date.now()}-${Math.random().toString(36).slice(2,9)}`;
+    const sessionFile = path.join(sessionsDir, `${sessionId}.json`);
+    const session = { id: sessionId, savedAt: new Date().toISOString(), payload: { player: 'guest', state: { score: 5 } } };
+    fs.writeFileSync(sessionFile, JSON.stringify(session, null, 2), 'utf8');
+    console.log('Wrote demo session to', sessionFile);
+
+    console.log('Local seeding complete.');
+    return 0;
+  } catch (err) {
+    console.error('Local seeding failed:', err);
+    return 1;
+  }
+}
 
 async function run() {
   if (!url || !key) {
-    console.error('SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are not set.');
-    console.error('This script supports only Supabase seeding. To apply SQL directly: psql -f server/supabase/seed.sql');
-    process.exit(1);
+    console.warn('SUPABASE_URL and/or SUPABASE_SERVICE_ROLE_KEY are not set. Falling back to local file-based seed.');
+    const code = await seedLocal();
+    process.exit(code);
   }
 
   try {
@@ -49,4 +84,3 @@ async function run() {
 }
 
 run();
-
