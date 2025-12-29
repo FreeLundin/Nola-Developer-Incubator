@@ -2,11 +2,15 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import path from "path";
 import fs from "fs";
+import sessionRoutes from './routes/sessionRoutes';
 
 export function attachRoutes(app: Express) {
   // health check
   app.get('/health', (_req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 
+  // Session save/load API (stubs)
+  app.use(sessionRoutes);
+  
   // serve runtime bot override if present at project root (bots.override.json)
   app.get('/bots.override.json', (_req, res) => {
     const file = path.resolve(process.cwd(), 'bots.override.json');

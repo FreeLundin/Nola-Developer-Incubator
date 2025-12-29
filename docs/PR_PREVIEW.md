@@ -16,6 +16,16 @@ Prerequisites and notes
 - The workflow uses the built `dist/public` folder produced by `npm run build`.
 - The preview is intended for QA and development only — do not consider previews production.
 
+Troubleshooting: lockfile / npm ci errors
+
+You may see errors like:
+
+```
+npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+```
+
+This happens when the lockfile in a fork or branch is out-of-sync with package.json (common in forks or when dependencies were updated locally). To make previews more robust for contributors and forks, the preview workflow uses `npm install` instead of `npm ci`. Maintainers should keep `package-lock.json` in sync with `package.json` in the default branch for reproducible CI builds.
+
 How to get a preview locally (without pushing):
 
 1. Run the dev server locally (fast feedback):

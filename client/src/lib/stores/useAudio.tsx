@@ -23,7 +23,7 @@ export const useAudio = create<AudioState>((set, get) => ({
   backgroundMusic: null,
   hitSound: null,
   successSound: null,
-  isMuted: true, // Start muted by default
+  isMuted: typeof window !== 'undefined' ? (localStorage.getItem('isMuted') === 'true') : true,
 
   setBackgroundMusic: (music) => set({ backgroundMusic: music }),
   setHitSound: (sound) => set({ hitSound: sound }),
@@ -37,6 +37,7 @@ export const useAudio = create<AudioState>((set, get) => ({
     try { Howler.mute(newMutedState); } catch (e) { /* ignore */ }
 
     set({ isMuted: newMutedState });
+    try { if (typeof window !== 'undefined') localStorage.setItem('isMuted', String(newMutedState)); } catch {}
 
     console.log(`Sound ${newMutedState ? 'muted' : 'unmuted'}`);
   },

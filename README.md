@@ -1,22 +1,42 @@
-# MardiGrasParadeGame
+# 🎭 NDI_MardiGrasParade — Playable 3D Mardi Gras Parade
 
-... (other sections remain unchanged) ...
+This repository contains a browser-playable 3D Mardi Gras parade experience built with React, React Three Fiber, Three.js and TypeScript.
 
-## SPRINT PLANNING
+Public playtest (GitHub Pages): https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/
 
-The following high-level estimates represent expected time required for each feature or improvement:
+Quick references
+- Canonical documentation and planning artifacts: `docs/README.md` (Game Design, Product Backlog, Roadmap, Ticket Template).
+- Playwright tests: `tests/playwright/` (skeletons and test cases).
+- PR preview workflow: `.github/workflows/pr-preview.yml` uploads preview artifacts and can publish previews to `gh-pages` when the `GH_PAGES_PAT` or `GH_PAGES_DEPLOY_TOKEN` secret is configured.
 
-| Task                                    | High-level Estimate |
-|----------------------------------------- |:------------------:|
-| Notify player (obstacle/NPC change)      | 3 days             |
-| Refine joystick UI                      | 2 days             |
-| Visual indicator for floats              | 1 day              |
-| Patch audio toggle                       | 1 day              |
-| Implement cloud save                     | 3 days             |
-| Leaderboards/challenges                  | 3 days             |
-| Helper bot spawning logic                | 2 days             |
-| Player analytics tracking                | 1 day              |
+Quick start (developer)
+1. Clone the repo and enter the directory:
 
-Task assignment will be made based on developer availability and our current sprint velocity to ensure balance and timely delivery.
+   git clone https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame.git
+   cd MardiGrasParadeGame
 
-... (additional sections follow) ...
+2. Install dependencies and run dev server:
+
+   npm ci
+   npm run dev
+
+3. Open in browser:
+   - Public preview: https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/
+   - Local dev server: http://localhost:5000
+
+Documentation
+- Full documentation and planning artifacts live under `docs/`. Start here: `docs/README.md`.
+
+Contributing
+- Run `npm ci` and `npm run dev` to test locally.
+- Create a feature branch, open a PR, and link to the related doc/backlog item.
+- PR previews upload an artifact and (if enabled) publish a live preview to GitHub Pages. See `.github/workflows/pr-preview.yml` for details.
+
+If you'd like, I can:
+- Expand backlog items into individual GitHub issues and attach Playwright test skeletons.
+- Clean up UI/HUD code and implement the minimal HUD/joystick improvements described in the backlog.
+- Enable and validate gh-pages publishing for PR previews (requires `GH_PAGES_PAT` secret).
+
+Contact
+- Project lead: Brian C Lundin
+- Issues: https://github.com/Nola-Developer-Incubator/MardiGrasParadeGame/issues
