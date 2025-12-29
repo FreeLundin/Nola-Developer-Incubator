@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { test, expect } from '@playwright/test';
 
-// Use PLAYTEST_URL so tests can run against a public host (Vercel) or localhost fallback
+// Use PLAYTEST_URL so tests can run against a public host or localhost fallback
 const BASE = process.env.PLAYTEST_URL || 'http://localhost:5000';
 
 // This test opens the app, captures console messages, starts the game, and fails if there are console.error messages.
@@ -13,9 +13,9 @@ test('app loads with no console.error', async ({ page }) => {
   const isBenign = (text) => {
     if (!text) return false;
     const lower = text.toLowerCase();
-    // Ignore Cloudflare performance beacon tracking-prevention warnings
+    // Ignore telemetry/tracking-related warnings from browser or 3rd-party beacons
     if (lower.includes('tracking prevention blocked access to storage')) return true;
-    if (lower.includes('performance.radar.cloudflare.com')) return true;
+    if (lower.includes('performance.radar')) return true; // generic telemetry beacon
     // Ignore Copilot explain helper prompt (devtools UI message)
     if (lower.includes('explain console errors by using copilot')) return true;
     // ignore common webgl warnings from headless chromium reported as warnings
@@ -32,10 +32,11 @@ test('app loads with no console.error', async ({ page }) => {
   });
 
   // Block known telemetry/beacon scripts that trigger privacy warnings
-  await page.route('**/performance.radar.cloudflare.com/**', route => route.abort());
+  // Use a generic pattern instead of referencing a specific provider
+  await page.route('**/performance.radar.*/**', route => route.abort());
   await page.route('**/beacon.js', route => route.abort());
 
-  // Use configurable base so CI can point at Vercel domain via PLAYTEST_URL
+  // Use configurable base so CI can point at a public domain via PLAYTEST_URL
   await page.goto(BASE);
   await page.waitForSelector('canvas', { timeout: 15000 });
 

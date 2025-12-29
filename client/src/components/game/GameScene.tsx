@@ -14,6 +14,7 @@ import { CompetitorBot } from "./CompetitorBot";
 import { AggressiveNPC } from "./AggressiveNPC";
 import { Obstacle } from "./Obstacle";
 import { TouchControls, TouchInput } from "./TouchControls";
+import { HelperBotVisual } from './HelperBotVisual';
 import * as THREE from "three";
 
 interface CatchEffectInstance {
@@ -238,12 +239,12 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
           
           {/* Competitor Bots - scaled by level for casual gameplay (ages 10-80) */}
           {/* Level 1-2: 2 bots, Level 3: 3 bots, Level 4+: All 6 bots */}
-          {level >= 1 && <CompetitorBot id="King Rex" startX={-5.5} startZ={-13} color="#ff4444" />}
-          {level >= 1 && <CompetitorBot id="Queen Zulu" startX={5} startZ={-10} color="#44ff44" />}
-          {level >= 3 && <CompetitorBot id="Jester Jazz" startX={-2} startZ={-7} color="#4444ff" />}
-          {level >= 4 && <CompetitorBot id="Bead Baron" startX={3} startZ={-12} color="#ffff44" />}
-          {level >= 5 && <CompetitorBot id="Doubloon Duke" startX={-4} startZ={-9} color="#ff44ff" />}
-          {level >= 6 && <CompetitorBot id="Mardi Gal" startX={1} startZ={-8} color="#44ffff" />}
+          {level >= 1 && <CompetitorBot id="bot-1" startX={-5.5} startZ={-13} color="#ff4444" />}
+          {level >= 1 && <CompetitorBot id="bot-2" startX={5} startZ={-10} color="#44ff44" />}
+          {level >= 3 && <CompetitorBot id="bot-3" startX={-2} startZ={-7} color="#4444ff" />}
+          {level >= 4 && <CompetitorBot id="bot-4" startX={3} startZ={-12} color="#ffff44" />}
+          {level >= 5 && <CompetitorBot id="bot-5" startX={-4} startZ={-9} color="#ff44ff" />}
+          {level >= 6 && <CompetitorBot id="bot-6" startX={1} startZ={-8} color="#44ffff" />}
           
           {/* Aggressive NPCs - black/white squares that chase player when hit */}
           {aggressiveNPCs.map((npc) => (
@@ -284,6 +285,9 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
               onCatch={handleCatch}
             />
           ))}
+
+          {/* Helper bot visuals */}
+          <HelperBotVisual playerPosition={playerPosition} />
           
           {/* Catch Effects */}
           {catchEffects.map((effect) => (

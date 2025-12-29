@@ -3,14 +3,32 @@ import { useAudio } from "@/lib/stores/useAudio";
 import { useParadeGame } from "@/lib/stores/useParadeGame";
 import { Howl } from 'howler';
 
+function getAssetBase() {
+  const env = (import.meta as any).env || {};
+  const base = env.VITE_ASSET_BASE_URL ?? env.BASE_URL ?? '';
+  return String(base || '');
+}
+
+function joinAsset(base: string, path: string) {
+  const b = base ? String(base).replace(/\/+$|\\s+$/g, '') : '';
+  const p = String(path).replace(/^\/+/, '');
+  if (!b) return `/${p}`; // preserve original leading slash behavior
+  return `${b.replace(/\/$/, '')}/${p}`;
+}
+
 export function AudioManager() {
   const { setBackgroundMusic, setHitSound, setSuccessSound, isMuted } = useAudio();
   const { phase } = useParadeGame();
 
   useEffect(() => {
-    const bg = new Howl({ src: ['/sounds/background.mp3'], loop: true, volume: 0.3 });
-    const hit = new Howl({ src: ['/sounds/hit.mp3'], volume: 0.3 });
-    const success = new Howl({ src: ['/sounds/success.mp3'], volume: 0.5 });
+    const assetBase = getAssetBase();
+    const bgPath = joinAsset(assetBase, 'sounds/background.mp3');
+    const hitPath = joinAsset(assetBase, 'sounds/hit.mp3');
+    const successPath = joinAsset(assetBase, 'sounds/success.mp3');
+
+    const bg = new Howl({ src: [bgPath], loop: true, volume: 0.3 });
+    const hit = new Howl({ src: [hitPath], volume: 0.3 });
+    const success = new Howl({ src: [successPath], volume: 0.5 });
 
     setBackgroundMusic(bg);
     setHitSound(hit);

@@ -1,20 +1,21 @@
-import { useState, useEffect } from "react";
-import { useParadeGame } from "@/lib/stores/useParadeGame";
-import { useAudio } from "@/lib/stores/useAudio";
-import { useIsMobile } from "@/hooks/use-is-mobile";
-import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX, ShoppingBag, Heart, DollarSign, Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { CosmeticShop } from "./CosmeticShop";
-import { AdminModal } from '@/components/ui/AdminModal';
-import { FirstLevelTutorial } from "./FirstLevelTutorial";
-import { SettingsModal } from "./SettingsModal";
-import { toast } from "sonner";
+import {useEffect, useState} from "react";
+import {useParadeGame} from "@/lib/stores/useParadeGame";
+import {useAudio} from "@/lib/stores/useAudio";
+import {useIsMobile} from "@/hooks/use-is-mobile";
+import {AnimatePresence, motion} from "framer-motion";
+import {Settings, ShoppingBag, Volume2, VolumeX} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Card} from "@/components/ui/card";
+import {Progress} from "@/components/ui/progress";
+import {CosmeticShop} from "./CosmeticShop";
+import {AdminModal} from '@/components/ui/AdminModal';
+import {FirstLevelTutorial} from "./FirstLevelTutorial";
+import {SettingsModal} from "./SettingsModal";
+import {MinimalHUD} from "@/components/ui/MinimalHUD";
+import {RemainingFloats} from "@/components/ui/RemainingFloats";
 
 export function GameUI() {
-  const { phase, score, targetScore, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins } = useParadeGame();
+  const { phase, score, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins, joystickEnabled, totalFloats, floatsPassed } = useParadeGame();
   const { isMuted, toggleMute } = useAudio();
   const [showTutorial, setShowTutorial] = useState(true);
   const [showFirstLevelTutorial, setShowFirstLevelTutorial] = useState(false);
@@ -28,7 +29,38 @@ export function GameUI() {
   });
   const [showAdmin, setShowAdmin] = useState(false);
   const isMobile = useIsMobile();
-  
+
+  // Development: Minimal HUD toggle
+  const [minimalHud, setMinimalHud] = useState<boolean>(() => {
+    try { return typeof window !== 'undefined' && localStorage.getItem('minimalHud') === 'true'; } catch { return false; }
+  });
+
+  // Force HUD for tests (localStorage flag) — helpful so automated tests can access shop without completing tutorial
+  const forceHudForTests = typeof window !== 'undefined' && (() => {
+    try { return localStorage.getItem('TEST_FORCE_HUD') === 'true'; } catch { return false; }
+  })();
+
+  // Expose a test helper to open the shop programmatically when running tests.
+  useEffect(() => {
+    if (forceHudForTests && typeof window !== 'undefined') {
+      (window as any).__OPEN_SHOP = () => setShowShop(true);
+      return () => { try { delete (window as any).__OPEN_SHOP; } catch {} };
+    }
+  }, [forceHudForTests]);
+
+  useEffect(() => {
+    const handler = () => {
+      try { setMinimalHud(localStorage.getItem('minimalHud') === 'true'); } catch { }
+    };
+    window.addEventListener('minimalHud:updated', handler);
+    return () => window.removeEventListener('minimalHud:updated', handler);
+  }, []);
+
+  // Allow preview builds to force a minimal HUD via Vite env flag (VITE_MINIMAL_HUD=true)
+  // This is safe because the flag will only be set in preview CI jobs and not in production builds.
+  const previewMinimalHud = (import.meta as any).env?.VITE_MINIMAL_HUD === 'true';
+  const effectiveMinimalHud = previewMinimalHud || minimalHud;
+
   // Map player color to display info
   const colorDisplayMap = {
     beads: { name: "Purple Beads", color: "#9b59b6" },
@@ -36,10 +68,10 @@ export function GameUI() {
     cup: { name: "Red Cup", color: "#e74c3c" },
   };
   const playerColorInfo = colorDisplayMap[playerColor];
-  
+
   // Sort bots by catches (descending)
   const sortedBots = [...botScores].sort((a, b) => b.catches - a.catches);
-  
+
   // Show combo animation when combo changes
   useEffect(() => {
     if (combo > 1) {
@@ -48,7 +80,7 @@ export function GameUI() {
       return () => clearTimeout(timer);
     }
   }, [combo]);
-  
+
   // Update combo timer
   useEffect(() => {
     if (combo > 0 && lastCatchTime > 0) {
@@ -61,7 +93,7 @@ export function GameUI() {
       return () => clearInterval(interval);
     }
   }, [combo, lastCatchTime]);
-  
+
   // Update power-up UI countdown
   useEffect(() => {
     if (activePowerUps.length > 0) {
@@ -71,12 +103,12 @@ export function GameUI() {
       return () => clearInterval(interval);
     }
   }, [activePowerUps.length]);
-  
+
   // Update showPersonas in localStorage
   useEffect(() => {
     try { if (typeof window !== 'undefined') localStorage.setItem('showPersonas', String(showPersonas)); } catch { }
   }, [showPersonas]);
-  
+
   const handleStartGame = () => {
     setShowTutorial(false);
     // Show first-level tutorial on level 1
@@ -86,12 +118,33 @@ export function GameUI() {
       startGame();
     }
   };
-  
+
   const handleTutorialComplete = () => {
     setShowFirstLevelTutorial(false);
     startGame();
   };
-  
+
+  // Render a minimal HUD when requested in dev or preview builds
+  if (effectiveMinimalHud) {
+    return (
+      <>
+        {phase === 'tutorial' && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+            <Card className="bg-black/80 border-2 border-yellow-400 p-6 max-w-xs text-white">
+              <h2 className="text-lg font-bold text-yellow-300 text-center mb-2">NDI_MardiGrasParade</h2>
+              <p className="text-sm text-center mb-4">A simplified HUD preview for development.</p>
+              <Button onClick={handleStartGame} className="w-full bg-yellow-500 text-purple-900 font-bold">Start</Button>
+            </Card>
+          </div>
+        )}
+
+        {phase === 'playing' && (
+          <MinimalHUD floatsRemaining={Math.max(0, (totalFloats || 0) - (floatsPassed || 0))} score={score} />
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       {/* Tutorial Overlay */}
@@ -122,6 +175,7 @@ export function GameUI() {
                     <div className="space-y-1 sm:space-y-2">
                       <p className="text-xs sm:text-sm">• Move: Tap screen to move</p>
                       <p className="text-xs sm:text-sm">• Get close to items to catch them</p>
+                      <p className="text-xs sm:text-sm">• Joystick available in Settings for on-screen movement</p>
                     </div>
                   )}
                   <p className="text-xs sm:text-sm text-yellow-300 font-bold">• Match your color for 3x points!</p>
@@ -141,7 +195,7 @@ export function GameUI() {
       </AnimatePresence>
       
       {/* In-Game HUD */}
-      {phase === "playing" && (
+      {(phase === "playing" || forceHudForTests) && (
         <div className="absolute inset-0 pointer-events-none">
           {/* Top HUD Bar - Phone Optimized */}
           <div className="absolute top-2 md:top-4 left-2 md:left-4 right-2 md:right-4 flex justify-between items-start pointer-events-auto">
@@ -176,6 +230,7 @@ export function GameUI() {
                   onClick={() => setShowShop(true)}
                   size="sm"
                   className="hidden sm:flex bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white"
+                  data-testid="open-shop"
                 >
                   <ShoppingBag size={18} />
                 </Button>
@@ -216,6 +271,9 @@ export function GameUI() {
             </div>
           </div>
           
+          {/* Remaining floats indicator (compact) */}
+          <RemainingFloats remaining={Math.max(0, (totalFloats || 0) - (floatsPassed || 0))} />
+
           {/* Admin & Controls - Hidden on phones */}
           <div className="hidden md:flex absolute bottom-4 right-4 pointer-events-auto flex-col gap-2">
             <Button onClick={() => setShowAdmin(true)} size="lg" className="bg-gray-800 text-white border-2 border-yellow-400">Admin</Button>
@@ -256,7 +314,7 @@ export function GameUI() {
             )}
           </AnimatePresence>
           
-          {/* Bot Scores - Hidden on phones */}
+          {/* Bot Scores - Hidden on phones (desktop view) - but show compact overlay on mobile when joystick enabled */}
           <div className="hidden md:block absolute bottom-4 left-4 pointer-events-auto">
             <Card className="bg-black/40 backdrop-blur-md border-2 border-gray-400 shadow-2xl px-4 py-3">
               <div className="text-sm text-gray-200 font-black mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">🤖 COMPETITOR CATCHES</div>
@@ -279,6 +337,23 @@ export function GameUI() {
               </div>
             </Card>
           </div>
+
+          {/* Mobile compact bot overlay when joystick enabled - positioned above joystick to avoid overlap */}
+          {isMobile && joystickEnabled && (
+            <div className="block md:hidden absolute bottom-40 left-2 right-2 pointer-events-auto">
+              <Card className="bg-black/50 backdrop-blur-md border-2 border-gray-400 shadow-2xl px-3 py-2">
+                <div className="flex items-center justify-between text-xs text-gray-200 font-black mb-1">🤖 COMPETITORS</div>
+                <div className="flex gap-2 overflow-x-auto">
+                  {sortedBots.slice(0,4).map(bot => (
+                    <div key={bot.id} className="flex-shrink-0 flex flex-col items-center w-16">
+                      <div className="w-6 h-6 rounded-full mb-1" style={{ backgroundColor: bot.color }} />
+                      <div className="text-[11px] text-white text-center">{bot.catches}</div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </div>
+          )}
           
           {/* Small HUD toggles - top-right compact */}
           <div className="absolute top-4 right-4">

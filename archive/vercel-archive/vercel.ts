@@ -7,8 +7,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 attachRoutes(app);
 
-// Vercel expects a default export that is a handler
+// Export a default handler to keep compatibility with serverless adapters
 export default function handler(req: any, res: any) {
-  // Use the Express app to handle the request
   app(req, res);
 }

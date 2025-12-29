@@ -46,9 +46,31 @@ export function Collectible({ collectible, playerPosition, onCatch }: Collectibl
   
   useFrame((state, delta) => {
     if (!meshRef.current || hasBeenCaught.current) return;
-    
+
+    // Get helper bot count
+    const { updateCollectible, removeCollectible, incrementMisses } = useParadeGame();
+    const helperBots = useParadeGame.getState().helperBots || 0;
+
     // Apply gravity
     velocity.current.y += GRAVITY * delta;
+
+    // Helper bot attraction: if helperBots active, apply attraction force toward player
+    if (helperBots > 0) {
+      const attractRadius = 6 + helperBots * 2; // radius grows with number of helper bots
+      const toPlayer = new THREE.Vector3().subVectors(playerPosition, position.current);
+      const distance = toPlayer.length();
+      if (distance < attractRadius) {
+        // Normalize and apply attraction proportional to (1 - distance/attractRadius)
+        const strength = 4 * (helperBots) * Math.max(0, 1 - distance / attractRadius);
+        const accel = toPlayer.normalize().multiplyScalar(strength * delta);
+        // Apply to velocity, clamp to avoid too fast
+        velocity.current.add(accel);
+        const maxSpeed = 8;
+        if (velocity.current.length() > maxSpeed) {
+          velocity.current.setLength(maxSpeed);
+        }
+      }
+    }
     
     // Update position based on velocity
     position.current.add(velocity.current.clone().multiplyScalar(delta));

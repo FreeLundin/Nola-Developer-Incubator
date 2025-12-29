@@ -105,6 +105,32 @@ The dev server is powered by Vite and provides:
 - 📦 Automatic bundling
 - 🔄 Backend auto-restart with tsx
 
+### How to launch in your browser (quick)
+
+Use one of the recommended flows below depending on whether you want a local editable instance or a public shareable link.
+
+- Local (developer):
+
+```powershell
+npm ci
+npm run dev
+# Open http://localhost:5000
+```
+
+- Public (shareable): publish the built frontend (`dist/public`) to GitHub Pages (workflow `.github/workflows/deploy-gh-pages.yml`) or run the local `deploy:gh-pages` script. Example public URL for this repo:
+
+```
+https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/
+```
+
+- If the public page appears blank, use the debug page to bypass cached index:
+
+```
+https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/debug.html
+```
+
+> Note: Vercel-related guides and legacy CI have been archived to `archive/legacy-hosting/` and are no longer part of the recommended workflow for this repository.
+
 ### File Structure
 
 ```
@@ -460,7 +486,7 @@ Test thoroughly in production mode before deployment.
 
 The project is designed for deployment to platforms like:
 
-- **Vercel** - Frontend hosting
+- **GitHub Pages** - Frontend hosting (static)
 - **Railway** - Backend hosting
 - **Render** - Full-stack hosting
 - **Neon** - PostgreSQL database

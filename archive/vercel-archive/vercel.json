@@ -1,0 +1,5 @@
+{
+  "deprecated": true,
+  "note": "Legacy hosting deployment is deprecated for this repository - GitHub Pages is used instead. Original config backed up to legacy-config.json.bak.",
+  "version": 2
+}
