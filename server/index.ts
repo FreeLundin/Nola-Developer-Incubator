@@ -28,21 +28,30 @@ async function startServer() {
     process.env.NODE_ENV = process.env.NODE_ENV.toString().trim();
   }
 
-  if (!process.env.NODE_ENV) {
-    try {
-      const distPublic = path.resolve(__dirname, 'public');
-      if (fs.existsSync(distPublic)) {
-        process.env.NODE_ENV = 'production';
-      }
-    } catch (e) {
-      // ignore
-    }
+  app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+    // Structured error logging
+    const errorLog = {
+      timestamp: new Date().toISOString(),
+      method: req.method,
+      path: req.path,
+      error: err.message || "Internal Server Error",
+      stack: err.stack || "No stack trace",
+      status: err.status || err.statusCode || 500
+    };
+    console.error("[API Error]", JSON.stringify(errorLog, null, 2));
 
-    // also treat running the compiled bundle as production
-    if (!process.env.NODE_ENV && isMain && process.argv.some((a) => String(a).toLowerCase().endsWith('dist' + path.sep + 'index.js'))) {
-      process.env.NODE_ENV = 'production';
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
+
+    // Don't send response if headers already sent
+    if (!res.headersSent) {
+      res.status(status).json({ 
+        error: message,
+        // Only include details in development
+        ...(process.env.NODE_ENV === "development" && { stack: err.stack })
+      });
     }
-  }
+  });
 
   const NODE_ENV = (process.env.NODE_ENV || '').toString().trim();
   console.log('server/index.ts starting with NODE_ENV=', NODE_ENV);
