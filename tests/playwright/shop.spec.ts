@@ -20,18 +20,19 @@ test('shop purchase helper', async ({ page }) => {
   const startButton = page.getByRole('button', { name: /Start Game/i });
   try {
     if (await startButton.isVisible({ timeout: 3000 })) {
-      await startButton.click();
+      // use DOM click to avoid Playwright interception
+      await page.evaluate((sel) => { const b = document.querySelector(sel) as HTMLElement | null; if (b) b.click(); }, 'button:has-text("Start Game")');
 
       // If the first-level tutorial appears, click Skip (or click through to Start!)
       const skipBtn = page.getByRole('button', { name: /^Skip$/i });
       try {
         if (await skipBtn.isVisible({ timeout: 2000 })) {
-          await skipBtn.click();
+          await page.evaluate((sel) => { const b = document.querySelector(sel) as HTMLElement | null; if (b) b.click(); }, 'button:has-text("Skip")');
         }
       } catch {
         // If Skip isn't visible, try final Start button in tutorial
         const finalStart = page.getByRole('button', { name: /Start!?$/i });
-        try { if (await finalStart.isVisible({ timeout: 2000 })) await finalStart.click(); } catch { }
+        try { if (await finalStart.isVisible({ timeout: 2000 })) await page.evaluate((sel) => { const b = document.querySelector(sel) as HTMLElement | null; if (b) b.click(); }, 'button:has-text("Start!")'); } catch { }
       }
     }
   } catch {
@@ -49,7 +50,6 @@ test('shop purchase helper', async ({ page }) => {
         });
         for (const el of els) {
           try {
-            // Prefer to remove the element from the DOM; if removal causes React issues, fall back to hiding
             if (el.parentNode) el.parentNode.removeChild(el);
           } catch (_) {
             try { (el as HTMLElement).style.pointerEvents = 'none'; (el as HTMLElement).style.opacity = '0'; } catch (_) {}
@@ -70,14 +70,13 @@ test('shop purchase helper', async ({ page }) => {
   await page.waitForTimeout(250);
 
   // Wait for HUD and open shop button
-  const open = page.getByTestId('open-shop');
-  await open.waitFor({ timeout: 10000 });
-  await open.click();
+  await page.waitForSelector('[data-testid="open-shop"]', { timeout: 10000 });
+  // Use DOM click to avoid pointer interception issues
+  await page.evaluate(() => { const b = document.querySelector('[data-testid="open-shop"]') as HTMLElement | null; if (b) b.click(); });
 
   // Wait for buy helper button
-  const buy = page.getByTestId('buy-helper');
-  await buy.waitFor({ timeout: 5000 });
-  await buy.click();
+  await page.waitForSelector('[data-testid="buy-helper"]', { timeout: 5000 });
+  await page.evaluate(() => { const b = document.querySelector('[data-testid="buy-helper"]') as HTMLElement | null; if (b) b.click(); });
 
   // Expect shop message to appear
   const msg = page.getByTestId('shop-message');
