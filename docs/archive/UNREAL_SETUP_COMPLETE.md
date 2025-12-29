@@ -465,7 +465,7 @@ Everything is set up and ready to go! You have:
 
 You've got a solid foundation, comprehensive documentation, and automated tools. The hard part (setup) is done!
 
-**Now comes the fun part - bringing your Mardi Gras Parade game to life in stunning 3D!** ????
+**Now comes the fun part - bringing NDI_MardiGrasParade to life in stunning 3D!** ????
 
 **Laissez les bons temps rouler!** ??
 

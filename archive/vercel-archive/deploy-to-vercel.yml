@@ -1,0 +1,16 @@
+name: Deprecated - Deploy to legacy hosting (archived)
+
+# This workflow previously deployed the project to a legacy hosting provider. It has been deprecated
+# and replaced by GitHub Pages / other deployment options. The original workflow
+# has been archived to `archive/legacy-hosting/deploy-to-vercel.yml`.
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notice
+        run: |
+          echo "This workflow is deprecated. See DEPLOYMENT.md and README.md for current deployment instructions."

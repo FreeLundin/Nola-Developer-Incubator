@@ -1,6 +1,22 @@
-node_modules
-dist
+node_modules/
+dist/
 .DS_Store
-server/public
+.vscode/
+.idea/
+.env
+.env.*
+server/public/
 vite.config.ts.*
 *.tar.gz
+# logs
+logs/
+*.log
+# build artifacts
+build/
+coverage/
+
+# Local OS files
+Thumbs.db
+# Legacy Vercel directory (kept in .gitignore). The project no longer uses Vercel; archived Vercel configs are in archive/legacy-hosting/.
+.vercel
+.env*.local

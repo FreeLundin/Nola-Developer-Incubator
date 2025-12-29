@@ -16,68 +16,78 @@ export function TouchControls({ onInput }: TouchControlsProps) {
   const joystickRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [stickPosition, setStickPosition] = useState({ x: 0, y: 0 });
-  
+
   // Responsive joystick sizing - smaller on phones, larger on tablets
   const isSmallScreen = typeof window !== 'undefined' && window.innerWidth < 640;
   const joystickSize = isSmallScreen ? 100 : 140;
   const stickSize = isSmallScreen ? 40 : 60;
   const maxDistance = (joystickSize - stickSize) / 2;
-  
+
+  // Helper to update stick position given client coords
+  const updateFromClientCoords = (clientX: number, clientY: number) => {
+    if (!joystickRef.current) return;
+    const rect = joystickRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const deltaX = clientX - centerX;
+    const deltaY = clientY - centerY;
+
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const clampedDistance = Math.min(distance, maxDistance);
+    const angle = Math.atan2(deltaY, deltaX);
+
+    const x = Math.cos(angle) * clampedDistance;
+    const y = Math.sin(angle) * clampedDistance;
+
+    setStickPosition({ x, y });
+
+    // Normalize input to -1 to 1 range
+    const normalizedX = +(x / maxDistance).toFixed(3);
+    const normalizedY = +(y / maxDistance).toFixed(3);
+
+    onInput({ x: normalizedX, y: normalizedY });
+  };
+
   useEffect(() => {
     if (!isMobile) return;
-    
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isDragging || !joystickRef.current) return;
-      
-      const rect = joystickRef.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      
-      const touch = e.touches[0];
-      const deltaX = touch.clientX - centerX;
-      const deltaY = touch.clientY - centerY;
-      
-      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-      const clampedDistance = Math.min(distance, maxDistance);
-      const angle = Math.atan2(deltaY, deltaX);
-      
-      const x = Math.cos(angle) * clampedDistance;
-      const y = Math.sin(angle) * clampedDistance;
-      
-      setStickPosition({ x, y });
-      
-      // Normalize input to -1 to 1 range
-      const normalizedX = x / maxDistance;
-      const normalizedY = y / maxDistance;
-      
-      onInput({ x: normalizedX, y: normalizedY });
+
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!isDragging) return;
+      // If pointer events, use clientX/Y
+      updateFromClientCoords(e.clientX, e.clientY);
     };
-    
-    const handleTouchEnd = () => {
+
+    const handlePointerUp = () => {
       setIsDragging(false);
       setStickPosition({ x: 0, y: 0 });
       onInput({ x: 0, y: 0 });
+
+      // release pointer capture if any
+      try {
+        joystickRef.current?.releasePointerCapture?.((joystickRef.current as any)?._lastPointerId);
+      } catch {}
     };
-    
+
     if (isDragging) {
-      window.addEventListener("touchmove", handleTouchMove);
-      window.addEventListener("touchend", handleTouchEnd);
-      window.addEventListener("touchcancel", handleTouchEnd);
+      window.addEventListener('pointermove', handlePointerMove);
+      window.addEventListener('pointerup', handlePointerUp);
+      window.addEventListener('pointercancel', handlePointerUp);
     }
-    
+
     return () => {
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
-      window.removeEventListener("touchcancel", handleTouchEnd);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerUp);
     };
   }, [isDragging, isMobile, maxDistance, onInput]);
-  
+
   if (!isMobile) return null;
-  
+
   return (
     <>
-      {/* Movement Joystick - Compact on phones */}
-      <div className="absolute bottom-16 sm:bottom-20 left-2 sm:left-4 pointer-events-auto">
+      {/* Movement Joystick - Left half of screen */}
+      <div className="absolute bottom-16 sm:bottom-20 left-2 sm:left-4 pointer-events-auto" style={{ maxWidth: '55vw' }}>
         <div
           ref={joystickRef}
           className="relative bg-black/40 rounded-full border-4 border-white/40 backdrop-blur-sm shadow-2xl"
@@ -87,7 +97,17 @@ export function TouchControls({ onInput }: TouchControlsProps) {
             WebkitTapHighlightColor: 'transparent',
             touchAction: 'none'
           }}
-          onTouchStart={() => setIsDragging(true)}
+          // Use pointer events for better cross-browser support; store pointerId for release
+          onPointerDown={(e) => {
+            // Only handle primary touch/pointer
+            if (e.isPrimary === false) return;
+            // prevent other handlers
+            (e.target as Element).setPointerCapture?.(e.pointerId);
+            // store last pointer id for release
+            try { (joystickRef.current as any)._lastPointerId = e.pointerId; } catch {}
+            setIsDragging(true);
+            updateFromClientCoords(e.clientX, e.clientY); // process initial touch immediately
+          }}
         >
           {/* Joystick base crosshair */}
           <div className="absolute inset-0 flex items-center justify-center">
@@ -110,6 +130,7 @@ export function TouchControls({ onInput }: TouchControlsProps) {
           </div>
         </div>
       </div>
+
     </>
   );
 }

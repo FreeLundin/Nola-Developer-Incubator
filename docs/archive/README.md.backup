@@ -543,7 +543,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## ?? Team & Contact
 
 ### Core Team
+<<<<<<< HEAD
 - **Project Lead:** Brandon Lundin
+=======
+- **Project Lead:** Brian C Lundin
+>>>>>>> origin/main
 - **Repository:** [Nola-Developer-Incubator](https://github.com/FreeLundin/Nola-Developer-Incubator)
 
 ### Contact

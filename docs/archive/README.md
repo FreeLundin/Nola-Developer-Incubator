@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 📦 Documentation Archive
 
 This directory contains deprecated documentation files that are no longer active but preserved for historical reference.
@@ -77,3 +78,10 @@ These files represent previous directions and approaches for the Mardi Gras Para
 ---
 
 **Questions?** See [docs/DEPRECATED.md](../DEPRECATED.md) for more details about why these files were deprecated.
+=======
+# Archived: docs/archive/README.md
+
+This README has been archived. The canonical documentation and playtest link are in the top-level `README.md`.
+
+See: ../../README.md
+>>>>>>> origin/main

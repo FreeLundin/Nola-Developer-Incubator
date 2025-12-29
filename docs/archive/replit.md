@@ -1,8 +1,8 @@
-# Mardi Gras Parade Simulator
+# NDI_MardiGrasParade
 
 ## Overview
 
-The Mardi Gras Parade Simulator is a 3D catching game built with React Three Fiber, where players collect items thrown from parade floats. The game features progressive difficulty, combo scoring, and festive celebrations. It uses a full-stack TypeScript architecture with an Express backend, React frontend, and is designed to integrate with a PostgreSQL database via Drizzle ORM. The project aims to provide an engaging and visually rich Mardi Gras experience.
+NDI_MardiGrasParade is a 3D catching game built with React Three Fiber, where players collect items thrown from parade floats. The game features progressive difficulty, combo scoring, and festive celebrations. It uses a full-stack TypeScript architecture with an Express backend, React frontend, and is designed to integrate with a PostgreSQL database via Drizzle ORM. The project aims to provide an engaging and visually rich Mardi Gras experience.
 
 ## User Preferences
 

@@ -1,0 +1,7 @@
+# This repository no longer uses Vercel for deployments.
+# The original .vercelignore has been archived under archive/legacy-hosting/.vercelignore
+# Keep this stub to avoid accidental use; see docs/DEPLOYMENT.md and README.md for GitHub Pages deployment instructions.
+
+# No files required here; this project uses GitHub Pages for public hosting.
+
+# NOTE: If you intentionally need the original .vercelignore, see archive/legacy-hosting/.vercelignore

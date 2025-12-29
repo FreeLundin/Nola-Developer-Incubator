@@ -1,0 +1,42 @@
+name: Playwright Smoke Tests (PR)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Playwright (browsers + deps + caching)
+        uses: microsoft/playwright-github-action@v1
+
+      - name: Run Playwright smoke test
+        run: npx playwright test tests/playwright/drive-tutorial.spec.ts -c tests/playwright.config.ts --project=chromium
+
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            playwright-report
+            test-results
+            playwright-report/traces
+            playwright-report/videos
+            test-results/**/trace.zip
+

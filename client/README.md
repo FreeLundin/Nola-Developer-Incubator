@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Client Setup - Mardi Gras Parade Game (Web Version)
 
 This directory contains the React/Three.js frontend for the Mardi Gras Parade Game.
@@ -199,3 +200,10 @@ See the main [README.md](../README.md) for contribution guidelines.
 ## 📄 License
 
 MIT License - See [LICENSE](../LICENSE) file for details.
+=======
+# Archived: client/README.md
+
+This README has been archived. The canonical documentation and playtest link are now in the top-level `README.md`.
+
+See: ../README.md
+>>>>>>> origin/main

@@ -1,16 +1,17 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useState, useCallback, useEffect } from "react";
 import { KeyboardControls } from "@react-three/drei";
-import "@fontsource/inter";
 import { GameScene } from "./components/game/GameScene";
 import { GameUI } from "./components/game/GameUI";
 import { WinScreen } from "./components/game/WinScreen";
 import { AudioManager } from "./components/game/AudioManager";
 import { AdRewardScreen } from "./components/game/AdRewardScreen";
 import { TouchControls, TouchInput } from "./components/game/TouchControls";
+import { CatchArea } from './components/game/CatchArea';
 import { Controls, JoystickInput } from "./components/game/Player";
 import { useParadeGame } from "./lib/stores/useParadeGame";
 import { useIsMobile } from "./hooks/use-is-mobile";
+import DevOverlay from "./components/game/DevOverlay";
 
 const controls = [
   { name: Controls.forward, keys: ["KeyW", "ArrowUp"] },
@@ -66,8 +67,13 @@ function App() {
         
         {/* Touch Controls - only show when joystick is enabled on mobile during gameplay */}
         {isMobile && joystickEnabled && phase === "playing" && (
-          <TouchControls onInput={handleJoystickInput} />
-        )}
+          <>
+            <TouchControls onInput={handleJoystickInput} />
+            <CatchArea />
+          </>
+         )}
+
+        {process.env.NODE_ENV === 'development' && <DevOverlay />}
       </KeyboardControls>
     </div>
   );
