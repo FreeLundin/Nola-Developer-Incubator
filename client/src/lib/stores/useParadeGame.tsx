@@ -163,6 +163,9 @@ export const useParadeGame = create<ParadeGameState>()(
     unlockedSkins: ["default"],
     adRewardType: null,
     
+    // number of helper bots currently active
+    helperBots: 0, // number of helper bots currently active
+    
     startGame: () => {
       console.log("Starting game...");
       // Randomly assign player color from the three main collectible types
@@ -595,11 +598,24 @@ export const useParadeGame = create<ParadeGameState>()(
       console.log(`Equipped skin: ${skin}`);
     },
     
+    // Helper bot spawn: spawns helper bot which assists player for a duration
+    spawnHelperBot: (durationMs = 8000) => {
+      const id = Date.now();
+      console.log(`Spawning helper bot ${id} for ${durationMs}ms`);
+      set((state) => ({ helperBots: (state as any).helperBots + 1 }));
+      setTimeout(() => {
+        set((state) => ({ helperBots: Math.max(0, (state as any).helperBots - 1) }));
+        console.log(`Helper bot ${id} expired`);
+      }, durationMs);
+    },
+    
+    // Inactivity timeout
     endGameDueToInactivity: () => {
       console.log("Game ended due to inactivity (30 seconds without movement)");
       set({ phase: "won" });
     },
     
+    // Float collision
     eliminatePlayer: () => {
       console.log("💥 Player hit by parade float! Eliminated!");
       set({ phase: "won" });
