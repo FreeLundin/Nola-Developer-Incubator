@@ -4,7 +4,8 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests/playwright',
+  // testDir is relative to this config file (located in tests/), so use './playwright'
+  testDir: './playwright',
   timeout: 30_000,
   expect: { timeout: 5_000 },
   /* Run tests in files in parallel */
