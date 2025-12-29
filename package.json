@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "name": "mardi-gras-parade-game",
-=======
   "name": "ndi-mardigrasparade",
->>>>>>> origin/main
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
@@ -122,11 +118,8 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
-<<<<<<< HEAD
-=======
     "@playwright/test": "^1.40.0",
     "@rollup/pluginutils": "^5.3.0",
->>>>>>> origin/main
     "@tailwindcss/typography": "^0.5.15",
     "@types/connect-pg-simple": "^7.0.3",
     "@types/express": "4.17.21",
