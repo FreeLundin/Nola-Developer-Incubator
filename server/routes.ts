@@ -2,7 +2,10 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { asyncHandler } from "./http";
-// import { requireEnv } from "./requireEnv";
+import fs from 'fs';
+import path from 'path';
+import sessionRoutes from './routes/sessionRoutes';
+import leaderboardRoutes from './routes/leaderboardRoutes';
 
 export function attachRoutes(app: Express) {
   // health check
@@ -32,22 +35,20 @@ export function attachRoutes(app: Express) {
       return res.status(403).json({ error: 'writing overrides is disabled in production' });
     }
 
-  // Example route with error handling:
-  // app.get('/api/users/:id', asyncHandler(async (req, res) => {
-  //   // Validate environment variables if needed
-  //   // requireEnv(['DATABASE_URL']);
-  //   
-  //   const userId = parseInt(req.params.id);
-  //   const user = await storage.getUser(userId);
-  //   
-  //   if (!user) {
-  //     return res.status(404).json({ error: 'User not found' });
-  //   }
-  //   
-  //   res.json(user);
-  // }));
+    try {
+      const payload = req.body || {};
+      const file = path.resolve(process.cwd(), 'bots.override.json');
+      fs.writeFileSync(file, JSON.stringify(payload, null, 2), 'utf-8');
+      return res.json({ ok: true });
+    } catch (e) {
+      console.error('failed to write bot override', e);
+      return res.status(500).json({ error: 'failed to save override' });
+    }
+  });
 
-  const httpServer = createServer(app);
+  // Example route with error handling (kept as comment for reference):
+  // app.get('/api/users/:id', asyncHandler(async (req, res) => { ... }));
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // attach routes to the provided app then return an http.Server
