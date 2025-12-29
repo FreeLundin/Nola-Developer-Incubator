@@ -14,6 +14,7 @@ import { CompetitorBot } from "./CompetitorBot";
 import { AggressiveNPC } from "./AggressiveNPC";
 import { Obstacle } from "./Obstacle";
 import { TouchControls, TouchInput } from "./TouchControls";
+import { HelperBotVisual } from './HelperBotVisual';
 import * as THREE from "three";
 
 interface CatchEffectInstance {
@@ -284,6 +285,9 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
               onCatch={handleCatch}
             />
           ))}
+
+          {/* Helper bot visuals */}
+          <HelperBotVisual playerPosition={playerPosition} />
           
           {/* Catch Effects */}
           {catchEffects.map((effect) => (

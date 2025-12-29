@@ -16,7 +16,7 @@ export function TouchControls({ onInput }: TouchControlsProps) {
   const joystickRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [stickPosition, setStickPosition] = useState({ x: 0, y: 0 });
-  
+
   // Responsive joystick sizing - smaller on phones, larger on tablets
   const isSmallScreen = typeof window !== 'undefined' && window.innerWidth < 640;
   const joystickSize = isSmallScreen ? 100 : 140;
@@ -86,8 +86,8 @@ export function TouchControls({ onInput }: TouchControlsProps) {
 
   return (
     <>
-      {/* Movement Joystick - Compact on phones */}
-      <div className="absolute bottom-16 sm:bottom-20 left-2 sm:left-4 pointer-events-auto">
+      {/* Movement Joystick - Left half of screen */}
+      <div className="absolute bottom-16 sm:bottom-20 left-2 sm:left-4 pointer-events-auto" style={{ maxWidth: '55vw' }}>
         <div
           ref={joystickRef}
           className="relative bg-black/40 rounded-full border-4 border-white/40 backdrop-blur-sm shadow-2xl"
@@ -130,6 +130,7 @@ export function TouchControls({ onInput }: TouchControlsProps) {
           </div>
         </div>
       </div>
+
     </>
   );
 }

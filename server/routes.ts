@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import path from "path";
 import fs from "fs";
 import sessionRoutes from './routes/sessionRoutes';
+import leaderboardRoutes from './routes/leaderboardRoutes';
 
 export function attachRoutes(app: Express) {
   // health check
@@ -10,6 +11,8 @@ export function attachRoutes(app: Express) {
 
   // Session save/load API (stubs)
   app.use(sessionRoutes);
+  // Leaderboard API
+  app.use(leaderboardRoutes);
   
   // serve runtime bot override if present at project root (bots.override.json)
   app.get('/bots.override.json', (_req, res) => {

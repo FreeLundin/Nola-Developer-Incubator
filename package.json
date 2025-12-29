@@ -27,6 +27,7 @@
     "deploy:gh-pages:local": "npm run deploy:gh-pages"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.34.0",
     "@fontsource/inter": "^5.2.5",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@neondatabase/serverless": "^0.10.4",
