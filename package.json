@@ -25,7 +25,10 @@
     "build:gh-pages": "node ./scripts/build-gh-pages.js",
     "publish:gh-pages": "node ./scripts/publish-gh-pages.js",
     "deploy:gh-pages": "node ./scripts/build-gh-pages.js && npx gh-pages --dotfiles -d dist/public",
-    "deploy:gh-pages:local": "npm run deploy:gh-pages"
+    "deploy:gh-pages:local": "npm run deploy:gh-pages",
+    "gltf-optimize": "npx gltf-transform batch client/public/models client/public/models/optimized --draco.compress=true --draco.quantize=14",
+    "image-optimize": "npx imagemin client/public/textures/* --out-dir=client/public/textures/optimized",
+    "assets-optimize": "npm run gltf-optimize; npm run image-optimize"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.34.0",
@@ -143,7 +146,11 @@
     "terser": "^5.44.1",
     "tsx": "^4.19.1",
     "typescript": "5.6.3",
-    "vite": "^5.4.19"
+    "vite": "^5.4.19",
+    "@gltf-transform/cli": "^0.13.0",
+    "imagemin-cli": "^7.0.0",
+    "imagemin-mozjpeg": "^10.0.0",
+    "imagemin-pngquant": "^9.0.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"

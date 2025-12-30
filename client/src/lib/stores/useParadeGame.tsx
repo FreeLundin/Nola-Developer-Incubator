@@ -69,6 +69,10 @@ interface ParadeGameState {
   
   // Settings
   joystickEnabled: boolean; // Enable joystick controls for mobile/tablet
+  settings?: {
+    enableShadows?: boolean;
+    quality?: 'low' | 'medium' | 'high';
+  };
   
   // Actions
   startGame: () => void;
@@ -166,6 +170,8 @@ export const useParadeGame = create<ParadeGameState>()(
     ,joystickEnabled: typeof window !== 'undefined' 
       ? localStorage.getItem('joystickEnabled') === 'true' 
       : false,
+    // Render settings (new): keep shadows enabled by default for compatibility.
+    settings: { enableShadows: true, quality: 'high' },
     
     // Monetization state
     coins: 0,

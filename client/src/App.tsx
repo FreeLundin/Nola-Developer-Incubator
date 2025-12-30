@@ -1,17 +1,17 @@
-import { Canvas } from "@react-three/fiber";
-import { Suspense, useState, useCallback, useEffect } from "react";
-import { KeyboardControls } from "@react-three/drei";
-import { GameScene } from "./components/game/GameScene";
-import { GameUI } from "./components/game/GameUI";
-import { WinScreen } from "./components/game/WinScreen";
-import { AudioManager } from "./components/game/AudioManager";
-import { AdRewardScreen } from "./components/game/AdRewardScreen";
-import { TouchControls, TouchInput } from "./components/game/TouchControls";
-import { CatchArea } from './components/game/CatchArea';
-import { Controls, JoystickInput } from "./components/game/Player";
-import { useParadeGame } from "./lib/stores/useParadeGame";
-import { useIsMobile } from "./hooks/use-is-mobile";
+import React, {Suspense, useCallback, useEffect, useState} from "react";
+import {KeyboardControls} from "@react-three/drei";
+import {GameUI} from "./components/game/GameUI";
+import {WinScreen} from "./components/game/WinScreen";
+import {AudioManager} from "./components/game/AudioManager";
+import {AdRewardScreen} from "./components/game/AdRewardScreen";
+import {TouchControls, TouchInput} from "./components/game/TouchControls";
+import {CatchArea} from './components/game/CatchArea';
+import {Controls, JoystickInput} from "./components/game/Player";
+import {useParadeGame} from "./lib/stores/useParadeGame";
+import {useIsMobile} from "./hooks/use-is-mobile";
 import DevOverlay from "./components/game/DevOverlay";
+// Lazy-load the heavy Canvas and scene to defer loading R3F/drei until needed
+const GameCanvas = React.lazy(() => import("./components/game/GameCanvas"));
 
 const controls = [
   { name: Controls.forward, keys: ["KeyW", "ArrowUp"] },
@@ -40,25 +40,9 @@ function App() {
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
       <KeyboardControls map={controls}>
-        <Canvas
-          shadows
-          camera={{
-            position: [0, 4, 6],
-            fov: 60,
-            near: 0.1,
-            far: 1000
-          }}
-          gl={{
-            antialias: true,
-            powerPreference: "high-performance"
-          }}
-        >
-          <color attach="background" args={["#0f0f1e"]} />
-          
-          <Suspense fallback={null}>
-            <GameScene joystickInput={joystickInput} />
-          </Suspense>
-        </Canvas>
+        <Suspense fallback={null}>
+          <GameCanvas joystickInput={joystickInput} />
+        </Suspense>
         
         <GameUI />
         <WinScreen />
