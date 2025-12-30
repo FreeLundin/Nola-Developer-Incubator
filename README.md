@@ -194,6 +194,66 @@ PORT=5000
 NODE_ENV=development
 ```
 
+## QA Checklist
+
+Quick summary and test checklist for maintainers, designers, and QA engineers.
+
+- Production (public playtest): https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/ (frontend build published to GitHub Pages)
+
+What's done (evidence in repo)
+- Player movement (WASD, click-to-move, touch/joystick): implemented; see `client/src/components/` and test hook in `tests/playwright/joystick.spec.ts`.
+- Parade floats and collectibles (beads, doubloons, cups, king cake, power-ups): implemented and described in `README.md` features.
+- Scoring, combos and color-match bonus: implemented in game logic (see scoring references in README and stores).
+- Power-ups (speed, double points) and basic level progression: implemented.
+- Leaderboard & persistence: basic server endpoints and `data/leaderboard.json` exist for storing scores.
+- Mobile optimizations: touch controls and optional on-screen joystick are present; Playwright skeleton test added for joystick.
+
+Sprint status (from `docs/PRODUCT_BACKLOG.md`)
+- Sprint A planned items (Joystick, HUD, Audio toggle, Floats indicator): NOT fully completed.
+  - PB-001 Mobile & Desktop Joystick Improvements — In Progress
+  - PB-002 Minimal HUD / Compact UI Mode — To Do
+  - PB-003 Audio toggle persistence bugfix — To Do
+  - PB-005 Visual remaining floats indicator — To Do
+
+Conclusion: Sprint goals are not all accomplished yet. PB-001 is in progress; the other planned sprint items remain To Do.
+
+What's undone / high priority
+- Finalize joystick improvements and multi-touch handling (PB-001)
+- Implement minimal HUD/compact UI mode (PB-002)
+- Fix audio toggle persistence across reloads/platforms (PB-003)
+- Add visual remaining floats indicator in HUD (PB-005)
+- Backend session tracking / cloud save and Shop/monetization items live in backlog (PB-004, PB-007, PB-008)
+
+Testable features & quick checks
+- Manual smoke tests (local dev):
+  1. Run the dev server: `npm run dev` and open http://localhost:5000. Confirm no console errors.
+  2. Verify player movement: WASD, click-to-move, and touch/joystick on mobile/emulation move the player.
+  3. Verify collectibles spawn, can be caught, and that score updates and collectible disappears.
+  4. Verify combo behavior and color-match scoring.
+  5. Verify power-up behavior (speed/double points) and temporary effect timing.
+  6. Submit a score and confirm persistence in `data/leaderboard.json` or via `/api/leaderboard`.
+  7. Toggle audio and camera mode settings and confirm effects.
+
+- Automated (Playwright):
+  - Joystick skeleton test is present at `tests/playwright/joystick.spec.ts` (smoke test). Run it locally with:
+
+```bash
+# Run joystick tests (Chromium)
+npx playwright test tests/playwright/joystick.spec.ts --project=chromium
+```
+
+  - Run all Playwright tests:
+
+```bash
+npx playwright test
+```
+
+How to report problems found during QA
+- Open an issue or attach to your PR with: reproduction steps, expected vs actual, browser/OS/device, screenshots or short video/GIF, and a reference to the related backlog item (if applicable).
+
+Notes & next steps
+- If you'd like, I can: create an `ASSET_SUBMISSION_TEMPLATE.md`, convert backlog rows into GitHub issues, or expand Playwright tests to cover power-ups, scoring edge cases, and leaderboard flows.
+
 ---
 
 ## 📚 Documentation
