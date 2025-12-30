@@ -26,7 +26,7 @@
     "publish:gh-pages": "node ./scripts/publish-gh-pages.js",
     "deploy:gh-pages": "node ./scripts/build-gh-pages.js && npx gh-pages --dotfiles -d dist/public",
     "deploy:gh-pages:local": "npm run deploy:gh-pages",
-    "gltf-optimize": "npx gltf-transform batch client/public/models client/public/models/optimized --draco.compress=true --draco.quantize=14",
+    "gltf-optimize": "node ./scripts/optimize-gltf.js",
     "image-optimize": "npx imagemin client/public/textures/* --out-dir=client/public/textures/optimized",
     "assets-optimize": "npm run gltf-optimize; npm run image-optimize"
   },
