@@ -264,6 +264,7 @@ export function GameUI() {
                   onClick={() => setShowSettings(true)}
                   size="sm"
                   className="bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white p-1 md:p-2"
+                  data-testid="settings-button"
                 >
                   <Settings size={14} className="md:w-[18px] md:h-[18px]" />
                 </Button>
@@ -364,6 +365,13 @@ export function GameUI() {
               </label>
             </div>
           </div>
+
+          {/* Test hook: expose a visible DOM marker when tests opt-in via localStorage */}
+          {forceHudForTests && (
+            <div data-testid="player-entity" style={{ position: 'absolute', left: 8, top: 8, zIndex: 60, background: 'rgba(255,255,255,0.02)', padding: '2px 6px', borderRadius: 4, color: 'white', pointerEvents: 'none' }}>
+              Player
+            </div>
+          )}
           
           {/* Controls Hint - Hidden on phones */}
           <div className="hidden md:block absolute bottom-4 left-1/2 transform -translate-x-1/2">

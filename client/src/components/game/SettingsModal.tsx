@@ -1,9 +1,9 @@
-import { useParadeGame } from "@/lib/stores/useParadeGame";
-import { useIsMobile } from "@/hooks/use-is-mobile";
-import { X, Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
+import {useParadeGame} from "@/lib/stores/useParadeGame";
+import {useIsMobile} from "@/hooks/use-is-mobile";
+import {Settings, X} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Card} from "@/components/ui/card";
+import {Switch} from "@/components/ui/switch";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -55,6 +55,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 checked={joystickEnabled}
                 onCheckedChange={toggleJoystick}
                 className="ml-3"
+                data-testid="joystick-toggle"
               />
             </div>
           )}
@@ -71,6 +72,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <Button
               onClick={onClose}
               className="w-full bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold"
+              data-testid="settings-close"
             >
               Close
             </Button>

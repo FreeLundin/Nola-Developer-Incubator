@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from "react";
-import { useIsMobile } from "@/hooks/use-is-mobile";
+import {useEffect, useRef, useState} from "react";
+import {useIsMobile} from "@/hooks/use-is-mobile";
 
 export interface TouchInput {
   x: number; // -1 to 1
@@ -90,6 +90,7 @@ export function TouchControls({ onInput }: TouchControlsProps) {
       <div className="absolute bottom-16 sm:bottom-20 left-2 sm:left-4 pointer-events-auto" style={{ maxWidth: '55vw' }}>
         <div
           ref={joystickRef}
+          data-testid="on-screen-joystick"
           className="relative bg-black/40 rounded-full border-4 border-white/40 backdrop-blur-sm shadow-2xl"
           style={{ 
             width: joystickSize, 
