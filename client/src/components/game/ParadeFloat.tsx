@@ -205,23 +205,9 @@ export function ParadeFloat({
   };
   
   // Refs for instanced meshes
-  const decorRef = useRef<THREE.InstancedMesh | null>(null);
   const wheelsRef = useRef<THREE.InstancedMesh | null>(null);
 
   useFrame(() => {
-    // Update decoration instance matrices
-    if (decorRef.current) {
-      for (let i = 0; i < decorations.length; i++) {
-        const dec = decorations[i];
-        const m = new THREE.Matrix4();
-        const pos = new THREE.Vector3(dec.x, dec.y + meshRef.current!.position.y - 1, dec.z);
-        const q = new THREE.Quaternion();
-        const s = new THREE.Vector3(dec.scale, dec.scale, dec.scale);
-        m.compose(pos, q, s);
-        decorRef.current.setMatrixAt(i, m);
-      }
-      decorRef.current.instanceMatrix.needsUpdate = true;
-    }
     // Update wheel instance matrices (4 wheels)
     if (wheelsRef.current) {
       const wheelPositions = [[-0.8, -0.7, -1], [0.8, -0.7, -1], [-0.8, -0.7, 1], [0.8, -0.7, 1]];
@@ -269,8 +255,7 @@ export function ParadeFloat({
         </Html>
       )}
       
-      <instancedMesh ref={decorRef} args={[new THREE.SphereGeometry(0.5, 6, 6), new THREE.MeshStandardMaterial({ color: '#FFD700', emissive: '#FFD700', emissiveIntensity: 1.2, metalness: 0.8, roughness: 0.2 }), decorations.length]} castShadow />
-
+      {/* Decorations are now rendered globally by FloatDecorationsInstanced to reduce draw calls */}
       {/* Float wheels - instanced (4 instances) */}
       <instancedMesh ref={wheelsRef} args={[new THREE.CylinderGeometry(0.3, 0.3, 0.3, 8), new THREE.MeshStandardMaterial({ color: '#2c2c2c' }), 4]} castShadow />
     </group>
