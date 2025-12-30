@@ -32,7 +32,7 @@ export function ParadeFloat({
   
   // Pre-calculate random decorative elements positions
   const decorations = useMemo(() => {
-    return Array.from({ length: 5 }, (_, i) => ({
+    return Array.from({ length: 5 }, () => ({
       x: (Math.random() - 0.5) * 1.5,
       y: Math.random() * 1.5 + 0.5,
       z: (Math.random() - 0.5) * 2,
@@ -204,6 +204,39 @@ export function ParadeFloat({
     console.log(`Float ${id} threw ${clusterCount}x ${randomType}`);
   };
   
+  // Refs for instanced meshes
+  const decorRef = useRef<THREE.InstancedMesh | null>(null);
+  const wheelsRef = useRef<THREE.InstancedMesh | null>(null);
+
+  useFrame(() => {
+    // Update decoration instance matrices
+    if (decorRef.current) {
+      for (let i = 0; i < decorations.length; i++) {
+        const dec = decorations[i];
+        const m = new THREE.Matrix4();
+        const pos = new THREE.Vector3(dec.x, dec.y + meshRef.current!.position.y - 1, dec.z);
+        const q = new THREE.Quaternion();
+        const s = new THREE.Vector3(dec.scale, dec.scale, dec.scale);
+        m.compose(pos, q, s);
+        decorRef.current.setMatrixAt(i, m);
+      }
+      decorRef.current.instanceMatrix.needsUpdate = true;
+    }
+    // Update wheel instance matrices (4 wheels)
+    if (wheelsRef.current) {
+      const wheelPositions = [[-0.8, -0.7, -1], [0.8, -0.7, -1], [-0.8, -0.7, 1], [0.8, -0.7, 1]];
+      for (let i = 0; i < 4; i++) {
+        const pos = new THREE.Vector3(wheelPositions[i][0], wheelPositions[i][1] + meshRef.current!.position.y - 1, wheelPositions[i][2]);
+        const m = new THREE.Matrix4();
+        const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, Math.PI/2));
+        const s = new THREE.Vector3(1,1,1);
+        m.compose(pos, q, s);
+        wheelsRef.current.setMatrixAt(i, m);
+      }
+      wheelsRef.current.instanceMatrix.needsUpdate = true;
+    }
+  });
+
   return (
     <group ref={meshRef} position={[position.current.x, position.current.y, position.current.z]} scale={[1.5, 1.5, 1.5]}>
       {/* Main float platform with enhanced emissive glow */}
@@ -236,37 +269,10 @@ export function ParadeFloat({
         </Html>
       )}
       
-      {/* Decorative elements on the float with glow */}
-      {decorations.map((dec, i) => (
-        <mesh key={i} position={[dec.x, dec.y, dec.z]} castShadow>
-          <sphereGeometry args={[dec.scale, 6, 6]} />
-          <meshStandardMaterial 
-            color="#FFD700" 
-            emissive="#FFD700"
-            emissiveIntensity={1.2}
-            metalness={0.8} 
-            roughness={0.2} 
-          />
-        </mesh>
-      ))}
-      
-      {/* Float wheels - optimized */}
-      <mesh position={[-0.8, -0.7, -1]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.3, 8]} />
-        <meshStandardMaterial color="#2c2c2c" />
-      </mesh>
-      <mesh position={[0.8, -0.7, -1]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.3, 8]} />
-        <meshStandardMaterial color="#2c2c2c" />
-      </mesh>
-      <mesh position={[-0.8, -0.7, 1]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.3, 8]} />
-        <meshStandardMaterial color="#2c2c2c" />
-      </mesh>
-      <mesh position={[0.8, -0.7, 1]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.3, 8]} />
-        <meshStandardMaterial color="#2c2c2c" />
-      </mesh>
+      <instancedMesh ref={decorRef} args={[new THREE.SphereGeometry(0.5, 6, 6), new THREE.MeshStandardMaterial({ color: '#FFD700', emissive: '#FFD700', emissiveIntensity: 1.2, metalness: 0.8, roughness: 0.2 }), decorations.length]} castShadow />
+
+      {/* Float wheels - instanced (4 instances) */}
+      <instancedMesh ref={wheelsRef} args={[new THREE.CylinderGeometry(0.3, 0.3, 0.3, 8), new THREE.MeshStandardMaterial({ color: '#2c2c2c' }), 4]} castShadow />
     </group>
   );
 }

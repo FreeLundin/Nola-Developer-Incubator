@@ -1,18 +1,7 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useParadeGame} from "@/lib/stores/useParadeGame";
 import {useAudio} from "@/lib/stores/useAudio";
 import {useIsMobile} from "@/hooks/use-is-mobile";
-import {AnimatePresence, motion} from "framer-motion";
-import {Settings, ShoppingBag, Volume2, VolumeX} from "lucide-react";
-import {Button} from "@/components/ui/button";
-import {Card} from "@/components/ui/card";
-import {Progress} from "@/components/ui/progress";
-import {CosmeticShop} from "./CosmeticShop";
-import {AdminModal} from '@/components/ui/AdminModal';
-import {FirstLevelTutorial} from "./FirstLevelTutorial";
-import {SettingsModal} from "./SettingsModal";
-import {MinimalHUD} from "@/components/ui/MinimalHUD";
-import {RemainingFloats} from "@/components/ui/RemainingFloats";
 
 export function GameUI() {
   const { phase, score, level, combo, startGame, activePowerUps, lastCatchTime, playerColor, botScores, coins, joystickEnabled, totalFloats, floatsPassed } = useParadeGame();
@@ -24,7 +13,7 @@ export function GameUI() {
   const [, forceUpdate] = useState(0); // For power-up countdown updates
   const [showShop, setShowShop] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showPersonas, setShowPersonas] = useState<boolean>(() => {
+  const [showPersonas, setShowPersonas<boolean>(() => {
     try { return typeof window !== 'undefined' && localStorage.getItem('showPersonas') === 'true'; } catch { return false; }
   });
   const [showAdmin, setShowAdmin] = useState(false);
@@ -279,16 +268,15 @@ export function GameUI() {
                 {isMuted ? <VolumeX size={14} className="md:w-[18px] md:h-[18px]" /> : <Volume2 size={14} className="md:w-[18px] md:h-[18px]" />}
               </Button>
               
-              {isMobile && (
-                <Button
-                  onClick={() => setShowSettings(true)}
-                  size="sm"
-                  className="bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white p-1 md:p-2"
-                  data-testid="settings-button"
-                >
-                  <Settings size={14} className="md:w-[18px] md:h-[18px]" />
-                </Button>
-              )}
+              {/* Settings button available on all devices for easier access and tests */}
+              <Button
+                onClick={() => setShowSettings(true)}
+                size="sm"
+                className="bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white p-1 md:p-2"
+                data-testid="settings-button"
+              >
+                <Settings size={14} className="md:w-[18px] md:h-[18px]" />
+              </Button>
             </div>
           </div>
           

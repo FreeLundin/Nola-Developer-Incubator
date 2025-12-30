@@ -22,7 +22,16 @@ jobs:
         run: npm run check
       - name: Build
         run: npm run build
-      # Optional: Run Playwright tests if secrets needed or configured
-      # - name: Playwright Tests
-      #   run: npx playwright test
-
+      - name: Optional: Install gltf-transform CLI (best-effort)
+        run: |
+          set -e
+          npm i -D @gltf-transform/cli@^0.13.0 || echo "@gltf-transform/cli install failed; skipping gltf optimization"
+      - name: Optional: Run gltf-optimize (non-fatal)
+        run: npm run gltf-optimize || echo "gltf-optimize failed or no models present"
+      # Optional Playwright tests: only run when PLAYWRIGHT=true is set in workflow dispatch or env
+      - name: Optional Playwright tests
+        if: ${{ env.PLAYWRIGHT == 'true' }}
+        run: |
+          npm ci
+          npx playwright install --with-deps
+          npx playwright test

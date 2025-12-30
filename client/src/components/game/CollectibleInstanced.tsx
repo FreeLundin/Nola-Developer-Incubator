@@ -9,124 +9,90 @@ interface CollectibleInstancedProps {
 }
 
 export function CollectibleInstanced({ types, playerPosition }: CollectibleInstancedProps) {
-  const meshRef = useRef<THREE.InstancedMesh | null>(null);
+  // We'll render one instancedMesh per collectible type for per-type materials/colors.
+  const typesList = ['beads', 'doubloon', 'cup'] as const;
+  const perTypeRefs = useRef<Record<string, THREE.InstancedMesh | null>>({});
   const tempMatrix = useMemo(() => new THREE.Matrix4(), []);
   const tempPos = useMemo(() => new THREE.Vector3(), []);
   const tempQuat = useMemo(() => new THREE.Quaternion(), []);
   const tempScale = useMemo(() => new THREE.Vector3(), []);
 
-  // Map of collectible id -> index within instances
-  const indexById = useRef<Record<string, number>>({});
-  const instances = useRef<{ id: string; position: THREE.Vector3; velocity: THREE.Vector3; type: CollectibleType['type']; onGroundStartTime: number | null }[]>([]);
-
   const { removeCollectible, updateCollectible, incrementMisses } = useParadeGame();
 
-  // Static geometry/material memoized
   const geometry = useMemo(() => new THREE.SphereGeometry(0.25, 8, 8), []);
-  const material = useMemo(() => new THREE.MeshStandardMaterial({ metalness: 0.6, roughness: 0.2 }), []);
 
-  // Sync instances with store each frame (lightweight)
+  // Create per-type materials so colors can differ
+  const materials = useMemo(() => ({
+    beads: new THREE.MeshStandardMaterial({ color: '#9b59b6', metalness: 0.6, roughness: 0.2 }),
+    doubloon: new THREE.MeshStandardMaterial({ color: '#f1c40f', metalness: 0.9, roughness: 0.15 }),
+    cup: new THREE.MeshStandardMaterial({ color: '#e74c3c', metalness: 0.4, roughness: 0.35 }),
+  }), []);
+
   useFrame((state, delta) => {
     const storeCollectibles = useParadeGame.getState().collectibles;
-    // Filter only requested types
-    const relevant = storeCollectibles.filter((c) => types.includes(c.type));
-
-    // Rebuild instances list if counts change or ids mismatch
-    let changed = false;
-    if (relevant.length !== instances.current.length) changed = true;
-    else {
-      for (let i = 0; i < relevant.length; i++) {
-        if (instances.current[i]?.id !== relevant[i].id) { changed = true; break; }
-      }
-    }
-    if (changed) {
-      instances.current = relevant.map((c) => ({ id: c.id, position: c.position.clone(), velocity: c.velocity.clone(), type: c.type, onGroundStartTime: null }));
-      indexById.current = {};
-      instances.current.forEach((it, i) => indexById.current[it.id] = i);
-    }
-
-    // Physics and update per-instance
+    // For each type, filter and render
     const GRAVITY = -15;
     const CATCH_RADIUS = 2.0;
     const MIN_CATCH_HEIGHT = 0.5;
     const GROUND_PICKUP_WINDOW_MS = 1000;
 
-    for (let i = 0; i < instances.current.length; i++) {
-      const inst = instances.current[i];
-      // apply gravity
-      inst.velocity.y += GRAVITY * delta;
-      inst.position.add(inst.velocity.clone().multiplyScalar(delta));
+    for (const t of typesList) {
+      const list = storeCollectibles.filter(c => c.type === t);
+      const mesh = perTypeRefs.current[t];
+      if (!mesh) continue;
+      // Ensure capacity
+      mesh.count = list.length;
 
-      // ground handling
-      const isOnGround = inst.position.y <= 0.3;
-      if (isOnGround) {
-        inst.position.y = 0.3;
-        if (inst.onGroundStartTime === null) inst.onGroundStartTime = Date.now();
-        const timeOnGroundMs = Date.now() - (inst.onGroundStartTime || 0);
-        if (timeOnGroundMs > 5000) {
-          const isRegularItem = inst.type === 'beads' || inst.type === 'doubloon' || inst.type === 'cup';
-          if (isRegularItem) incrementMisses();
-          try { removeCollectible(inst.id); } catch (e) { /* ignore */ }
-          // mark for removal by setting id to empty
-          inst.id = '';
-          continue;
+      for (let i = 0; i < list.length; i++) {
+        const c = list[i];
+        // Basic physics/resync: apply gravity and simple ground handling locally
+        const position = c.position.clone();
+        const velocity = c.velocity.clone();
+
+        velocity.y += GRAVITY * delta;
+        position.add(velocity.clone().multiplyScalar(delta));
+
+        const isOnGround = position.y <= 0.3;
+        if (isOnGround) {
+          position.y = 0.3;
+          // friction
+          velocity.x *= 0.9; velocity.z *= 0.9;
+          if (Math.abs(velocity.y) > 0.5) velocity.y = -velocity.y * 0.4; else velocity.y = 0;
         }
 
-        // bounce/friction
-        if (Math.abs(inst.velocity.y) > 0.5) inst.velocity.y = -inst.velocity.y * 0.4;
-        else inst.velocity.y = 0;
-        inst.velocity.x *= 0.9; inst.velocity.z *= 0.9;
-      } else {
-        inst.onGroundStartTime = null;
-      }
-
-      // Catch detection
-      const distanceToPlayer = inst.position.distanceTo(playerPosition);
-      const isAboveGround = inst.position.y >= MIN_CATCH_HEIGHT;
-      const isInRange = distanceToPlayer < CATCH_RADIUS;
-      const timeOnGround = inst.onGroundStartTime ? (Date.now() - inst.onGroundStartTime) : 0;
-      const isGroundPickupWindow = inst.onGroundStartTime !== null && timeOnGround <= GROUND_PICKUP_WINDOW_MS;
-      const isCatchable = isInRange && ((isAboveGround && inst.position.y < 2) || isGroundPickupWindow);
-
-      if (isCatchable) {
-        // auto-catch when very close
-        if (distanceToPlayer < 0.8) {
-          try {
-            // Remove from store and handle catch via existing handlers in GameScene
-            removeCollectible(inst.id);
-          } catch (e) { /* ignore */ }
-          inst.id = '';
-          continue;
+        // Catch detection
+        const distanceToPlayer = position.distanceTo(playerPosition);
+        const isAboveGround = position.y >= MIN_CATCH_HEIGHT;
+        const isInRange = distanceToPlayer < CATCH_RADIUS;
+        const timeOnGround = 0; // we don't track exact ground time here in instancer
+        const isGroundPickupWindow = false;
+        const isCatchable = isInRange && ((isAboveGround && position.y < 2) || isGroundPickupWindow);
+        if (isCatchable && distanceToPlayer < 0.8) {
+          try { removeCollectible(c.id); } catch {}
+          continue; // don't set matrix for removed
         }
-      }
 
-      // Write instance matrix
-      if (meshRef.current && inst.id) {
-        tempPos.copy(inst.position);
+        // Compose matrix
+        tempPos.copy(position);
         tempQuat.setFromEuler(new THREE.Euler(0, state.clock.elapsedTime * 0.5, 0));
-        tempScale.setScalar(inst.type === 'cup' ? 0.3 : 0.25);
+        tempScale.setScalar(t === 'cup' ? 0.3 : 0.25);
         tempMatrix.compose(tempPos, tempQuat, tempScale);
-        meshRef.current.setMatrixAt(i, tempMatrix);
-        // Optionally set color via setColorAt if supported
+        mesh.setMatrixAt(i, tempMatrix);
+
+        // Sync back approximate pos & vel into store for other systems
+        updateCollectible(c.id, { position: position.clone(), velocity: velocity.clone() });
       }
 
-      // Update store positions for other systems that may read them
-      updateCollectible(inst.id, { position: inst.position.clone(), velocity: inst.velocity.clone() });
-    }
-
-    // Cleanup removed instances
-    instances.current = instances.current.filter((it) => it.id && it.id.length > 0);
-    // Update count
-    if (meshRef.current) {
-      meshRef.current.count = instances.current.length;
-      meshRef.current.instanceMatrix.needsUpdate = true;
+      mesh.instanceMatrix.needsUpdate = true;
     }
   });
 
-  // Render single instanced mesh for requested types (shared geometry)
+  // Render three instanced meshes (one per type)
   return (
-    <instancedMesh ref={meshRef} args={[geometry, material, Math.max(1, Math.min(1000, useParadeGame.getState().collectibles.length))]} castShadow>
-      {/* material color will be uniform; for per-type colors we could render one instancedMesh per type if needed */}
-    </instancedMesh>
+    <>
+      <instancedMesh ref={(r) => (perTypeRefs.current['beads'] = r)} args={[geometry, materials['beads'], 1024]} castShadow />
+      <instancedMesh ref={(r) => (perTypeRefs.current['doubloon'] = r)} args={[geometry, materials['doubloon'], 1024]} castShadow />
+      <instancedMesh ref={(r) => (perTypeRefs.current['cup'] = r)} args={[geometry, materials['cup'], 1024]} castShadow />
+    </>
   );
 }

@@ -22,6 +22,7 @@ const controls = [
 
 function App() {
   const joystickEnabled = useParadeGame((state) => state.joystickEnabled);
+  const startGame = useParadeGame((s) => s.startGame);
   const phase = useParadeGame((state) => state.phase);
   const isMobile = useIsMobile();
   const [joystickInput, setJoystickInput] = useState<JoystickInput | null>(null);
@@ -48,7 +49,7 @@ function App() {
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'auto', zIndex: 50 }}>
             <button
               onMouseEnter={prefetchCanvas}
-              onClick={() => setGameStarted(true)}
+              onClick={() => { setGameStarted(true); startGame(); }}
               style={{ padding: '18px 28px', fontSize: 20, borderRadius: 12, background: '#ff6b35', color: 'white', border: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.4)', cursor: 'pointer' }}
             >
               Play Mardi Gras Parade
