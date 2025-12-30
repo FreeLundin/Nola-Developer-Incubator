@@ -285,6 +285,7 @@ export function GameUI() {
                 size="sm"
                 className="bg-purple-700 hover:bg-purple-600 border-2 border-yellow-400 text-white p-1 md:p-2"
                 data-testid="settings-button"
+                style={{ zIndex: 80 }}
               >
                 <Settings size={14} className="md:w-[18px] md:h-[18px]" />
               </Button>
@@ -380,7 +381,7 @@ export function GameUI() {
           )}
           
           {/* Small HUD toggles - top-right compact */}
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 pointer-events-none">
             <div className="bg-black/60 p-2 rounded-md pointer-events-auto space-y-2">
               <label className="flex items-center gap-2 text-white text-xs">
                 <input type="checkbox" checked={showPersonas} onChange={(e) => setShowPersonas(e.target.checked)} />
