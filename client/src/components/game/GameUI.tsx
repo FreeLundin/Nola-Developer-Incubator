@@ -272,8 +272,10 @@ export function GameUI() {
             </div>
           </div>
           
-          {/* Remaining floats indicator (compact) */}
-          <RemainingFloats remaining={Math.max(0, (totalFloats || 0) - (floatsPassed || 0))} />
+          {/* Remaining floats indicator (compact) - show only in dev or when tests force HUD */}
+          {(import.meta.env.DEV || forceHudForTests) && (
+            <RemainingFloats remaining={Math.max(0, (totalFloats || 0) - (floatsPassed || 0))} />
+          )}
 
           {/* Admin & Controls - Hidden on phones */}
           <div className="hidden md:flex absolute bottom-4 right-4 pointer-events-auto flex-col gap-2">

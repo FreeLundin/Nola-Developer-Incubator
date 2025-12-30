@@ -1,20 +1,19 @@
-import { useState, useEffect, useCallback } from "react";
-import { useThree } from "@react-three/fiber";
-import { useParadeGame } from "@/lib/stores/useParadeGame";
-import { useAudio } from "@/lib/stores/useAudio";
-import { useIsMobile } from "@/hooks/use-is-mobile";
-import { Player, Controls, JoystickInput } from "./Player";
-import { GameCamera } from "./GameCamera";
-import { Environment } from "./Environment";
-import { ParadeFloat } from "./ParadeFloat";
-import { Collectible } from "./Collectible";
-import { CatchEffect } from "./CatchEffect";
-import { ClickMarker } from "./ClickMarker";
-import { CompetitorBot } from "./CompetitorBot";
-import { AggressiveNPC } from "./AggressiveNPC";
-import { Obstacle } from "./Obstacle";
-import { TouchControls, TouchInput } from "./TouchControls";
-import { HelperBotVisual } from './HelperBotVisual';
+import {useCallback, useEffect, useState} from "react";
+import {useThree} from "@react-three/fiber";
+import {useParadeGame} from "@/lib/stores/useParadeGame";
+import {useAudio} from "@/lib/stores/useAudio";
+import {useIsMobile} from "@/hooks/use-is-mobile";
+import {JoystickInput, Player} from "./Player";
+import {GameCamera} from "./GameCamera";
+import {Environment} from "./Environment";
+import {ParadeFloat} from "./ParadeFloat";
+import {Collectible} from "./Collectible";
+import {CatchEffect} from "./CatchEffect";
+import {ClickMarker} from "./ClickMarker";
+import {CompetitorBot} from "./CompetitorBot";
+import {AggressiveNPC} from "./AggressiveNPC";
+import {Obstacle} from "./Obstacle";
+import {HelperBotVisual} from './HelperBotVisual';
 import * as THREE from "three";
 
 interface CatchEffectInstance {
@@ -222,20 +221,21 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
         <>
           {/* Parade Floats - dynamically generated based on level (10 floats per level) */}
           {Array.from({ length: totalFloats }, (_, i) => {
-            const colors = ["#9b59b6", "#e74c3c", "#ff6b35", "#3498db", "#f39c12", "#1abc9c", "#e91e63", "#9c27b0"];
-            const color = colors[i % colors.length];
-            const startZ = -30 - (i * 10); // Space floats 10 units apart
-            return (
-              <ParadeFloat 
-                key={`float-${level}-${i}`}
-                id={`float-${level}-${i}`}
+             const colors = ["#9b59b6", "#e74c3c", "#ff6b35", "#3498db", "#f39c12", "#1abc9c", "#e91e63", "#9c27b0"];
+             const color = colors[i % colors.length];
+             const startZ = -30 - (i * 10); // Space floats 10 units apart
+             return (
+               <ParadeFloat 
+                 key={`float-${level}-${i}`}
+                 id={`float-${level}-${i}`}
                 startZ={startZ}
-                lane={1}
-                color={color}
-                playerPosition={playerPosition}
-              />
-            );
-          })}
+                 lane={1}
+                 color={color}
+                label={i + 1}
+                 playerPosition={playerPosition}
+               />
+             );
+           })}
           
           {/* Competitor Bots - scaled by level for casual gameplay (ages 10-80) */}
           {/* Level 1-2: 2 bots, Level 3: 3 bots, Level 4+: All 6 bots */}

@@ -1,6 +1,7 @@
-import { useRef, useEffect, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useParadeGame } from "@/lib/stores/useParadeGame";
+import {useEffect, useMemo, useRef} from "react";
+import {useFrame} from "@react-three/fiber";
+import {useParadeGame} from "@/lib/stores/useParadeGame";
+import {Html} from '@react-three/drei';
 import * as THREE from "three";
 
 interface ParadeFloatProps {
@@ -8,6 +9,7 @@ interface ParadeFloatProps {
   startZ: number;
   lane: number; // -1 or 1 for left or right side of street
   color: string;
+  label?: number; // optional numeric label to show on the float
   playerPosition?: THREE.Vector3;
 }
 
@@ -16,6 +18,7 @@ export function ParadeFloat({
   startZ, 
   lane, 
   color,
+  label,
   playerPosition,
 }: ParadeFloatProps) {
   const meshRef = useRef<THREE.Group>(null);
@@ -176,6 +179,23 @@ export function ParadeFloat({
           roughness={0.4}
         />
       </mesh>
+      
+      {/* Numeric label integrated into UX */}
+      {typeof label === 'number' && (
+        <Html position={[0, 1.0, 0]} center style={{ pointerEvents: 'none' }}>
+          <div style={{
+            background: 'rgba(0,0,0,0.6)',
+            color: 'white',
+            padding: '6px 8px',
+            borderRadius: 8,
+            fontWeight: 700,
+            fontSize: 14,
+            boxShadow: '0 4px 10px rgba(0,0,0,0.6)'
+          }}>
+            {label}
+          </div>
+        </Html>
+      )}
       
       {/* Decorative elements on the float with glow */}
       {decorations.map((dec, i) => (
