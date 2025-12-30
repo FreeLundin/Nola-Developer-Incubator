@@ -1,11 +1,11 @@
+#!/usr/bin/env node
 // This script publishes the prepared ./dist/public directory to the gh-pages branch.
 // Publishing is intentionally gated: the script only runs the push when the
 // environment variable GH_PAGES_CONFIRM is set to '1' or 'true'. This prevents
 // accidental local publishes. In CI (GitHub Actions) set GH_PAGES_CONFIRM=1
 // for the publish step, or use an actions-based publisher as in
 // .github/workflows/publish-client-gh-pages.yml.
-#!/usr/bin/env node
-import { execSync } from 'child_process';
+import {execSync} from 'child_process';
 import fs from 'fs';
 import path from 'path';
 

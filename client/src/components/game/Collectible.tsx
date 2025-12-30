@@ -1,8 +1,8 @@
-import { useRef, useEffect, useState } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useParadeGame, type Collectible as CollectibleType } from "@/lib/stores/useParadeGame";
-import { TrajectoryHint } from "./TrajectoryHint";
-import { GlowingTrail } from "./GlowingTrail";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {useFrame} from "@react-three/fiber";
+import {type Collectible as CollectibleType, useParadeGame} from "@/lib/stores/useParadeGame";
+import {TrajectoryHint} from "./TrajectoryHint";
+import {GlowingTrail} from "./GlowingTrail";
 import * as THREE from "three";
 
 interface CollectibleProps {
@@ -32,9 +32,16 @@ export function Collectible({ collectible, playerPosition, onCatch }: Collectibl
   const { updateCollectible, removeCollectible, incrementMisses } = useParadeGame();
   const hasBeenCaught = useRef(false);
   const [showHint, setShowHint] = useState(true);
-  const [timeOnGround, setTimeOnGround] = useState(0);
   const onGroundStartTime = useRef<number | null>(null);
   
+  // Memoized catch handler - keeps hooks at top-level and avoids reallocating inside frame loop
+  const handleCatch = useCallback((type: CollectibleType['type']) => {
+    onCatch(type);
+  }, [onCatch]);
+  
+  // Early return guard after hooks (safe to use conditionals here)
+  if (!collectible) return null;
+
   useEffect(() => {
     return () => {
       // Cleanup when component unmounts
@@ -48,7 +55,7 @@ export function Collectible({ collectible, playerPosition, onCatch }: Collectibl
     if (!meshRef.current || hasBeenCaught.current) return;
 
     // Get helper bot count
-    const { updateCollectible, removeCollectible, incrementMisses } = useParadeGame();
+    // Use the store functions captured above and read helperBots from the store state
     const helperBots = useParadeGame.getState().helperBots || 0;
 
     // Apply gravity
@@ -140,7 +147,7 @@ export function Collectible({ collectible, playerPosition, onCatch }: Collectibl
       // Auto-catch when player is close
       if (distanceToPlayer < 0.8) {
         hasBeenCaught.current = true;
-        onCatch(collectible.type);
+        handleCatch(collectible.type);
         removeCollectible(collectible.id);
       }
     } else {
