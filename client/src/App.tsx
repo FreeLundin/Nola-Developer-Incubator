@@ -27,6 +27,19 @@ function App() {
   const isMobile = useIsMobile();
   const [joystickInput, setJoystickInput] = useState<JoystickInput | null>(null);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
+  // Auto-start behavior for test environments: if URL contains `autoStart=true` or running on localhost
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const auto = params.get('autoStart') === 'true' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+      if (auto) {
+        setGameStarted(true);
+        // startGame may be a no-op if already started but safe to call
+        setTimeout(() => startGame(), 50);
+      }
+    } catch (e) { /* ignore in non-browser env */ }
+  }, [startGame]);
+
   // Prefetch GameCanvas when user hovers Play to reduce wait
   const prefetchCanvas = () => { void import('./components/game/GameCanvas'); };
 
