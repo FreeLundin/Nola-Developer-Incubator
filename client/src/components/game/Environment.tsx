@@ -14,7 +14,10 @@ export function Environment() {
     (async () => {
       try {
         const res = await fetch(url, { method: 'HEAD' });
-        if (!res.ok) return;
+        if (!res.ok) {
+          console.warn('Asphalt texture not found at', url, '— using fallback color material.');
+          return;
+        }
         if (cancelled) return;
         const loader = new THREE.TextureLoader();
         loader.load(url, (tex) => {
@@ -24,16 +27,19 @@ export function Environment() {
               tex.wrapS = THREE.RepeatWrapping;
               tex.wrapT = THREE.RepeatWrapping;
               tex.repeat.set(3, 10);
+              // optional: increase anisotropy if available
+              try { tex.anisotropy = (renderer && renderer.capabilities && (renderer.capabilities as any).getMaxAnisotropy ? (renderer.capabilities as any).getMaxAnisotropy() : tex.anisotropy); } catch(e) { /* ignore */ }
             } catch (e) {
               // ignore if setting fails
             }
             setAsphaltTexture(tex);
           }
-        }, undefined, () => {
-          // ignore texture load errors silently
+        }, undefined, (err) => {
+          console.warn('Failed to load asphalt texture at', url, err);
+          // keep asphaltTexture as null — fallback will be used
         });
       } catch (e) {
-        // ignore
+        console.warn('Error checking asphalt texture:', e);
       }
     })();
     return () => { cancelled = true; };
@@ -155,9 +161,11 @@ export function Environment() {
       {/* Street/Ground - Main parade route */}
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[14, 50]} />
-        <meshStandardMaterial 
-          map={asphaltTexture as any} 
-        />
+        {asphaltTexture ? (
+          <meshStandardMaterial map={asphaltTexture as any} />
+        ) : (
+          <meshStandardMaterial color="#333333" />
+        )}
       </mesh>
       
       {/* Street yellow center line */}
