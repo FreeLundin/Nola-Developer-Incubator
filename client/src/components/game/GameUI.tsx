@@ -380,31 +380,7 @@ export function GameUI() {
             </div>
           )}
           
-          {/* Small HUD toggles - top-right compact */}
-          <div className="absolute top-4 right-4 pointer-events-none">
-            <div className="bg-black/60 p-2 rounded-md pointer-events-auto space-y-2">
-              <label className="flex items-center gap-2 text-white text-xs">
-                <input type="checkbox" checked={showPersonas} onChange={(e) => setShowPersonas(e.target.checked)} />
-                <span>Show Personas (debug)</span>
-              </label>
-              <label className="flex items-center gap-2 text-white text-xs">
-                <input type="checkbox" checked={showFloatLabels} onChange={(e) => setShowFloatLabels(e.target.checked)} />
-                <span>Show Float Labels</span>
-              </label>
-              <label className="flex items-center gap-2 text-white text-xs">
-                <input type="checkbox" checked={showPowerUps} onChange={(e) => setShowPowerUps(e.target.checked)} />
-                <span>Show Power-ups</span>
-              </label>
-              <label className="flex items-center gap-2 text-white text-xs">
-                <input type="checkbox" checked={showCompetitors} onChange={(e) => setShowCompetitors(e.target.checked)} />
-                <span>Show Competitors</span>
-              </label>
-              <label className="flex items-center gap-2 text-white text-xs">
-                <input type="checkbox" checked={showRemainingFloats} onChange={(e) => setShowRemainingFloats(e.target.checked)} />
-                <span>Show Remaining Floats</span>
-              </label>
-             </div>
-           </div>
+          {/* Small HUD toggles removed (these belong in SettingsModal) */}
 
           {/* Test hook: expose a visible DOM marker when tests opt-in via localStorage */}
           {forceHudForTests && (
