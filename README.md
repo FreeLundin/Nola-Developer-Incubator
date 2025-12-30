@@ -131,101 +131,27 @@ NDI_MardiGrasParade/
 - **PostgreSQL** - Robust relational database (Neon)
 - **WebSocket** - Real-time communication (optional)
 
+### Backend Features
+- REST API endpoints for game data and user profiles (see `server/routes.ts`).
+- Leaderboard persistence and retrieval (see `data/leaderboard.json` and server storage implementations).
+- Session management and simple authentication for player profiles and playtests.
+- Score submission and validation endpoints for recording high scores.
+- Admin endpoints for managing mock sessions, test data, and scheduled events.
+- Optional WebSocket support for real-time score updates and multiplayer sync hooks.
+
+(See the `server/` directory for implementation details and `shared/schema.ts` for DB schemas.)
+
 ---
 
 ## 🌐 Deployment
 
-### Vercel (Recommended)
+This repository no longer uses Vercel. Recommended deployment options:
 
-This application is **production-ready for Vercel deployment**:
+- GitHub Pages (frontend only): The client build can be published to `gh-pages`. The project includes helper scripts (`scripts/publish-gh-pages.*`) and a `build` workflow that can be adapted for GitHub Pages.
+- Self-hosted Node.js: Run the Express backend and serve the built client from a Node process. Use `npm run build` and `npm start` to run the production server.
+- Docker / Cloud provider: Build a Docker image and deploy to your cloud provider of choice (e.g., AWS, GCP, Azure, Render). Configure environment variables such as `DATABASE_URL` and `SESSION_SECRET` in your hosting environment.
 
-✅ **Public Access** - Deployed instances are publicly accessible to anyone with the URL  
-✅ **One-Click Deploy** - Use the "Deploy with Vercel" button above  
-✅ **Auto-Deploy** - Push to main branch automatically deploys  
-✅ **Preview URLs** - Every PR gets its own preview deployment  
-
-**Complete deployment instructions:** See [README_VERCEL.md](README_VERCEL.md)
-
-**Key Features When Deployed:**
-- Game accessible at `https://your-project-name.vercel.app`
-- Share the link with anyone - no login or setup required for players
-- Automatic HTTPS and global CDN
-- API routes work as serverless functions
-- Database persists user data and high scores
-
-#### Understanding Vercel Runtimes
-
-This project uses **Node.js runtime** for serverless functions (not Edge runtime), which is important for the following reasons:
-
-**Why Node.js Runtime?**
-- Uses Node-specific APIs (fs, path, Buffer, crypto)
-- Requires process.env for environment variables
-- Compatible with Express.js middleware
-- Supports PostgreSQL database connections
-
-The runtime is explicitly set in `api/index.js`:
-```javascript
-export const runtime = 'nodejs';
-```
-
-**Edge vs Node.js Runtime:**
-- **Edge Runtime**: Lightweight, ultra-fast, runs on Vercel's edge network, limited Node.js API support
-- **Node.js Runtime**: Full Node.js API support, slightly slower cold starts, required for database and filesystem operations
-
-#### Environment Variables for Vercel
-
-When deploying to Vercel, configure these environment variables in your project settings:
-
-**Required:**
-- `DATABASE_URL` - PostgreSQL connection string (from Neon or other provider)
-- `NODE_ENV` - Set to `production`
-
-**How to Set Environment Variables:**
-1. Go to your Vercel project dashboard
-2. Navigate to **Settings** → **Environment Variables**
-3. Add each variable with appropriate values
-4. **Important**: Choose the correct environment:
-   - **Production**: For main branch deployments
-   - **Preview**: For PR and branch previews
-   - **Development**: For local development (use `.env` file instead)
-
-#### Viewing Function Logs in Vercel
-
-To debug issues in production:
-
-1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
-2. Select your project
-3. Click on **Deployments**
-4. Select a specific deployment
-5. Click on the **Functions** tab
-6. View real-time logs for each serverless function invocation
-
-**Logs include:**
-- Request method and path
-- Timestamp
-- Error messages and stack traces
-- Response status codes
-
-**Reference:** [Vercel Function Logs Documentation](https://vercel.com/docs/observability/runtime-logs)
-
-For FUNCTION_INVOCATION_FAILED errors, check:
-- Environment variables are set correctly
-- No missing dependencies
-- No unhandled promise rejections
-- Runtime is set to 'nodejs' for Node-dependent code
-
-**Additional Resources:**
-- [Vercel Errors Reference](https://vercel.com/docs/errors/FUNCTION_INVOCATION_FAILED)
-- [Node.js Runtime Documentation](https://vercel.com/docs/functions/runtimes/node-js)
-
-### Testing Your Deployment
-
-Once deployed, anyone can test by visiting:
-```
-https://your-project-name.vercel.app
-```
-
-No authentication needed - the game loads and plays immediately in the browser!
+If you need help with a specific hosting provider, I can add provider-specific instructions and CI/CD examples.
 
 ---
 
@@ -364,7 +290,7 @@ See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for specific guidelines.
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is distributed under a traditional proprietary license. See the `LICENSE` file for details.
 
 ---
 
@@ -391,7 +317,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Stay Connected
 - **GitHub** - [FreeLundin/Nola-Developer-Incubator](https://github.com/FreeLundin/Nola-Developer-Incubator)
-- **Project Lead** - Brandon Lundin
+- **Project Lead** - Brian C Lundin
 
 ---
 

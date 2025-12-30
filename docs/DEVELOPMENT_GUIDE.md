@@ -105,8 +105,6 @@ The dev server is powered by Vite and provides:
 - 📦 Automatic bundling
 - 🔄 Backend auto-restart with tsx
 
-<<<<<<< HEAD
-=======
 ### How to launch in your browser (quick)
 
 Use one of the recommended flows below depending on whether you want a local editable instance or a public shareable link.
@@ -133,7 +131,6 @@ https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/debug.html
 
 > Note: Vercel-related guides and legacy CI have been archived to `archive/legacy-hosting/` and are no longer part of the recommended workflow for this repository.
 
->>>>>>> origin/main
 ### File Structure
 
 ```
@@ -489,11 +486,7 @@ Test thoroughly in production mode before deployment.
 
 The project is designed for deployment to platforms like:
 
-<<<<<<< HEAD
-- **Vercel** - Frontend hosting
-=======
 - **GitHub Pages** - Frontend hosting (static)
->>>>>>> origin/main
 - **Railway** - Backend hosting
 - **Render** - Full-stack hosting
 - **Neon** - PostgreSQL database
