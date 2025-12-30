@@ -1,7 +1,7 @@
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 import react from "@vitejs/plugin-react";
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
+import path, {dirname} from "path";
+import {fileURLToPath} from "url";
 import glsl from "vite-plugin-glsl";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,6 +38,17 @@ export default defineConfig({
     target: "esnext",
     minify: "terser",
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('three')) return 'vendor-three';
+            if (id.includes('@react-three')) return 'vendor-r3f';
+            return 'vendor';
+          }
+        }
+      }
+    },
   },
   server: {
     // Note: In development, Vite runs in middleware mode via Express on port 5000

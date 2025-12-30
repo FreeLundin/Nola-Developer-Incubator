@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from "react";
+import React, {Suspense, useCallback, useEffect, useState} from "react";
 import {useThree} from "@react-three/fiber";
 import {useParadeGame} from "@/lib/stores/useParadeGame";
 import {useAudio} from "@/lib/stores/useAudio";
@@ -14,7 +14,13 @@ import {CompetitorBot} from "./CompetitorBot";
 import {AggressiveNPC} from "./AggressiveNPC";
 import {Obstacle} from "./Obstacle";
 import {HelperBotVisual} from './HelperBotVisual';
-import * as THREE from "three";
+import {Lighting} from './Lighting';
+import {PostProcessing} from './PostProcessing';
+import * as THREE from 'three';
+
+const AdvancedPostProcessing = React.lazy(() => import('./AdvancedPostProcessing').then(m => ({ default: m.AdvancedPostProcessing })));
+const Confetti = React.lazy(() => import('./Confetti').then(m => ({ default: m.Confetti })));
+const HDRIEnvironment = React.lazy(() => import('./HDRIEnvironment').then(m => ({ default: m.HDRIEnvironment })));
 
 interface CatchEffectInstance {
   id: string;
@@ -57,7 +63,16 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
   const [clickMarkers, setClickMarkers] = useState<ClickMarkerInstance[]>([]);
   const floatStartTime = useState(() => Date.now())[0];
   const [labelEnabled, setLabelEnabled] = useState<boolean>(() => {
-    try { const v = localStorage.getItem('hud:showFloatLabels'); return v === null ? true : v === 'true'; } catch { return true; }
+     try { const v = localStorage.getItem('hud:showFloatLabels'); return v === null ? true : v === 'true'; } catch { return true; }
+   });
+  const [advancedPostEnabled, setAdvancedPostEnabled] = useState<boolean>(() => {
+    try { return localStorage.getItem('visual:advancedPost') === 'true'; } catch { return false; }
+  });
+  const [confettiEnabled, setConfettiEnabled] = useState<boolean>(() => {
+    try { return localStorage.getItem('visual:confetti') === null ? true : localStorage.getItem('visual:confetti') === 'true'; } catch { return true; }
+  });
+  const [hdriEnabled, setHdriEnabled] = useState<boolean>(() => {
+    try { return localStorage.getItem('visual:hdri') === 'true'; } catch { return false; }
   });
   
   // Update labelEnabled state when 'hud:updated' event is received
@@ -67,6 +82,19 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
     };
     window.addEventListener('hud:updated', onHudUpdated);
     return () => window.removeEventListener('hud:updated', onHudUpdated);
+  }, []);
+  
+  // Listen for visual toggle updates
+  useEffect(() => {
+    const onVisualUpdated = () => {
+      try {
+        setAdvancedPostEnabled(localStorage.getItem('visual:advancedPost') === 'true');
+        setConfettiEnabled((localStorage.getItem('visual:confetti') === null) ? true : localStorage.getItem('visual:confetti') === 'true');
+        setHdriEnabled(localStorage.getItem('visual:hdri') === 'true');
+      } catch { }
+    };
+    window.addEventListener('visual:updated', onVisualUpdated);
+    return () => window.removeEventListener('visual:updated', onVisualUpdated);
   }, []);
   
   // Check for float-player collision
@@ -253,6 +281,17 @@ export function GameScene({ joystickInput: externalJoystickInput = null }: GameS
     <group>
       {/* Environment - always visible */}
       <Environment />
+      <Lighting />
+      <PostProcessing />
+      <Suspense fallback={null}>
+        {advancedPostEnabled && <AdvancedPostProcessing enabled />}
+      </Suspense>
+      <Suspense fallback={null}>
+        {confettiEnabled && <Confetti count={200} origin={[0,2,-6]} />}
+      </Suspense>
+      <Suspense fallback={null}>
+        {hdriEnabled && <HDRIEnvironment envUrl={'/hdrs/st-peters-square-1k.hdr'} />}
+      </Suspense>
       
       {/* Player - starts behind center line */}
       <Player 

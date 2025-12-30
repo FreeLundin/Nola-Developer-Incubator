@@ -30,11 +30,23 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [showRemainingFloats, setShowRemainingFloats] = useState<boolean>(() => {
     try { return localStorage.getItem('hud:showRemainingFloats') === null ? true : localStorage.getItem('hud:showRemainingFloats') === 'true'; } catch { return true; }
   });
+  const [enableAdvancedPost, setEnableAdvancedPost] = useState<boolean>(() => {
+    try { return localStorage.getItem('visual:advancedPost') === null ? false : localStorage.getItem('visual:advancedPost') === 'true'; } catch { return false; }
+  });
+  const [enableConfetti, setEnableConfetti] = useState<boolean>(() => {
+    try { return localStorage.getItem('visual:confetti') === null ? true : localStorage.getItem('visual:confetti') === 'true'; } catch { return true; }
+  });
+  const [enableHDRI, setEnableHDRI] = useState<boolean>(() => {
+    try { return localStorage.getItem('visual:hdri') === null ? false : localStorage.getItem('visual:hdri') === 'true'; } catch { return false; }
+  });
 
   useEffect(() => { try { localStorage.setItem('hud:showFloatLabels', String(showFloatLabels)); window.dispatchEvent(new Event('hud:updated')); } catch {} }, [showFloatLabels]);
   useEffect(() => { try { localStorage.setItem('hud:showPowerUps', String(showPowerUps)); window.dispatchEvent(new Event('hud:updated')); } catch {} }, [showPowerUps]);
   useEffect(() => { try { localStorage.setItem('hud:showCompetitors', String(showCompetitors)); window.dispatchEvent(new Event('hud:updated')); } catch {} }, [showCompetitors]);
   useEffect(() => { try { localStorage.setItem('hud:showRemainingFloats', String(showRemainingFloats)); window.dispatchEvent(new Event('hud:updated')); } catch {} }, [showRemainingFloats]);
+  useEffect(() => { try { localStorage.setItem('visual:advancedPost', String(enableAdvancedPost)); window.dispatchEvent(new Event('visual:updated')); } catch {} }, [enableAdvancedPost]);
+  useEffect(() => { try { localStorage.setItem('visual:confetti', String(enableConfetti)); window.dispatchEvent(new Event('visual:updated')); } catch {} }, [enableConfetti]);
+  useEffect(() => { try { localStorage.setItem('visual:hdri', String(enableHDRI)); window.dispatchEvent(new Event('visual:updated')); } catch {} }, [enableHDRI]);
 
   if (!isOpen) return null;
 
@@ -116,6 +128,43 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <Switch checked={showRemainingFloats} onCheckedChange={(v) => setShowRemainingFloats(Boolean(v))} />
               </label>
             </div>
+          </div>
+
+          {/* Visual / Performance toggles */}
+          <div className="mt-3 border-t border-white/5 pt-3">
+            <p className="text-xs text-gray-300 mb-2">Visual Options</p>
+            <label className="flex items-center justify-between text-white text-xs">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">Advanced Post-processing</span>
+                  <span className="px-2 py-0.5 text-[11px] rounded bg-red-700 text-yellow-100 font-bold">High</span>
+                </div>
+                <div className="text-[11px] text-gray-300">Enable depth-of-field and LUT color grading (may reduce performance).</div>
+              </div>
+              <Switch checked={enableAdvancedPost} onCheckedChange={(v) => setEnableAdvancedPost(Boolean(v))} />
+            </label>
+
+            <label className="flex items-center justify-between text-white text-xs">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">Confetti Particle Effects</span>
+                  <span className="px-2 py-0.5 text-[11px] rounded bg-amber-700 text-white font-semibold">Medium</span>
+                </div>
+                <div className="text-[11px] text-gray-300">Enable small confetti bursts for celebrations.</div>
+              </div>
+              <Switch checked={enableConfetti} onCheckedChange={(v) => setEnableConfetti(Boolean(v))} />
+            </label>
+
+            <label className="flex items-center justify-between text-white text-xs">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">HDR Environment</span>
+                  <span className="px-2 py-0.5 text-[11px] rounded bg-red-700 text-yellow-100 font-bold">High</span>
+                </div>
+                <div className="text-[11px] text-gray-300">Use HDRI lighting for richer materials (increases memory).</div>
+              </div>
+              <Switch checked={enableHDRI} onCheckedChange={(v) => setEnableHDRI(Boolean(v))} />
+            </label>
           </div>
 
           <div className="pt-2">
