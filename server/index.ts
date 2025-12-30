@@ -2,6 +2,7 @@ import {createServer} from "http";
 import {createApp} from "./app";
 import {log, setupVite} from "./vite";
 import type {NextFunction, Request, Response} from 'express';
+import type {Socket} from 'net';
 
 console.log('server/index.ts executing', { argv: process.argv.slice(0, 10), nodeEnv: process.env.NODE_ENV });
 
@@ -17,7 +18,9 @@ const isMain =
 
 async function startServer() {
   const app = await createApp();
-  const server = createServer(app);
+
+  // create a server instance (used by Vite in dev mode for HMR)
+  let server = createServer(app);
 
   // determine NODE_ENV robustly and default to production when running from built dist
   // (accidental shell command removed here)
@@ -58,19 +61,60 @@ async function startServer() {
     await setupVite(app, server);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client
-  const port = Number(process.env.PORT || 5000);
+  // ALWAYS serve the app on port 5000 by default
+  const desiredPort = Number(process.env.PORT || 5000);
 
-  // use a portable listen signature to avoid ENOTSUP on some platforms
-  // Bind without explicit host so the OS picks an address that supports both IPv4 and IPv6 (helps Playwright connect to ::1 and 127.0.0.1)
-  const httpServer = server.listen(port, () => {
-    log(`serving on port ${port}`);
+  // Attempt to listen on the desired port; if it's in use, fall back to an ephemeral port (0)
+  // Keep the same `server` instance so Vite HMR (dev) continues to work with it.
+  const httpServer = await new Promise<any>((resolve, reject) => {
+    // Helper to resolve once server is listening
+    const onListening = () => {
+      // remove temporary error listener
+      server.removeAllListeners('error');
+      resolve(server);
+    };
+
+    // Error handler to detect EADDRINUSE and fall back
+    const onError = (err: any) => {
+      if (err && err.code === 'EADDRINUSE') {
+        log(`port ${desiredPort} in use, falling back to ephemeral port`);
+        // Try to listen on an ephemeral port (0)
+        // remove this error handler to avoid double-handling
+        server.removeListener('error', onError);
+        try {
+          server.listen(0, onListening);
+        } catch (e) {
+          reject(e);
+        }
+      } else {
+        reject(err);
+      }
+    };
+
+    server.once('error', onError);
+
+    try {
+      server.listen(desiredPort, onListening);
+    } catch (e) {
+      // synchronous exception (rare) — try ephemeral port
+      server.removeListener('error', onError);
+      try {
+        server.listen(0, onListening);
+      } catch (err) {
+        reject(err);
+      }
+    }
   });
+
+  // At this point server is listening — determine actual port
+  const actualAddress = httpServer.address();
+  const actualPort = typeof actualAddress === 'object' && actualAddress ? (actualAddress as any).port : desiredPort;
+  process.env.PORT = String(actualPort);
+  log(`serving on port ${actualPort}`);
 
   // Track open sockets so we can destroy them on shutdown (avoid hanging connections)
   const sockets = new Set<any>();
-  httpServer.on('connection', (socket) => {
+  httpServer.on('connection', (socket: Socket) => {
     sockets.add(socket);
     socket.on('close', () => sockets.delete(socket));
   });
@@ -84,7 +128,7 @@ async function startServer() {
 
     // stop accepting new connections
     await new Promise<void>((resolve) => {
-      httpServer.close((err) => {
+      httpServer.close((err?: Error | null) => {
         if (err) {
           log(`error closing server: ${String(err)}`);
         }
@@ -126,7 +170,7 @@ async function startServer() {
 // If this file is run directly, start the server and attach a shutdown that exits the process
 if (isMain) {
   (async () => {
-    const { shutdown } = await startServer();
+    await startServer();
     // Do not call shutdown() immediately — keep the server running and rely on signal handlers only.
   })();
 }
