@@ -12,6 +12,7 @@ interface ParadeFloatProps {
   label?: number; // optional numeric label to show on the float
   labelEnabled?: boolean;
   playerPosition?: THREE.Vector3;
+  useInstancedDecorations?: boolean; // if true, skip local decoration meshes
 }
 
 export function ParadeFloat({ 
@@ -22,6 +23,7 @@ export function ParadeFloat({
   label,
   labelEnabled = true,
   playerPosition,
+  useInstancedDecorations = false,
 }: ParadeFloatProps) {
   const meshRef = useRef<THREE.Group>(null);
   const labelRef = useRef<HTMLDivElement | null>(null);
@@ -255,8 +257,8 @@ export function ParadeFloat({
         </Html>
       )}
       
-      {/* Render per-float decorations locally (reverted from global instancing) */}
-      {decorations.map((d, idx) => (
+      {/* Render per-float decorations locally unless instanced decorations are enabled */}
+      {!useInstancedDecorations && decorations.map((d, idx) => (
         <mesh key={`dec-${id}-${idx}`} position={[d.x, d.y - 0.5, d.z]} scale={[d.scale, d.scale, d.scale]} castShadow>
           <sphereGeometry args={[0.15, 8, 8]} />
           <meshStandardMaterial color="#FFD700" emissive="#FFD700" emissiveIntensity={0.8} metalness={0.3} roughness={0.3} />
