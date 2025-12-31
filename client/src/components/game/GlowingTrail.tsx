@@ -59,11 +59,11 @@ export function GlowingTrail({ targetRef, color, length = 8 }: GlowingTrailProps
   
   return (
     <instancedMesh ref={instancedMeshRef} args={[undefined, undefined, length]}>
-      <sphereGeometry args={[0.1, 6, 6]} />
+      <sphereGeometry args={[0.12, 8, 8]} />
       <meshBasicMaterial 
         color={color} 
         transparent 
-        opacity={0.6}
+        opacity={0.7}
         blending={THREE.AdditiveBlending}
       />
     </instancedMesh>

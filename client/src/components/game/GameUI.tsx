@@ -3,7 +3,7 @@ import {useParadeGame} from "@/lib/stores/useParadeGame";
 import {useAudio} from "@/lib/stores/useAudio";
 import {useIsMobile} from "@/hooks/use-is-mobile";
 import {AnimatePresence, motion} from "framer-motion";
-import {ShoppingBag, Volume2, VolumeX} from "lucide-react";
+import {Settings as SettingsIcon, ShoppingBag, Volume2, VolumeX} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {Card} from "@/components/ui/card";
 import {Progress} from "@/components/ui/progress";
@@ -177,22 +177,24 @@ export function GameUI() {
           onClick={() => setShowSettings(true)}
           data-testid="settings-button"
           aria-label="Open Settings"
+          title="Settings"
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: 44,
-            height: 44,
-            borderRadius: 10,
-            background: 'rgba(45, 15, 80, 0.95)',
+            width: 48,
+            height: 48,
+            borderRadius: 12,
+            background: 'linear-gradient(180deg, rgba(60,20,100,0.98), rgba(35,10,60,0.95))',
             color: 'white',
-            border: '2px solid rgba(245, 215, 110, 0.95)',
-            cursor: 'pointer'
+            border: '2px solid rgba(245, 215, 110, 0.98)',
+            cursor: 'pointer',
+            boxShadow: '0 6px 18px rgba(0,0,0,0.6)'
           }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-            <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z" fill="currentColor" />
-          </svg>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <SettingsIcon style={{ width: 20, height: 20 }} />
+          </div>
         </button>
       </div>
 
