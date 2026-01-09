@@ -1,0 +1,9 @@
+{
+  "folders": [
+    { "path": "." },
+    { "path": "client" },
+    { "path": "server" },
+    { "path": "mgp-iteration-2" }
+  ],
+  "settings": {}
+}

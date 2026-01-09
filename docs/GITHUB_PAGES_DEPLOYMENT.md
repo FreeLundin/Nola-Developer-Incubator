@@ -115,16 +115,27 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build
-        run: npm run build
+      - name: Prebuild checks (lint & verify)
+        run: |
+          npm run lint:assets || true
+          node ./scripts/verify-built-assets.cjs || true
+
+      - name: Build (GH Pages friendly)
+        # This repo provides `scripts/build-gh-pages.js` which ensures the
+        # correct `GH_PAGES_BASE` is set so Vite emits repo-prefixed asset paths
+        run: npm run build:gh-pages
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./dist/public
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+
+Note: Adjust `publish_dir` if your build outputs to a different directory (e.g., `dist` vs `dist/public`). Also ensure asset paths in your code are relative (no leading `/`) to avoid broken assets on GitHub Pages.
 ```
 
 Change `publish_dir` to match your build output folder.

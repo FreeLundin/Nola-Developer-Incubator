@@ -172,7 +172,7 @@ export function GameUI() {
   return (
     <>
       {/* Settings button moved to lower-right to avoid overlapping top HUD */}
-      <div style={{ position: 'fixed', bottom: 12, right: 12, zIndex: 2147483647, pointerEvents: 'auto' }}>
+      <div style={{ position: 'fixed', bottom: 12, right: 12, zIndex: 40, pointerEvents: 'auto' }}>
         <button
           onClick={() => setShowSettings(true)}
           data-testid="settings-button"
