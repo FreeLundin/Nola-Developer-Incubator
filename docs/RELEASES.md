@@ -31,3 +31,21 @@ Rollback
   git push origin :refs/tags/vX.Y.Z
 
 
+
+PR-mode and finalization workflow
+
+PR-mode
+- For pull requests, the version is bumped to the next patch number (odd or even) based on the target branch's version.
+- The version bump is done by the `scripts/auto-bump-version.js --mode=pr` script, which is run automatically in the CI.
+
+Finalization workflow
+- After merging a pull request, the release process should be finalized by running the `scripts/finalize-release.js` script.
+- This script will create a new release commit and tag, based on the merged changes.
+
+Manual overrides for non-technical users
+- If you need to manually bump the version or create a release, you can do so by following these steps:
+  1. Decide if the release is visual-only or functional/overall.
+  2. Bump the patch number in `package.json` to the next odd (visual) or even (overall) number.
+  3. Commit the changes with a message like "Release version X.Y.Z".
+  4. Tag the release with the same version number: `git tag -a vX.Y.Z -m "Release version X.Y.Z"`.
+  5. Push the commit and tag to the repository: `git push && git push origin vX.Y.Z`.

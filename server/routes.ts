@@ -46,6 +46,22 @@ export function attachRoutes(app: Express) {
     }
   });
 
+  // Client-side logging endpoint for asset/load issues
+  app.post('/api/logs', (req, res) => {
+    try {
+      const payload = req.body || {};
+      const logDir = path.resolve(process.cwd(), 'logs');
+      if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+      const file = path.join(logDir, 'client-asset-issues.log');
+      const entry = JSON.stringify({ ts: new Date().toISOString(), ip: req.ip, ua: req.get('user-agent'), payload }) + '\n';
+      fs.appendFileSync(file, entry, 'utf-8');
+      return res.json({ ok: true });
+    } catch (e) {
+      console.error('failed to write client log', e);
+      return res.status(500).json({ error: 'failed to write log' });
+    }
+  });
+
   // Example route with error handling (kept as comment for reference):
   // app.get('/api/users/:id', asyncHandler(async (req, res) => { ... }));
 }

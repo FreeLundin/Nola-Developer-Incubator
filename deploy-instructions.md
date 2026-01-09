@@ -15,6 +15,7 @@ git push --set-upstream origin fix/server-entry-detection
 # OPTIONAL: open a PR on GitHub web UI to merge into main
 
 # Deploy via GitHub Pages workflow
+# See also: `docs/GITHUB_PAGES_DEPLOYMENT.md` for a canonical GitHub Pages blueprint with asset path guidance and an optional GitHub Actions workflow.
 # 1. Push changes to `main` (the workflow will build and publish automatically), or run the workflow via the Actions UI.
 # 2. Ensure `npm run build` completes successfully and `dist/public/index.html` is created.
 # 3. The site will be available at https://Nola-Developer-Incubator.github.io/MardiGrasParadeGame/ when the gh-pages branch is published.

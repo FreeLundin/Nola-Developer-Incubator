@@ -15,11 +15,15 @@ const repoBase =
     ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
     : '/';
 
+
+
+const defaultBase = process.env.GH_PAGES_BASE || (repoBase === '/' ? './' : repoBase);
+
 export default defineConfig({
   // Use the computed base by default. If you need a custom base for other
   // hosting (CDN or custom domain), set the GH_PAGES_BASE env var or override
   // this value in your environment.
-  base: process.env.GH_PAGES_BASE || repoBase,
+  base: defaultBase,
   plugins: [
     react(),
     glsl(), // Add GLSL shader support
