@@ -9,6 +9,8 @@ export const useStore = create((set,get) => ({
   coachMode: false,
   playerPosition: { x: 0, z: 0 },
   tutorialStep: 0,
+  floatsCount: 0,
+  inventory: [],
 
   setJoystickEnabled: (v) => set({ joystickEnabled: v }),
   setFlipControls: (v) => set({ flipControls: v }),
@@ -18,6 +20,8 @@ export const useStore = create((set,get) => ({
   setCoachMode: (v) => set({ coachMode: v }),
   setPlayerPosition: (p) => set({ playerPosition: p }),
   setTutorialStep: (s) => set({ tutorialStep: s }),
+  setFloatsCount: (n) => set({ floatsCount: n }),
+  addToInventory: (item) => set(state => ({ inventory: [...state.inventory, item] })),
 
   getMoveSpeedMultiplier: () => (get().coachMode ? 0.8 : 1.0)
 }))

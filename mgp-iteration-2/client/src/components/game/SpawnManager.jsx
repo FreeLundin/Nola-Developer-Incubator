@@ -35,10 +35,11 @@ export function SpawnManager(){
     if(!SpawnManager._lastUpdate || now - SpawnManager._lastUpdate > 180){
       SpawnManager._lastUpdate = now
       setFloats([...floatsRef.current])
-      // update debug DOM element attached to document.body
+      // update store float count and debug DOM element attached to document.body
       try{
-        const el = document.getElementById('mgp-debug') || (() => {
-          const d = document.createElement('div')
+        useStore.getState().setFloatsCount(floatsRef.current.length)
+      }catch(e){}
+
           d.id = 'mgp-debug'
           d.style.display = 'none'
           document.body.appendChild(d)
