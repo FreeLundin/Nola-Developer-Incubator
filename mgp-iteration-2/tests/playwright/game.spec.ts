@@ -1,6 +1,4 @@
-import { test, expect, devices } from '@playwright/test'
-
-test.use({ ...devices['Pixel 5'] })
+import { test, expect } from '@playwright/test'
 
 test('joystick moves and HUD updates', async ({ page }) => {
   await page.goto('http://localhost:5173')
