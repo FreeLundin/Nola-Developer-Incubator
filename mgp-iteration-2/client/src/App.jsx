@@ -17,12 +17,12 @@ export default function App(){
         <directionalLight position={[5,10,5]} intensity={0.6} />
         <Suspense fallback={null}>
           <Player />
+          <SpawnManager />
         </Suspense>
       </Canvas>
 
       <HUD />
       <Tutorial />
-      <SpawnManager />
 
       {joystickEnabled && <TouchControls onInput={(i)=>useStore.getState().setJoystickInput(i)} />}
     </div>

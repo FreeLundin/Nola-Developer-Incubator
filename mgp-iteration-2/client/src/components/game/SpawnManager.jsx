@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { computeAvoidance } from '../../ai/avoidance'
 import { useStore } from '../../store/useParadeStore'
@@ -31,11 +30,22 @@ export function SpawnManager(){
       f.x += (avoid.x * 0.02) + (Math.random() - 0.5) * 0.01
       f.z += (avoid.z * 0.02) + (Math.random() - 0.5) * 0.01
     }
-    // throttle UI updates to ~5/sec
+    // throttle UI updates to ~5/sec and update debug DOM
     const now = performance.now()
     if(!SpawnManager._lastUpdate || now - SpawnManager._lastUpdate > 180){
       SpawnManager._lastUpdate = now
       setFloats([...floatsRef.current])
+      // update debug DOM element attached to document.body
+      try{
+        const el = document.getElementById('mgp-debug') || (() => {
+          const d = document.createElement('div')
+          d.id = 'mgp-debug'
+          d.style.display = 'none'
+          document.body.appendChild(d)
+          return d
+        })()
+        el.setAttribute('data-json', JSON.stringify({ floatsCount: floatsRef.current.length, player: playerPosRef.current }))
+      }catch(e){}
     }
   })
 
@@ -47,10 +57,6 @@ export function SpawnManager(){
           <meshStandardMaterial color={'#f97316'} emissive={'#f97316'} emissiveIntensity={0.2} />
         </mesh>
       ))}
-      {/* debug DOM */}
-      <Html position={[0,0,0]}>
-        <div id="mgp-debug" style={{display:'none'}} data-json={JSON.stringify({ floatsCount: floats.length, player: playerPosRef.current })}></div>
-      </Html>
     </group>
   )
 }

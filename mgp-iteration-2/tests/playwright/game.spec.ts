@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test'
 
 test('joystick moves and HUD updates', async ({ page }) => {
-  await page.goto('http://localhost:5173')
+  const BASE = process.env.PREVIEW_URL || 'http://127.0.0.1:5173'
+  await page.goto(BASE)
   await page.waitForSelector('.hud')
 
   // simulate touch-style pointer events via mouse
@@ -21,8 +22,8 @@ test('joystick moves and HUD updates', async ({ page }) => {
   await slider?.focus()
   await page.keyboard.press('ArrowRight')
 
-  // wait for debug DOM and assert player moved and floats spawn
-  await page.waitForSelector('#mgp-debug', { timeout: 3000 })
+  // wait for debug DOM (attached to DOM even if hidden) and assert player moved and floats spawn
+  await page.waitForSelector('#mgp-debug', { state: 'attached', timeout: 5000 })
   const debug = await page.$('#mgp-debug')
   const json = await debug?.getAttribute('data-json')
   expect(json).not.toBeNull()

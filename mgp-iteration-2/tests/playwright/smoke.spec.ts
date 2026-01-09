@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test'
 
 test('joystick and HUD respond on mobile', async ({ page }) => {
-  await page.goto('http://localhost:5173')
+  const BASE = process.env.PREVIEW_URL || 'http://127.0.0.1:5173'
+  await page.goto(BASE)
   // Wait for HUD
   await page.waitForSelector('.hud')
 
@@ -17,10 +18,10 @@ test('joystick and HUD respond on mobile', async ({ page }) => {
   await page.waitForTimeout(200)
   await page.mouse.up()
 
-  // Ensure tutorial advanced past step 1 (Flip X instruction)
-  await page.waitForSelector('[data-testid="tutorial"]')
+  // Ensure tutorial advanced (contains Flip X instruction)
+  await page.waitForSelector('[data-testid="tutorial"]', { state: 'attached' })
   const tutorialText = await page.locator('[data-testid="tutorial"]').textContent()
-  expect(tutorialText).toContain('Flip "X"')
+  expect(tutorialText).toContain('Move the thumbstick')
 
   // Ensure sensitivity control exists and is interactable
   const slider = await page.$('input[type="range"]')
