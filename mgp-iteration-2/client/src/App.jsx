@@ -3,6 +3,8 @@ import { Canvas } from '@react-three/fiber'
 import { Player } from './components/game/Player'
 import { TouchControls } from './components/game/TouchControls'
 import { HUD } from './components/game/HUD'
+import { SpawnManager } from './components/game/SpawnManager'
+import { Tutorial } from './components/game/Tutorial'
 import { useStore } from './store/useParadeStore'
 
 export default function App(){
@@ -19,6 +21,8 @@ export default function App(){
       </Canvas>
 
       <HUD />
+      <Tutorial />
+      <SpawnManager />
 
       {joystickEnabled && <TouchControls onInput={(i)=>useStore.getState().setJoystickInput(i)} />}
     </div>
