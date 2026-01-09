@@ -1,0 +1,58 @@
+name: Predeploy checks
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run asset path linter
+        run: npm run lint:assets
+
+      - name: Build for GH Pages (compute base)
+        run: npm run build:gh-pages
+
+      - name: Verify built assets referenced in index
+        run: node ./scripts/verify-built-assets.cjs
+
+  smoke-test:
+    needs: build-and-verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Serve built site
+        run: npx http-server ./dist/public -p 5000 -c-1 & npx wait-on http://127.0.0.1:5000
+
+      - name: Run Playwright smoke test
+        env:
+          PREVIEW_URL: http://127.0.0.1:5000
+        run: npx playwright test tests/playwright/smoke.spec.ts --project=chromium --reporter=list

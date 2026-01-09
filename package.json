@@ -26,6 +26,7 @@
     "migrate:generate": "npx drizzle-kit generate:migration --config ./drizzle.config.ts",
     "migrate:push": "npx drizzle-kit push:pg --config ./drizzle.config.ts",
     "playwright:preview": "cross-env PREVIEW_URL=$PREVIEW_URL npx playwright test tests/playwright/interaction.spec.ts --project=chromium",
+    "test:smoke": "cross-env PREVIEW_URL=$PREVIEW_URL npx playwright test tests/playwright/smoke.spec.ts --project=chromium",
     "ci:serve": "http-server ./dist/public -p 5000 -c-1",
     "playwright:test": "cross-env PREVIEW_URL=http://127.0.0.1:5000 npx playwright test",
     "build:gh-pages": "node ./scripts/build-gh-pages.js",
